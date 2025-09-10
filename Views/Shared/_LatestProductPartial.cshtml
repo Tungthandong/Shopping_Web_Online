@@ -1,0 +1,55 @@
+﻿<div class="recommended_items">
+    <h2 class="title text-center">latest items</h2>
+
+    <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            @{
+                int count = 0;
+                List<Product> items = ViewBag.LatestItems;
+                for (int i = 0; i < ViewBag.LatestItems.Count; i += 3)
+                {
+                    <div class="item @(count == 0 ? "active" : "")">
+                        @for (int j = i; j < i + 3; j++)
+                        {
+                            <div class="col-sm-4">
+                                <div class="product-image-wrapper">
+                                    <div class="single-products">
+                                        <div class="productinfo text-center">
+                                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@items[j].ProductId">
+                                                <img src="@items[j].Image" alt="" width="255px" height="360px" />
+                                            </a>
+                                            <h2>@items[j].UnitPrice₫</h2>
+                                            <p>@items[j].ProductName</p>
+                                            @{
+                                                var username = Context.Session.GetString("Username");
+                                                var returnUrl = Context.Request.Path + Context.Request.QueryString;
+                                            }
+                                            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                                                <input type="hidden" name="Username" value="@username" />
+                                                <input type="hidden" name="ProductId" value="@items[j].ProductId" />
+                                                <input type="hidden" name="Quantity" value="1" />
+                                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                                <button type="submit" class="btn btn-default add-to-cart">
+                                                    <i class="fa fa-shopping-cart"></i>Add to cart
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    count++;
+                }
+            }
+        </div>
+
+
+        <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+            <i class="fa fa-angle-left"></i>
+        </a>
+        <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+            <i class="fa fa-angle-right"></i>
+        </a>
+    </div>
+</div>

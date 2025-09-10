@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Category>
+
+@foreach (var c in Model)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a asp-action="Index" asp-controller="Product" asp-route-cid="@c.CategoryId" asp-route-search="@ViewBag.Search" asp-route-minPrice="@ViewBag.minPrice" asp-route-maxPrice="@ViewBag.maxPrice" asp-route-sort="@ViewBag.Sort">@c.CategoryName</a></h4>
+        </div>
+    </div>
+}
+<h2>Price</h2>
+<form asp-action="Index" asp-controller="Product">
+    <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+        <input type="text" hidden name="cid" value="@ViewBag.Cid"/>
+        <input type="text" hidden name="search" value="@ViewBag.Search" />
+        <input type="number" name="minPrice" class="form-control" placeholder="Min"
+               value="@ViewBag.MinPrice" style="width: 100px;" min="0"/>
+
+        <span style="font-weight: bold; line-height: 1;">-</span>
+
+        <input type="number" name="maxPrice" class="form-control" placeholder="Max"
+               value="@ViewBag.MaxPrice" style="width: 100px;" min="0"/>
+    </div>
+    <div class="form-group" style="margin-top: 10px;">
+        <label><strong>Sort by Price:</strong></label><br />
+        <input type="radio" name="sort" value="asc" @(ViewBag.Sort == "asc" || ViewBag.Sort == "" || ViewBag.Sort == null ? "checked" : "") /> Low to High<br />
+        <input type="radio" name="sort" value="desc" @(ViewBag.Sort == "desc" ? "checked" : "") /> High to Low
+    </div>
+    <button type="submit" class="btn btn-danger btn-sm">Apply</button>
+</form>
+@* <script>
+    function resetFilters() {
+        document.getElementsByName("minPrice")[0].value = "";
+        document.getElementsByName("maxPrice")[0].value = "";
+    }
+</script> *@

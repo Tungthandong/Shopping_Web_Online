@@ -1,0 +1,159 @@
+﻿@model List<Cart>
+
+@{
+    var username = "";
+    var phone = "";
+
+    if (ViewBag.Account != null)
+    {
+        username = ViewBag.Account.Username;
+        phone = ViewBag.Account.Phonenumber;
+    }
+}
+
+<form asp-controller="Checkout" asp-action="Checkout" method="post">
+    <section id="checkout" class="py-5" style="background-color: #f8f8f8;">
+        <div class="container bg-white p-4 rounded shadow-sm">
+            <h2 class="mb-4 fw-bold text-dark">Checkout</h2>
+            <div style="color: red">@ViewBag.Msg</div>
+            <div class="row">
+                <!-- Customer Info -->
+                <div class="col-md-6 mb-4">
+                    <h5 class="mb-3">Customer Information</h5>
+                    <input type="text" class="form-control mb-3" placeholder="Full Name *" name="Username" required value="@username" readonly>
+                    <input type="text" class="form-control mb-3" placeholder="Phone *" name="PhoneNumber" required value="@phone">
+                    <input type="text" class="form-control mb-3" placeholder="Address *" name="ShippingAddress" required>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="col-md-6 mb-4">
+                    <h5 class="mb-3">Payment Method</h5>
+                    <div class="form-check mb-2">
+                        <input type="radio" class="form-check-input" id="bank" name="PaymentMethod" value="Bank" checked>
+                        <label class="form-check-label" for="bank">Direct Bank Transfer</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input type="radio" class="form-check-input" id="paypal" name="PaymentMethod" value="PayPal">
+                        <label class="form-check-label" for="paypal">PayPal</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="cod" name="PaymentMethod" value="COD">
+                        <label class="form-check-label" for="cod">Cash on Delivery</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping -->
+            <div class="row border-top pt-4 mt-4">
+                <div class="col-md-6 mb-3">
+                    <h5 class="mb-2">Shipping Method</h5>
+                    <div class="form-check mb-2">
+                        <input type="radio" class="form-check-input" name="ShippingMethod" id="standard" value="standard" checked>
+                        <label class="form-check-label" for="standard">Standard Shipping</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" name="ShippingMethod" id="express" value="express">
+                        <label class="form-check-label" for="express">Express Shipping</label>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Shipping Cost: <span id="shippingCost" class="text-nowrap">30,000 ₫</span></h5>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="mt-4">
+                <h5 class="mb-3">Order Summary</h5>
+                <table class="table table-bordered w-100" style="table-layout: fixed;">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Count != 0)
+                        {
+                            foreach (var c in Model)
+                            {
+                                <tr>
+                                    <td>@c.Product.ProductName</td>
+                                    <td>@c.Quantity</td>
+                                    <td>@c.Product.UnitPrice</td>
+                                    <td class="cart-item-total" data-total="@(c.Quantity* c.Product.UnitPrice)">
+                                        @(c.Quantity* c.Product.UnitPrice) ₫
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Shipping</strong></td>
+                            <td id="shippingCostCell" class="text-end text-nowrap">30,000 ₫</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total</strong></td>
+                            <td><strong id="totalAmount">0 ₫</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="TotalAmount" id="totalAmountInput" value="0" />
+                @if (Model == null || Model.Count == 0)
+                {
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-warning btn-lg px-4 text-white" disabled>Place Order</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-warning btn-lg px-4 text-white">Place Order</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const shippingRadios = document.querySelectorAll('input[name="ShippingMethod"]');
+        const shippingCostEl = document.getElementById('shippingCost');
+        const shippingCostCell = document.getElementById('shippingCostCell');
+        const totalAmountEl = document.getElementById('totalAmount');
+
+        function getCartTotal() {
+            let total = 0;
+            document.querySelectorAll('.cart-item-total').forEach(td => {
+                total += parseInt(td.dataset.total);
+            });
+            return total;
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('vi-VN').format(num) + ' ₫';
+        }
+
+        function updateTotal() {
+            let shippingCost = 30000;
+            const selected = document.querySelector('input[name="ShippingMethod"]:checked');
+            if (selected && selected.value === 'express') {
+                shippingCost = 50000;
+            }
+
+            const cartTotal = getCartTotal();
+            shippingCostEl.textContent = formatCurrency(shippingCost);
+            shippingCostCell.textContent = formatCurrency(shippingCost);
+            totalAmountEl.textContent = formatCurrency(cartTotal + shippingCost);
+            document.getElementById('totalAmountInput').value = cartTotal + shippingCost;
+        }
+
+
+        updateTotal();
+
+        shippingRadios.forEach(radio => {
+            radio.addEventListener('change', updateTotal);
+        });
+    });
+</script>

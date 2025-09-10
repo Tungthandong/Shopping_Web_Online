@@ -1,0 +1,25 @@
+﻿<header class="bg-white shadow-sm">
+    <div class="flex items-center justify-between px-6 py-4">
+        <!-- Mobile menu button -->
+        <button class="md:hidden text-gray-500 focus:outline-none" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+
+        <!-- Giữ chỗ search nhưng bỏ input -->
+        <div class="hidden md:block w-64"></div>
+
+        <!-- Right side icons -->
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <button class="flex items-center focus:outline-none" onclick="toggleDropdown()">
+                    <i class="fas fa-user-circle text-2xl text-gray-600"></i>
+                    <i class="fas fa-chevron-down ml-2 text-gray-500"></i>
+                </button>
+                <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                    <a asp-action="Index" asp-controller="Account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                    <a asp-action="Logout" asp-controller="Login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

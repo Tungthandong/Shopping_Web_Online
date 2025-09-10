@@ -1,0 +1,108 @@
+﻿@model Product
+<div class="col-sm-3">
+    @Html.Partial("_SidebarPartial")
+</div>
+<div class=" col-sm-9 padding-right">
+    <div class="product-details">
+        <!--product-details-->
+        <div class="col-sm-4">
+            @* <div class="view-product" > *@
+            <img src="@Model.Image" alt="" width="255px" height="360px" />
+            @* </div> *@
+            @* <div id="similar-product" class="carousel slide" data-ride="carousel"> *@
+
+            @* 	<!-- Wrapper for slides --> *@
+            @* 	<div class="carousel-inner"> *@
+            @* 		<div class="item active"> *@
+            @* 			<a href=""><img src="images/product-details/similar1.jpg" alt=""></a> *@
+            @* 			<a href=""><img src="images/product-details/similar2.jpg" alt=""></a> *@
+            @* 			<a href=""><img src="images/product-details/similar3.jpg" alt=""></a> *@
+            @* 		</div> *@
+            @* 		<div class="item"> *@
+            @* 			<a href=""><img src="images/product-details/similar1.jpg" alt=""></a> *@
+            @* 			<a href=""><img src="images/product-details/similar2.jpg" alt=""></a> *@
+            @* 			<a href=""><img src="images/product-details/similar3.jpg" alt=""></a> *@
+            @* 		</div> *@
+            @* 		<div class="item"> *@
+            @* 			<a href=""><img src="images/product-details/similar1.jpg" alt=""></a> *@
+            @* 			<a href=""><img src="images/product-details/similar2.jpg" alt=""></a> *@
+            @* 			<a href=""><img src="images/product-details/similar3.jpg" alt=""></a> *@
+            @* 		</div> *@
+
+            @* 	</div> *@
+
+            @* 	<!-- Controls --> *@
+            @* 	<a class="left item-control" href="#similar-product" data-slide="prev"> *@
+            @* 		<i class="fa fa-angle-left"></i> *@
+            @* 	</a> *@
+            @* 	<a class="right item-control" href="#similar-product" data-slide="next"> *@
+            @* 		<i class="fa fa-angle-right"></i> *@
+            @* 	</a> *@
+            @* </div> *@
+
+        </div>
+        <div class="col-sm-8">
+            <div class="product-information">
+                <!--/product-information-->
+                <h2>@Model.ProductName</h2>
+                <span>
+                    <span style="color:#e70303;">@Model.UnitPrice₫</span>
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                            <label style="margin: 0;">Quantity:</label>
+
+                            <div class="input-group" style="display: flex; align-items: center;">
+                                <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="changeQuantity(-1)">-</button>
+                                <input type="text" id="quantityInput" name="Quantity" value="1"
+                                       class="form-control text-center" style="width: 60px; height: 32px; padding: 0 6px;" />
+                                <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+                        @{
+                            var username = Context.Session.GetString("Username");
+                            var returnUrl = Context.Request.Path + Context.Request.QueryString;
+                        }
+                        <input type="hidden" name="Username" value="@username" />
+                        <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                        <button type="submit" class="btn btn-default add-to-cart" style="margin: 0;">
+                            <i class="fa fa-shopping-cart"></i> Add to cart
+                        </button>
+                    </form>
+                </span>
+                <p><b>Availability:</b> @(Model.UnitsInStock > 0 ? "In Stock" : "Out of Stock")</p>
+                <p><b>Category:</b> @(Model.Category != null ? Model.Category.CategoryName : "Unknown")</p>
+                @{
+                    var message = Context.Request.Query["msg"].ToString();
+                    var error = Context.Request.Query["error"].ToString();
+                }
+                @if (!string.IsNullOrEmpty(message))
+                {
+                    <div class="alert alert-success">@message</div>
+                }
+                else if (!string.IsNullOrEmpty(error))
+                {
+                    <div class="alert alert-danger">@error</div>
+                }
+            </div><!--/product-information-->
+        </div>
+
+        <script>
+            const MAX_STOCK = @Model.UnitsInStock;
+
+            function changeQuantity(amount) {
+                const input = document.getElementById("quantityInput");
+                let value = parseInt(input.value) || 1;
+
+                value += amount;
+                if (value < 1) value = 1;
+                if (value > MAX_STOCK) value = MAX_STOCK;
+
+                input.value = value;
+            }
+        </script>
+
+    </div><!--/product-details-->
+    @Html.Partial("_LatestProductPartial")
+</div>

@@ -1,0 +1,70 @@
+﻿<section id="login">
+    <!--form-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-1">
+                <div class="login-form">
+                    <h2>Login to your account</h2>
+                    <div style="color:red">@ViewBag.Error</div>
+                    @{
+                        var username = Context.Request.Cookies["Username"];
+                        var remember = Context.Request.Cookies["Remember"];
+                    }
+                    <form asp-action="Login" method="post">
+                        <input type="text" placeholder="Username" name="Username" value="@username" />
+                        <input type="password" placeholder="Password" name="Password"/>
+                        <span>
+                            <input type="checkbox" class="checkbox" name="Remember" @(remember == "True" ? "checked" : "") />
+                            Remember me
+                        </span>
+                        <button type="submit" class="btn btn-default">Login</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <h2 class="or">OR</h2>
+            </div>
+            <div class="col-sm-4">
+                <div class="signup-form">
+                    <h2>New User Signup!</h2>
+                    <form asp-action="Signup" method="post">
+                        <input type="text" class="form-control" name="Username"
+                               placeholder="Enter your username"
+                               required
+                               oninvalid="this.setCustomValidity('Please enter your user name')"
+                               oninput="this.setCustomValidity('')">
+
+                        <input type="email" class="form-control" name="Email"
+                               placeholder="Enter your email"
+                               required
+                               oninvalid="this.setCustomValidity('Please enter a valid email')"
+                               oninput="this.setCustomValidity('')">
+
+                        <input type="tel" class="form-control" name="Phonenumber"
+                               placeholder="Enter your phone number"
+                               required
+                               pattern="^\d{10,11}$"
+                               oninvalid="this.setCustomValidity('Please enter a valid phone number (10–11 digits)')"
+                               oninput="this.setCustomValidity('')">
+
+                        <input type="password" class="form-control" name="Password"
+                               placeholder="Enter password"
+                               required
+                               minlength="6"
+                               oninvalid="this.setCustomValidity('Please enter a password with at least 6 characters')"
+                               oninput="this.setCustomValidity('')">
+
+                        <input type="password" class="form-control" name="ConfirmPassword"
+                               placeholder="Confirm password"
+                               required
+                               oninvalid="this.setCustomValidity('Please confirm your password')"
+                               oninput="this.setCustomValidity('')">
+
+                        <button type="submit" class="btn btn-default">Signup</button>
+                        <div style="color:red">@ViewBag.Message</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

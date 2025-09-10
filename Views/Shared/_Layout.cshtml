@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Home | E-Shopper</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet">
+    <link href="~/css/prettyPhoto.css" rel="stylesheet">
+    <link href="~/css/price-range.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/main.css" rel="stylesheet">
+    <link href="~/css/responsive.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="images/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+</head><!--/head-->
+
+<body>
+    <header id="header">
+        <!--header-->
+        <div class="header_top">
+            <!--header_top-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="contactinfo">
+                            <ul class="nav nav-pills">
+                                <li><a href="#"><i class="fa fa-phone"></i> +84 86 50 69 618</a></li>
+                                <li><a href="#"><i class="fa fa-envelope"></i> tungvnhe181298@fpt.edu.vn</a></li>
+                                @{
+                                    var username = Context.Session.GetString("Username");
+                                    var role = Context.Session.GetString("Role");
+                                }
+
+                                @if (!string.IsNullOrEmpty(username))
+                                {
+                                    <li><a><i class="fa fa-user"></i> Welcome, @username!</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header_top-->
+
+        <div class="header-middle">
+            <!--header-middle-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="logo pull-left">
+                            <a asp-controller="Home" asp-action="Index"><img src="~/images/1200px-Yu-Gi-Oh!_(Logo).jpg" /></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="shop-menu pull-right">
+                            <ul class="nav navbar-nav">
+                                @if (username!=null && role == "admin")
+                                {
+                                    <li><a asp-action="Index" asp-controller="Admin"><i class="fa fa-user"></i> Admin Dashboard</a></li>
+                                }
+                                <li><a asp-action="Index" asp-controller="Account"><i class="fa fa-user"></i> Account</a></li>
+                                <li><a asp-controller="Checkout" asp-action="Index"><i class="fa fa-crosshairs"></i> Checkout</a></li>
+                                <li><a asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                <li><a asp-controller="Checkout" asp-action="OrderHistory">&#128221; Order History</a></li>
+                                @if (!string.IsNullOrEmpty(username))
+                                {
+                                    <li><a asp-controller="Login" asp-action="Logout"><i class="fa fa-lock"></i> Logout</a></li>
+                                }
+                                else
+                                {
+                                    <li><a asp-controller="Login" asp-action="Index"><i class="fa fa-lock"></i> Login</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header-middle-->
+
+        <div class="header-bottom">
+            <!--header-bottom-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <div class="mainmenu pull-left">
+                            <ul class="nav navbar-nav collapse navbar-collapse">
+                                <li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
+                                <li class="dropdown">
+                                    <a asp-controller="Product" asp-route-cid="@null" asp-action="Index">Shop<i class="fa fa-angle-down"></i></a>
+                                    <ul role="menu" class="sub-menu">
+                                        @* <li><a asp-controller="Product" asp-action="Detail">Product Details</a></li> *@
+                                        <li><a asp-controller="Checkout" asp-action="Index">Checkout</a></li>
+                                        <li><a asp-controller="Cart" asp-action="Index">Cart</a></li>
+                                        @if (!string.IsNullOrEmpty(username))
+                                        {
+                                            <li><a asp-controller="Login" asp-action="Logout">Logout</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a asp-controller="Login" asp-action="Index">Login</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <form asp-controller="Product" asp-action="Index" method="get">
+                            <input type="hidden" name="cid" value="@ViewBag.Cid" />
+                            <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
+                            <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
+    
+                            <div class="search_box pull-right">
+                                <input type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header-bottom-->
+    </header><!--/header-->
+
+    <section>
+        <div class="container">
+            <div class="row">
+                @RenderBody()
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <!--Footer-->
+        <div class="footer-widget">
+            <div class="container">
+                <div class="row">
+                    @* <div class="col-sm-2"> *@
+                    @* 	<div class="single-widget"> *@
+                    @* 		<h2>Service</h2> *@
+                    @* 		<ul class="nav nav-pills nav-stacked"> *@
+                    @* 			<li><a href="#">Online Help</a></li> *@
+                    @* 			<li><a href="#">Contact Us</a></li> *@
+                    @* 			<li><a href="#">Order Status</a></li> *@
+                    @* 			<li><a href="#">Change Location</a></li> *@
+                    @* 			<li><a href="#">FAQ’s</a></li> *@
+                    @* 		</ul> *@
+                    @* 	</div> *@
+                    @* </div> *@
+                    @* <div class="col-sm-2"> *@
+                    @* 	<div class="single-widget"> *@
+                    @* 		<h2>Quick Shop</h2> *@
+                    @* 		<ul class="nav nav-pills nav-stacked"> *@
+                    @* 			<li><a href="#">T-Shirt</a></li> *@
+                    @* 			<li><a href="#">Mens</a></li> *@
+                    @* 			<li><a href="#">Womens</a></li> *@
+                    @* 			<li><a href="#">Gift Cards</a></li> *@
+                    @* 			<li><a href="#">Shoes</a></li> *@
+                    @* 		</ul> *@
+                    @* 	</div> *@
+                    @* </div> *@
+                    @* <div class="col-sm-2"> *@
+                    @* 	<div class="single-widget"> *@
+                    @* 		<h2>Policies</h2> *@
+                    @* 		<ul class="nav nav-pills nav-stacked"> *@
+                    @* 			<li><a href="#">Terms of Use</a></li> *@
+                    @* 			<li><a href="#">Privecy Policy</a></li> *@
+                    @* 			<li><a href="#">Refund Policy</a></li> *@
+                    @* 			<li><a href="#">Billing System</a></li> *@
+                    @* 			<li><a href="#">Ticket System</a></li> *@
+                    @* 		</ul> *@
+                    @* 	</div> *@
+                    @* </div> *@
+                    <div class="col-sm-6">
+                        <div class="single-widget">
+                            <h2>Introduce</h2>
+                            <p>Founded in 2025, we are a professional store specializing in trading card games and accessories for trading cards.</p>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <i class="fa fa-map-marker" aria-hidden="true" style="display: inline"></i>
+                                    <a style="display: inline">Co Dong-Son Tay-Ha Noi</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-phone" aria-hidden="true" style="display: inline"></i>
+                                    <a rel="nofollow" href="tel:0865069618" style="display: inline">0865069618</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-envelope" aria-hidden="true" style="display: inline"></i>
+                                    <a rel="nofollow" href="mailto:vungoctung098@gmail.com" style="display: inline">vungoctung098@gmail.com</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-sm-offset-1">
+                        <div class="single-widget">
+                            <h2>About Shopper</h2>
+                            <form action="#" class="searchform">
+                                <input type="text" placeholder="Your email address" />
+                                <button type="submit" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
+                                <p>Get the most recent updates from <br />our site and be updated your self...</p>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <p class="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
+                    <p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+                </div>
+            </div>
+        </div>
+
+    </footer><!--/Footer-->
+
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="~/js/price-range.js"></script>
+    <script src="~/js/jquery.prettyPhoto.js"></script>
+    <script src="~/js/main.js"></script>
+</body>
+</html>

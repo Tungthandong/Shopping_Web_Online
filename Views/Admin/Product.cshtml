@@ -1,0 +1,442 @@
+﻿@using Shopping_Web.ViewModels
+@{
+    Layout = null;
+}
+@model List<Product>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        @Html.Partial("_AdminSideBarPartial")
+
+        <!-- Main Content -->
+        <div class="main-content flex-1 flex flex-col overflow-hidden ml-64">
+            <!-- Header -->
+            @Html.Partial("_AdminHeaderPartial")
+
+            <!-- Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div id="productTable" class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h2 class="text-lg font-semibold">Products</h2>
+                        <div class="flex items-center space-x-2">
+                            <form method="get" asp-controller="Admin" asp-action="Product" class="flex space-x-2">
+                                <input type="text" name="search" placeholder="Search product..."
+                                       value="@Context.Request.Query["search"]"
+                                       class="border rounded px-3 py-2 text-sm w-64" />
+
+                                <select name="categoryId" class="border rounded px-3 py-2 text-sm">
+                                    <option value="">All Categories</option>
+                                    @foreach (var c in ViewBag.Categories as List<Category>)
+                                    {
+                                        if (Context.Request.Query["categoryId"] == c.CategoryId.ToString())
+                                        {
+                                            <option value="@c.CategoryId" selected>@c.CategoryName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@c.CategoryId">@c.CategoryName</option>
+                                        }
+                                    }
+                                </select>
+
+                                <select name="status" class="border rounded px-3 py-2 text-sm">
+                                    <option value="">All Status</option>
+                                    @if (Context.Request.Query["status"] == "active")
+                                    {
+                                        <option value="active" selected>Active</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="active">Active</option>
+                                    }
+
+                                    @if (Context.Request.Query["status"] == "inactive")
+                                    {
+                                        <option value="inactive" selected>Inactive</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="inactive">Inactive</option>
+                                    }
+                                </select>
+
+                                <select name="stock" class="border rounded px-3 py-2 text-sm">
+                                    <option value="">All Stock</option>
+                                    @if (Context.Request.Query["stock"] == "in")
+                                    {
+                                        <option value="in" selected>In Stock</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="in">In Stock</option>
+                                    }
+
+                                    @if (Context.Request.Query["stock"] == "out")
+                                    {
+                                        <option value="out" selected>Out of Stock</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="out">Out of Stock</option>
+                                    }
+                                </select>
+
+                                <button type="submit"
+                                        class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+
+                            </form>
+                        </div>
+                        <a href="javascript:void(0)" onclick="showAddForm()"
+                           class="px-4 py-2 bg-[#FE980F] text-white rounded hover:bg-[#e07d0b]">
+                            <i class="fas fa-plus mr-1"></i> Add Product
+                        </a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full table-auto divide-y divide-gray-200 text-center">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3">Name</th>
+                                    <th class="px-4 py-3">Category</th>
+                                    <th class="px-4 py-3">Price</th>
+                                    <th class="px-4 py-3">Stock</th>
+                                    <th class="px-4 py-3">Status</th>
+                                    <th class="px-4 py-3">Action</th>
+                                    <th class="px-4 py-3">Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                                @foreach (var p in Model)
+                                {
+                                    <tr>
+                                        <td class="px-4 py-3">@p.ProductName</td>
+                                        <td class="px-4 py-3">@p.Category?.CategoryName</td>
+                                        <td class="px-4 py-3 text-green-600">@p.UnitPrice đ</td>
+                                        <td class="px-4 py-3">@p.UnitsInStock</td>
+                                        <td class="px-4 py-3">@p.ProductStatus</td>
+                                        <td class="px-4 py-3 space-x-2">
+                                            <a href="javascript:void(0)"
+                                               onclick="showEditForm('@p.ProductId','@p.ProductName','@p.UnitPrice','@p.UnitsInStock','@p.ProductStatus','@p.Image','@p.CategoryId','@p.IsFeatured')"
+                                               class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                        @foreach (BestSeller seller in ViewBag.seller)
+                                        {
+                                            if (seller.ProductId == p.ProductId)
+                                            {
+                                                <td>
+                                                    <input type="text" value="@seller.rate" />
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @if (ViewBag.Totalpage > 1)
+                    {
+                        <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                            <div class="flex space-x-2">
+                                <a asp-controller="Admin" asp-action="Product"
+                                   asp-route-page="@(ViewBag.Pageindex - 1)"
+                                   asp-route-search="@Context.Request.Query["search"]"
+                                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                                   asp-route-status="@Context.Request.Query["status"]"
+                                   asp-route-stock="@Context.Request.Query["stock"]"
+                                   class="px-3 py-1 border rounded-md text-sm font-medium bg-white text-gray-700 hover:bg-gray-50 @(ViewBag.Pageindex == 1 ? "pointer-events-none opacity-50" : "")">
+                                    Previous
+                                </a>
+
+                                @for (int i = 1; i <= ViewBag.Totalpage; i++)
+                                {
+                                    <a asp-controller="Admin" asp-action="Product"
+                                       asp-route-page="@i"
+                                       asp-route-search="@Context.Request.Query["search"]"
+                                       asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                                       asp-route-status="@Context.Request.Query["status"]"
+                                       asp-route-stock="@Context.Request.Query["stock"]"
+                                       class="px-3 py-1 border rounded-md text-sm font-medium @(i == ViewBag.Pageindex ? "bg-indigo-600 text-white" : "bg-white text-gray-700 hover:bg-gray-50")">
+                                        @i
+                                    </a>
+                                }
+
+                                <a asp-controller="Admin" asp-action="Product"
+                                   asp-route-page="@(ViewBag.Pageindex + 1)"
+                                   asp-route-search="@Context.Request.Query["search"]"
+                                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                                   asp-route-status="@Context.Request.Query["status"]"
+                                   asp-route-stock="@Context.Request.Query["stock"]"
+                                   class="px-3 py-1 border rounded-md text-sm font-medium bg-white text-gray-700 hover:bg-gray-50 @(ViewBag.Pageindex == ViewBag.Totalpage ? "pointer-events-none opacity-50" : "")">
+                                    Next
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div id="addForm" class="hidden bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-lg font-semibold mb-4">Add Product</h2>
+                    <form asp-action="AddProduct" asp-controller="Admin" enctype="multipart/form-data">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <div class="mb-3">
+                                    <label class="block font-medium">Name</label>
+                                    <input type="text" name="ProductName" class="border rounded w-full px-3 py-2" required />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Price</label>
+                                    <input type="number" name="UnitPrice" class="border rounded w-full px-3 py-2" required />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Stock</label>
+                                    <input type="number" name="UnitsInStock" class="border rounded w-full px-3 py-2" required />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Status</label>
+                                    <select name="ProductStatus" class="border rounded w-full px-3 py-2">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Category</label>
+                                    <select name="CategoryId" class="border rounded w-full px-3 py-2">
+                                        @foreach (var c in ViewBag.Categories as List<Category>)
+                                        {
+                                            <option value="@c.CategoryId">@c.CategoryName</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="mb-3 flex items-center">
+                                    <input type="checkbox" name="IsFeatured" class="mr-2" />
+                                    <label class="font-medium">Featured Product</label>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center">
+                                <div class="mb-4">
+                                    <img id="addPreviewImage" src="" alt="Product Image"
+                                         class="w-50 h-50 object-cover border rounded shadow hidden" />
+                                </div>
+
+                                <div class="mb-4 w-full">
+                                    <label class="block font-medium">Upload Image</label>
+                                    @* <input type="file" name="Images" multiple class="border rounded w-full px-3 py-2" onchange="previewAddFiles(event)" /> *@
+                                    <input type="file" name="ImageFile" class="border rounded w-full px-3 py-2"
+                                           onchange="previewAddFile(event)" />
+                                    @* <div id="addPreviewContainer" class="flex flex-wrap gap-2 mt-2"></div> *@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex space-x-2">
+                            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+                            <button type="button" onclick="backToTable()" class="px-4 py-2 bg-gray-400 text-white rounded">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <script>
+                    function showAddForm() {
+                        document.getElementById("productTable").classList.add("hidden");
+                        document.getElementById("editForm").classList.add("hidden");
+                        document.getElementById("addForm").classList.remove("hidden");
+                    }
+
+                    function previewAddFile(event) {
+                        const output = document.getElementById('addPreviewImage');
+                        output.src = URL.createObjectURL(event.target.files[0]);
+                        output.classList.remove("hidden");
+                        output.onload = function () {
+                            URL.revokeObjectURL(output.src);
+                        }
+                    }
+
+                    // function previewAddFiles(event) {
+                    //     const container = document.getElementById('addPreviewContainer');
+                    //     container.innerHTML = '';
+                    //     Array.from(event.target.files).forEach(file => {
+                    //         const img = document.createElement('img');
+                    //         img.src = URL.createObjectURL(file);
+                    //         img.classList.add('w-20', 'h-20', 'object-cover', 'border', 'rounded');
+                    //         container.appendChild(img);
+                    //         img.onload = () => URL.revokeObjectURL(img.src);
+                    //     });
+                    // }
+
+                </script>
+
+                <div id="editForm" class="hidden bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-lg font-semibold mb-4">Edit Product</h2>
+                    <form method="post" asp-controller="Admin" asp-action="EditProduct" enctype="multipart/form-data">
+                        <input type="text" hidden name="ProductId" id="editId" />
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <div class="mb-3">
+                                    <label class="block font-medium">Name</label>
+                                    <input type="text" name="ProductName" id="editName" class="border rounded w-full px-3 py-2" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Price</label>
+                                    <input type="number" name="UnitPrice" id="editPrice" class="border rounded w-full px-3 py-2" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Stock</label>
+                                    <input type="number" name="UnitsInStock" id="editStock" class="border rounded w-full px-3 py-2" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Status</label>
+                                    <select name="ProductStatus" id="editStatus" class="border rounded w-full px-3 py-2">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="block font-medium">Category</label>
+                                    <select name="CategoryId" id="editCategory" class="border rounded w-full px-3 py-2">
+                                        @foreach (var c in ViewBag.Categories as List<Category>)
+                                        {
+                                            <option value="@c.CategoryId">@c.CategoryName</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="mb-3 flex items-center">
+                                    <input type="checkbox" name="IsFeatured" id="editFeatured" class="mr-2" />
+                                    <label for="editFeatured" class="font-medium">Featured Product</label>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center">
+                                <div class="mb-4">
+                                    <img id="previewImage" src="" alt="Product Image"
+                                         class="w-50 h-50 object-cover border rounded shadow" />
+                                </div>
+
+                                <div class="mb-4 w-full">
+                                    <label class="block font-medium">Upload New Image</label>
+                                    <input type="file" name="ImageFile" class="border rounded w-full px-3 py-2" onchange="previewFile(event)" />
+                                </div>
+
+                                <div class="text-gray-600 text-sm w-full">
+                                    <label class="block font-medium">Current Path</label>
+                                    <input type="text" readonly id="currentImagePath" class="border rounded px-3 py-1 w-full text-gray-500" />
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="cid" value="@Context.Request.Query["categoryId"]" />
+                        <input type="hidden" name="search" value="@Context.Request.Query["search"]" />
+                        <input type="hidden" name="status" value="@Context.Request.Query["status"]" />
+                        <input type="hidden" name="stock" value="@Context.Request.Query["stock"]" />
+                        <input type="hidden" name="page" value="@ViewBag.Pageindex" />
+                        <div class="mt-6 flex space-x-2">
+                            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+                            <button type="button" onclick="backToTable()" class="px-4 py-2 bg-gray-400 text-white rounded">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                @* @{
+                    var images = p.Image?.Split('|') ?? new string[0];
+                }
+
+                @foreach (var img in images)
+                {
+                    <img src="@img" class="w-16 h-16 object-cover border rounded mr-1" />
+                } *@
+                <script>
+                    function showEditForm(id, name, price, stock, status, image, categoryId, isFeatured) {
+                        document.getElementById("productTable").classList.add("hidden");
+                        document.getElementById("editForm").classList.remove("hidden");
+                        document.getElementById("detailForm")?.classList.add("hidden");
+
+                        document.getElementById("editId").value = id;
+                        document.getElementById("editName").value = name;
+                        document.getElementById("editPrice").value = price;
+                        document.getElementById("editStock").value = stock;
+                        document.getElementById("editStatus").value = status;
+                        document.getElementById("editCategory").value = categoryId;
+                        document.getElementById("editFeatured").checked = (isFeatured === "True" || isFeatured === true);
+
+                        document.getElementById("previewImage").src = image;
+                        document.getElementById("currentImagePath").value = image;
+                    }
+
+                    function backToTable() {
+                        document.getElementById("productTable").classList.remove("hidden");
+                        document.getElementById("editForm").classList.add("hidden");
+                        document.getElementById("detailForm")?.classList.add("hidden");
+                    }
+
+                    function previewFile(event) {
+                        const output = document.getElementById('previewImage');
+                        output.src = URL.createObjectURL(event.target.files[0]);
+                        output.onload = function () {
+                            URL.revokeObjectURL(output.src);
+                        }
+                    }
+                                // Toggle sidebar
+                    function toggleSidebar() {
+                        const sidebar = document.querySelector('.sidebar');
+                        const mainContent = document.querySelector('.main-content');
+                        sidebar.classList.toggle('collapsed');
+                        mainContent.classList.toggle('expanded');
+                    }
+
+                    // Toggle mobile menu
+                    function toggleMobileMenu() {
+                        const sidebar = document.querySelector('.sidebar');
+                        const overlay = document.getElementById('overlay');
+                        sidebar.classList.toggle('open');
+                        overlay.classList.toggle('active');
+                    }
+
+                    // Close mobile menu when clicking overlay
+                    document.getElementById('overlay').addEventListener('click', function () {
+                        const sidebar = document.querySelector('.sidebar');
+                        const overlay = document.getElementById('overlay');
+                        sidebar.classList.remove('open');
+                        overlay.classList.remove('active');
+                    });
+
+                    // Toggle user dropdown
+                    function toggleDropdown() {
+                        const dropdown = document.getElementById('userDropdown');
+                        dropdown.classList.toggle('hidden');
+                    }
+
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function (event) {
+                        const dropdown = document.getElementById('userDropdown');
+                        const dropdownButton = document.querySelector('.relative button');
+
+                        if (dropdown && !dropdown.contains(event.target) && !dropdownButton.contains(event.target)) {
+                            dropdown.classList.add('hidden');
+                        }
+                    });
+                </script>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

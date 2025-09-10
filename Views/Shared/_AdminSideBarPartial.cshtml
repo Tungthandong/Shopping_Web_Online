@@ -1,0 +1,64 @@
+﻿<div class="sidebar bg-[#FE980F] text-white w-64 flex flex-col fixed h-full">
+    <!-- Logo -->
+    <div class="p-4 flex items-center">
+        <div class="bg-white p-2 rounded-lg">
+            <i class="fas fa-cube text-[#FE980F] text-xl"></i>
+        </div>
+        <span class="logo-text ml-3 text-xl font-bold">YugiohAdmin</span>
+    </div>
+
+    <!-- User Profile -->
+    <div class="p-4 flex items-center border-b border-[#e07d0b]">
+        @{
+            var username = Context.Session.GetString("Username");
+        }
+        <div class="ml-3">
+            <div class="font-medium">@username</div>
+            <div class="text-xs text-[#fff3e0]">Admin</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto">
+        <!-- Main -->
+        <div class="p-2">
+            <div class="text-[#fff3e0] uppercase text-xs font-bold px-4 py-2">Main</div>
+
+            <a asp-action="Index" asp-controller="Admin"
+               class="flex items-center px-4 py-3 text-[#fff3e0] hover:text-white hover:bg-[#e07d0b] rounded-lg mx-2 mt-1">
+                <i class="fas fa-tachometer-alt"></i>
+                <span class="nav-text ml-3">Dashboard</span>
+            </a>
+
+            <a asp-action="Product" asp-controller="Admin"
+               class="flex items-center px-4 py-3 text-[#fff3e0] hover:text-white hover:bg-[#e07d0b] rounded-lg mx-2 mt-1">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="nav-text ml-3">Products</span>
+            </a>
+
+            <a asp-action="Account" asp-controller="Admin"
+               class="flex items-center px-4 py-3 text-[#fff3e0] hover:text-white hover:bg-[#e07d0b] rounded-lg mx-2 mt-1">
+                <i class="fas fa-users"></i>
+                <span class="nav-text ml-3">Accounts</span>
+            </a>
+        </div>
+
+        <!-- Management -->
+        <div class="p-2">
+            <div class="text-[#fff3e0] uppercase text-xs font-bold px-4 py-2">Management</div>
+            <a asp-action="Order" asp-controller="Admin"
+               class="flex items-center px-4 py-3 text-[#fff3e0] hover:text-white hover:bg-[#e07d0b] rounded-lg mx-2 mt-1">
+                <i class="fas fa-tasks"></i>
+                <span class="nav-text ml-3">Orders</span>
+            </a>
+        </div>
+
+        <div class="p-2 border-t border-[#e07d0b] mt-2">
+            <a asp-action="Index" asp-controller="Home" asp-route-back="true"
+               class="flex items-center px-4 py-3 text-[#fff3e0] hover:text-white hover:bg-[#e07d0b] rounded-lg mx-2 mt-1">
+                <i class="fas fa-home"></i>
+                <span class="nav-text ml-3">Back to Home</span>
+            </a>
+        </div>
+    </nav>
+</div>

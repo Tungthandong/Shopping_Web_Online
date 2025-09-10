@@ -1,0 +1,143 @@
+﻿@model List<Order>
+@using Newtonsoft.Json
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="flex-1 p-6 bg-gray-50 min-h-screen">
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-history"></i> Order History
+            </h2>
+            @if (!string.IsNullOrEmpty(ViewBag.Msg))
+            {
+                <p class="text-red-500 mt-2 text-sm">@ViewBag.Msg</p>
+            }
+        </div>
+
+        <div class="overflow-auto">
+            <table class="min-w-full text-sm text-left text-gray-800">
+                <thead class="bg-gray-100 text-xs text-gray-600 uppercase">
+                <tr>
+                    <th class="px-5 py-3">Date</th>
+                    <th class="px-5 py-3">Total</th>
+                    <th class="px-5 py-3">Ship Cost</th>
+                    <th class="px-5 py-3">Status</th>
+                    <th class="px-5 py-3 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                @foreach (var o in Model)
+                {
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-5 py-3">@o.OrderDate.ToString("dd/MM/yyyy")</td>
+                        <td class="px-5 py-3">@o.TotalAmount.ToString("N0") ₫</td>
+                        <td class="px-5 py-3">@o.ShipCost.ToString("N0") ₫</td>
+                        <td class="px-5 py-3">@o.OrderStatus</td>
+                        <td class="px-5 py-3 text-center">
+                            <button type="button"
+                                    onclick='showOrderDetail(@Html.Raw(JsonConvert.SerializeObject(o, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })))'
+                                    class="text-blue-600 hover:text-blue-800">
+                                👁 View
+                            </button>
+                            <br></br>
+                            @if (o.OrderStatus != "Cancelled" && o.OrderStatus != "Delivered" && o.OrderStatus != "Completed")
+                            {
+                                <form asp-action="CancelOrder" asp-controller="Checkout">
+                                    <input type="hidden" name="oid" value="@o.OrderId" />
+                                    <button type="submit"
+                                            class="text-green-600 hover:text-green-800"
+                                            onclick="return confirm('Are you sure you want to cancel this order?');">
+                                        Cancel Order
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (ViewBag.Totalpage > 1)
+    {
+        <ul class="pagination">
+            @for (int i = 1; i <= ViewBag.Totalpage; i++)
+            {
+                <li class="page-item @(i == ViewBag.Pageindex ? "active" : "")">
+                    <a class="page-link" asp-controller="Checkout" asp-action="OrderHistory" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-minPrice="@ViewBag.minPrice" asp-route-maxPrice="@ViewBag.maxPrice" asp-route-sort="@ViewBag.Sort">@i</a>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@* <a asp-action="Reorder" asp-controller="Order" asp-route-id="@Model.OrderId"
+   class="btn btn-warning">
+    <i class="fas fa-redo"></i> Mua lại
+</a> *@
+
+@* public IActionResult Reorder(int id)
+{
+    var oldOrder = _orderService.GetOrderById(id);
+    if (oldOrder == null) return NotFound();
+
+    foreach (var item in oldOrder.OrderItems)
+    {
+        _cartService.AddToCart(item.ProductId, item.Quantity);
+    }
+
+    TempData["Message"] = "Các sản phẩm đã được thêm vào giỏ hàng!";
+    return RedirectToAction("Index", "Cart");
+} *@
+
+
+
+<!-- Modal giống admin -->
+<div id="orderModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white w-full max-w-2xl rounded-lg shadow-lg p-6 relative">
+        <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-black text-xl">
+            &times;
+        </button>
+        <h2 class="text-lg font-semibold mb-4">Order Details</h2>
+        <div id="orderDetailContent" class="text-sm text-gray-700"></div>
+    </div>
+</div>
+
+<script>
+    function showOrderDetail(order) {
+        const modal = document.getElementById("orderModal");
+        const content = document.getElementById("orderDetailContent");
+
+        let html = `
+            <p><strong>Date:</strong> ${order.OrderDate}</p>
+            <p><strong>Total:</strong> ${order.TotalAmount} ₫</p>
+            <p><strong>Ship Cost:</strong> ${order.ShipCost} ₫</p>
+            <p><strong>Status:</strong> ${order.OrderStatus}</p>
+            <h3 class="mt-4 font-semibold">Products:</h3>
+            <table class="min-w-full text-sm mt-2 border">
+                <thead class="bg-gray-100 text-gray-600">
+                    <tr><th class="px-3 py-2">Product</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th></tr>
+                </thead>
+                <tbody>`;
+
+        order.OrderDetails?.forEach(p => {
+            html += `<tr>
+                        <td class="px-3 py-2">${p.Product?.ProductName ?? ''}</td>
+                        <td>${p.Quantity}</td>
+                        <td>${p.Product?.UnitPrice}</td>
+                        <td>${(p.Quantity * p.Product.UnitPrice).toFixed(2)}</td>
+                    </tr>`;
+        });
+
+        html += `</tbody></table>`;
+        content.innerHTML = html;
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    }
+
+    document.getElementById("closeModal").onclick = () => {
+        document.getElementById("orderModal").classList.add("hidden");
+    };
+</script>

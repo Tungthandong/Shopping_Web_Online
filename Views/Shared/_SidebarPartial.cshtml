@@ -1,0 +1,10 @@
+﻿<div class="left-sidebar">
+	<h2>Category</h2>
+	<div class="panel-group category-products" id="accordian">
+		<!--category-productsr-->
+		@await Component.InvokeAsync("Category")
+    </div><!--/category-products-->
+    <div style="margin-top: 10px;">
+        <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='/Product/Index'">Reset All Filters</button>
+    </div>
+</div>

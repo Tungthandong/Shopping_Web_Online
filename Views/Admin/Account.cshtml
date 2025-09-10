@@ -1,0 +1,311 @@
+﻿@{
+    Layout = null;
+}
+@using Newtonsoft.Json
+@model List<Account>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+
+            .sidebar.collapsed {
+                width: 70px;
+            }
+
+                .sidebar.collapsed .nav-text,
+                .sidebar.collapsed .logo-text {
+                    display: none;
+                }
+
+        .main-content {
+            transition: all 0.3s ease;
+        }
+
+            .main-content.expanded {
+                margin-left: 70px;
+            }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+
+                .sidebar.open {
+                    transform: translateX(0);
+                }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 999;
+            }
+
+                .overlay.active {
+                    display: block;
+                }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        @Html.Partial("_AdminSideBarPartial")
+
+        <!-- Main Content -->
+        <div class="main-content flex-1 flex flex-col overflow-hidden ml-64">
+            <!-- Header -->
+            @Html.Partial("_AdminHeaderPartial")
+
+            <!-- Overlay for mobile menu -->
+            <div id="overlay" class="overlay"></div>
+
+            <!-- Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-6 border-b">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-4">
+                            <h2 class="text-lg font-semibold">Account</h2>
+
+                            <form method="get" asp-controller="Admin" asp-action="Account"
+                                  class="flex flex-wrap justify-center space-x-2">
+                                <input type="text" name="search" placeholder="Search account..."
+                                       value="@Context.Request.Query["search"]"
+                                       class="border rounded px-3 py-2 text-sm w-64" />
+
+                                <input type="date" name="fromDate"
+                                       value="@Context.Request.Query["fromDate"]"
+                                       class="border rounded px-3 py-2 text-sm" />
+
+                                <input type="date" name="toDate"
+                                       value="@Context.Request.Query["toDate"]"
+                                       class="border rounded px-3 py-2 text-sm" />
+
+                                <select name="status" class="border rounded px-3 py-2 text-sm">
+                                    <option value="">All Status</option>
+                                    @if (Context.Request.Query["status"] == "active")
+                                    {
+                                        <option value="active" selected>Active</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="active">Active</option>
+                                    }
+
+                                    @if (Context.Request.Query["status"] == "inactive")
+                                    {
+                                        <option value="inactive" selected>Inactive</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="inactive">Inactive</option>
+                                    }
+                                </select>
+
+                                <select name="roleAcc" class="border rounded px-3 py-2 text-sm">
+                                    <option value="">All Role</option>
+                                    @if (Context.Request.Query["roleAcc"] == "admin")
+                                    {
+                                        <option value="admin" selected>Admin</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="admin">Admin</option>
+                                    }
+
+                                    @if (Context.Request.Query["roleAcc"] == "customer")
+                                    {
+                                        <option value="customer" selected>Customer</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="customer">Customer</option>
+                                    }
+                                </select>
+
+
+                                <button type="submit"
+                                        class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                            </form>
+
+                            <!-- Right: Message -->
+                            <h2 class="text-red-600 font-medium">@ViewBag.Msg</h2>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full table-auto divide-y divide-gray-200 text-center">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                    <th class="px-4 py-3">Fullname</th>
+                                    <th class="px-4 py-3">Email</th>
+                                    <th class="px-4 py-3">Phone</th>
+                                    <th class="px-4 py-3">Dob</th>
+                                    <th class="px-4 py-3">Gender</th>
+                                    <th class="px-4 py-3">Role</th>
+                                    <th class="px-4 py-3">Created date</th>
+                                    <th class="px-4 py-3">Status</th>
+                                    <th class="px-4 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                                @foreach (var o in Model)
+                                {
+                                    <form asp-controller="Admin" asp-action="UpdateAccountStatus" method="post">
+                                    <tr>
+                                        <td class="px-4 py-3">@o.Username</td>
+                                        <td class="px-4 py-3">@o.Fullname</td>
+                                        <td class="px-4 py-3">@o.Email</td>
+                                        <td class="px-4 py-3">@o.Phonenumber</td>
+                                        <td class="px-4 py-3">@o.Birthdate</td>
+                                        <td class="px-4 py-3">@o.Gender</td>
+                                        <td class="px-4 py-3">@o.Role</td>
+                                        <td class="px-4 py-3">@o.CreateDate.ToString("MM/dd/yyyy")</td>
+                                        <td class="px-4 py-3">
+                                            @{
+                                                string[] allowedStatuses = new string[] { "inactive", "active" };
+                                            }
+                                            <select class="border rounded px-2 py-1 text-sm bg-gray-50 text-gray-700" name="status">
+                                                @foreach (var status in allowedStatuses)
+                                                {
+                                                    if (status == o.AccountStatus)
+                                                    {
+                                                        <option value="@status" selected>@status</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@status">@status</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <input type="hidden" name="username" value="@o.Username" />
+                                            <button type="submit" class="text-green-600 hover:text-green-800">Update</button>
+                                        </td>
+                                        <input type="text" name="url" value="@(Context.Request.Path + Context.Request.QueryString)" hidden />
+                                    </tr>
+                                    </form>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    @if (ViewBag.Totalpage > 1)
+                    {
+                        <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                            <div class="flex space-x-2">
+                                <a asp-controller="Admin" asp-action="Account" asp-route-page="@(ViewBag.Pageindex - 1)"
+                                   asp-route-search="@Context.Request.Query["search"]"
+                                   asp-route-roleAcc="@Context.Request.Query["roleAcc"]"
+                                   asp-route-status="@Context.Request.Query["status"]"
+                                   asp-route-fromDate="@Context.Request.Query["fromDate"]"
+                                   asp-route-toDate="@Context.Request.Query["toDate"]"
+                                   class="px-3 py-1 border rounded-md text-sm font-medium bg-white text-gray-700 hover:bg-gray-50 @(ViewBag.Pageindex == 1 ? "pointer-events-none opacity-50" : "")">
+                                    Previous
+                                </a>
+                                @for (int i = 1; i <= ViewBag.Totalpage; i++)
+                                {
+                                    <a asp-controller="Admin" asp-action="Account" asp-route-page="@i"
+                                       asp-route-search="@Context.Request.Query["search"]"
+                                       asp-route-roleAcc="@Context.Request.Query["roleAcc"]"
+                                       asp-route-status="@Context.Request.Query["status"]"
+                                       asp-route-fromDate="@Context.Request.Query["fromDate"]"
+                                       asp-route-toDate="@Context.Request.Query["toDate"]"
+                                       class="px-3 py-1 border rounded-md text-sm font-medium @(i == ViewBag.Pageindex ? "bg-indigo-600 text-white" : "bg-white text-gray-700 hover:bg-gray-50")">
+                                        @i
+                                    </a>
+                                }
+                                <a asp-controller="Admin" asp-action="Account" asp-route-page="@(ViewBag.Pageindex + 1)"
+                                   asp-route-search="@Context.Request.Query["search"]"
+                                   asp-route-roleAcc="@Context.Request.Query["roleAcc"]"
+                                   asp-route-status="@Context.Request.Query["status"]"
+                                   asp-route-fromDate="@Context.Request.Query["fromDate"]"
+                                   asp-route-toDate="@Context.Request.Query["toDate"]"
+                                   class="px-3 py-1 border rounded-md text-sm font-medium bg-white text-gray-700 hover:bg-gray-50 @(ViewBag.Pageindex == ViewBag.Totalpage ? "pointer-events-none opacity-50" : "")">
+                                    Next
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div id="orderModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white w-full max-w-2xl rounded-lg shadow-lg p-6 relative">
+            <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-black text-xl">&times;</button>
+            <h2 class="text-lg font-semibold mb-4">Order Details</h2>
+            <div id="orderDetailContent" class="text-sm text-gray-700"></div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking overlay
+        document.getElementById('overlay').addEventListener('click', function () {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        // Toggle user dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('userDropdown');
+            const dropdownButton = document.querySelector('.relative button');
+
+            if (dropdown && !dropdown.contains(event.target) && !dropdownButton.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

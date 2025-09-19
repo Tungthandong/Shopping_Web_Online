@@ -66,8 +66,7 @@ public partial class YugiohCardShopContext : DbContext
                 .HasMaxLength(6)
                 .IsUnicode(false);
             entity.Property(e => e.Password)
-                .HasMaxLength(50)
-                .IsUnicode(false)
+                .HasMaxLength(255)
                 .HasColumnName("password");
             entity.Property(e => e.Phonenumber)
                 .HasMaxLength(11)

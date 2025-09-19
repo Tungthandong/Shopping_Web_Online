@@ -10,13 +10,13 @@
 }
 <h2>Price</h2>
 <form asp-action="Index" asp-controller="Product">
-    <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+    <div class="form-group" style="display: flex; justify-content: center; gap: 8px;">
         <input type="text" hidden name="cid" value="@ViewBag.Cid"/>
         <input type="text" hidden name="search" value="@ViewBag.Search" />
         <input type="number" name="minPrice" class="form-control" placeholder="Min"
                value="@ViewBag.MinPrice" style="width: 100px;" min="0"/>
 
-        <span style="font-weight: bold; line-height: 1;">-</span>
+        <span style="font-weight: bold; line-height: 1;">_</span>
 
         <input type="number" name="maxPrice" class="form-control" placeholder="Max"
                value="@ViewBag.MaxPrice" style="width: 100px;" min="0"/>

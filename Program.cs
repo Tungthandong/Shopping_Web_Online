@@ -25,6 +25,7 @@ namespace Shopping_Web
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderDA, OrderDA>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IEmailServices, EmailServices>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddSession();
             var app = builder.Build();

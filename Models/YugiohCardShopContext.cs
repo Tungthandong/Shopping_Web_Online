@@ -21,6 +21,8 @@ public partial class YugiohCardShopContext : DbContext
 
     public virtual DbSet<Category> Categories { get; set; }
 
+    public virtual DbSet<Contact> Contacts { get; set; }
+
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
@@ -29,13 +31,13 @@ public partial class YugiohCardShopContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("server=LAPTOP-M59U4987;database=YugiohCardShop;uid=sa;pwd=123;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("server=DESKTOP-5OO4AJH\\NGUYENHOANGVIET;database=YugiohCardShop;uid=sa;pwd=123;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Account__F3DBC573FA701569");
+            entity.HasKey(e => e.Username).HasName("PK__Account__F3DBC573D888CC16");
 
             entity.ToTable("Account");
 
@@ -81,7 +83,7 @@ public partial class YugiohCardShopContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => new { e.Username, e.ProductId }).HasName("PK__Cart__389B091DDB94BF59");
+            entity.HasKey(e => new { e.Username, e.ProductId }).HasName("PK__Cart__389B091DDB66092B");
 
             entity.ToTable("Cart");
 
@@ -94,25 +96,40 @@ public partial class YugiohCardShopContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__ProductID__3B40CD36");
+                .HasConstraintName("FK__Cart__ProductID__37A5467C");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__username__3A4CA8FD");
+                .HasConstraintName("FK__Cart__username__38996AB5");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B4B177406");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2BF8DC3E46");
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(50);
         });
 
+        modelBuilder.Entity<Contact>(entity =>
+        {
+            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.FilePath).HasMaxLength(255);
+            entity.Property(e => e.FullName).HasMaxLength(100);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Product).WithMany(p => p.Contacts)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Contacts_Products");
+        });
+
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFC20D934F");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF3D6074BD");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
@@ -135,29 +152,29 @@ public partial class YugiohCardShopContext : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__username__2BFE89A6");
+                .HasConstraintName("FK__Orders__username__3B75D760");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__OrderDet__08D097C1A827380B");
+            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__OrderDet__08D097C17DDD31EB");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__OrderDeta__Order__32AB8735");
+                .HasConstraintName("FK__OrderDeta__Order__398D8EEE");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Produ__339FAB6E");
+                .HasConstraintName("FK__OrderDeta__Produ__3A81B327");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED91F3B881");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6EDDF1F7964");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
@@ -170,7 +187,7 @@ public partial class YugiohCardShopContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__Products__Catego__06CD04F7");
+                .HasConstraintName("FK__Products__Catego__3C69FB99");
         });
 
         OnModelCreatingPartial(modelBuilder);

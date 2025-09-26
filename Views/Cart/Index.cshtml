@@ -2,6 +2,7 @@
 
 @{
     var productId = ViewBag.ProductId as int?;
+    var variant = ViewBag.Var as int?;
     var message = ViewBag.Message as string;
 }
 
@@ -45,7 +46,7 @@
                 <table class="table table-condensed">
                     <thead>
                         <tr class="cart_menu">
-                            <td></td>  <!-- Cột checkbox -->
+                            <td></td>
                             <td class="image">Item</td>
                             <td class="description"></td>
                             <td class="price">Price</td>
@@ -63,22 +64,25 @@
                             string quantityId = $"quantity_{cart.Product.ProductId}";
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="selectedProducts" value="@cart.Product.ProductId" />
+                                    <input type="checkbox" name="selectedProducts" value="@cart.VariantId" />
                                 </td>
                                 <td class="cart_product">
                                     <a href=""><img src="@cart.Product.Image" width="110" height="110" alt=""></a>
                                 </td>
                                 <td class="cart_description">
                                     <h4><a href="" style="font-size: 13px; font-weight: 800">@cart.Product.ProductName</a></h4>
+                                    <p style="margin:0; font-size: 12px; color: #555;">
+                                        Size: @(cart.Variant != null ? cart.Variant.Size : cart.Variant?.Size ?? "N/A")
+                                    </p>
                                 </td>
                                 <td class="cart_price">
                                     <p>@cart.Product.UnitPrice₫</p>
                                 </td>
                                 <td class="cart_quantity">
                                     <div class="cart_quantity_button">
-                                        <a class="cart_quantity_up" href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=1"> + </a>
+                                        <a class="cart_quantity_up" href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=1&var=@cart.VariantId"> + </a>
                                         <input id="@quantityId" class="cart_quantity_input" type="text" name="quantity" value="@cart.Quantity" autocomplete="off" size="2" readonly />
-                                        <a class="cart_quantity_down" onclick="return confirmDeleteNoItem('@quantityId', this.href)" href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=-1"> - </a>
+                                        <a class="cart_quantity_down" onclick="return confirmDeleteNoItem('@quantityId', this.href)" href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=-1&var=@cart.VariantId"> - </a>
                                     </div>
                                 </td>
                                 <td class="cart_total">
@@ -94,7 +98,7 @@
 
                             <tr>
                                 <td colspan="7" style="height: 25px;">
-                                    @if (productId == cart.Product.ProductId && !string.IsNullOrEmpty(message))
+                                    @if (productId == cart.Product.ProductId && variant == cart.VariantId && !string.IsNullOrEmpty(message))
                                     {
                                         <span style="color: red; font-weight: bold;">@message</span>
                                     }

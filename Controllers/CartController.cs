@@ -26,6 +26,7 @@ namespace Shopping_Web.Controllers
             var listCart = _cartService.GetAllByUsername(username);
             ViewBag.Message = TempData["Message"];
             ViewBag.ProductId = TempData["ProductId"];
+            ViewBag.Var = TempData["Var"];
             return View(listCart);
         }
         public IActionResult AddToCart(Cart c, string returnUrl)
@@ -52,14 +53,15 @@ namespace Shopping_Web.Controllers
             return Redirect(redirectUrl);
         }
 
-        public IActionResult UpdateQuantity(int productId, int delta)
+        public IActionResult UpdateQuantity(int productId, int delta, int var)
         {
             var username = HttpContext.Session.GetString("Username");
-            var cartItem = new Cart { Username = username, ProductId = productId };
+            var cartItem = new Cart { Username = username, ProductId = productId, VariantId = var };
 
             var result = _cartService.AddOrUpdateToCart(cartItem, delta);
             TempData["Message"] = result != "OK" ? result : "";
             TempData["ProductId"] = productId;
+            TempData["Var"] = var;
             return RedirectToAction("Index", "Cart");
         }
         public IActionResult DeleteItemInCart(int productId)
@@ -94,7 +96,6 @@ namespace Shopping_Web.Controllers
                 {
                     int? reduceBy = p.Quantity - inStock;
 
-                    // Giảm số lượng trong giỏ để phù hợp tồn kho
                     _cartService.AddOrUpdateToCart(p, (int)-reduceBy);
 
                     TempData["Message"] = $"Not enough stock for product '{product.ProductName}', only {inStock} left.";

@@ -51,7 +51,7 @@ namespace Shopping_Web.Controllers
             _orderService.AddOrderDetail(order.OrderId, cart);
             foreach (var c in cart)
             {
-                _productService.UpdateQuantity(_productService.GetProductById(c.Product.ProductId), c.Quantity, "-");
+                _productService.UpdateQuantity(_productService.GetProductById(c.Product.ProductId), _productService.GetProductVariantById(c.VariantId), c.Quantity, "-");
                 _cartService.Delete(c);
             }
             HttpContext.Session.Remove("Cart");
@@ -90,7 +90,7 @@ namespace Shopping_Web.Controllers
             var detail = _orderService.getDetailsByOrderId(oid);
             foreach (var d in detail)
             {
-                _productService.UpdateQuantity(_productService.GetProductById(d.ProductId), d.Quantity, "+");  
+                _productService.UpdateQuantity(_productService.GetProductById(d.ProductId), _productService.GetProductVariantById((int)d.VariantId), d.Quantity, "+");  
             }
             _orderService.CancelOrder(oid);
             return RedirectToAction("OrderHistory", "Checkout");

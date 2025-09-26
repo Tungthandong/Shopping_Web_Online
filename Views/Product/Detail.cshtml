@@ -43,14 +43,34 @@
         </div>
         <div class="col-sm-8">
             <div class="product-information">
-                <!--/product-information-->
                 <h2>@Model.ProductName</h2>
                 <span>
                     <span style="color:#e70303;">@Model.UnitPrice₫</span>
                     <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                        <div style="margin: 10px 0; display: flex; align-items: center; gap: 8px;">
+                            <label for="sizeSelect" style="margin: 0;">Size:</label>
+                            <select id="sizeSelect" name="VariantId" class="form-control"
+                                    style="width: 130px; display: inline-block;">
+                                @foreach (var variant in Model.ProductVariants)
+                                {
+                                    if (variant.StockQuantity > 0)
+                                    {
+                                        <option value="@variant.VariantId" data-stock="@variant.StockQuantity">
+                                            @variant.Size (@variant.StockQuantity remains)
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@variant.VariantId" disabled>
+                                            @variant.Size (Out of stock)
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                             <label style="margin: 0;">Quantity:</label>
-
                             <div class="input-group" style="display: flex; align-items: center;">
                                 <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="changeQuantity(-1)">-</button>
                                 <input type="text" id="quantityInput" name="Quantity" value="1"
@@ -58,6 +78,7 @@
                                 <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="changeQuantity(1)">+</button>
                             </div>
                         </div>
+
                         @{
                             var username = Context.Session.GetString("Username");
                             var returnUrl = Context.Request.Path + Context.Request.QueryString;
@@ -71,8 +92,10 @@
                         </button>
                     </form>
                 </span>
+
                 <p><b>Availability:</b> @(Model.UnitsInStock > 0 ? "In Stock" : "Out of Stock")</p>
                 <p><b>Category:</b> @(Model.Category != null ? Model.Category.CategoryName : "Unknown")</p>
+
                 @{
                     var message = Context.Request.Query["msg"].ToString();
                     var error = Context.Request.Query["error"].ToString();
@@ -85,22 +108,32 @@
                 {
                     <div class="alert alert-danger">@error</div>
                 }
-            </div><!--/product-information-->
+            </div>
         </div>
 
         <script>
-            const MAX_STOCK = @Model.UnitsInStock;
+            const sizeSelect = document.getElementById("sizeSelect");
+            const input = document.getElementById("quantityInput");
+
+            function getMaxStock() {
+                const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+                return parseInt(selectedOption.getAttribute("data-stock")) || 0;
+            }
 
             function changeQuantity(amount) {
-                const input = document.getElementById("quantityInput");
                 let value = parseInt(input.value) || 1;
+                const maxStock = getMaxStock();
 
                 value += amount;
                 if (value < 1) value = 1;
-                if (value > MAX_STOCK) value = MAX_STOCK;
+                if (value > maxStock) value = maxStock;
 
                 input.value = value;
             }
+
+            sizeSelect.addEventListener("change", () => {
+                input.value = 1;
+            });
         </script>
 
     </div><!--/product-details-->

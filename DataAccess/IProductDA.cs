@@ -8,12 +8,13 @@ namespace Shopping_Web.DataAccess
         List<Product> GetProducts();
         //List<Product>? GetProductsByCategory(int? cid = null);
         Product GetProductById(int id);
+        ProductVariant GetProductVariantById(int id);
         List<Product> GetFeatureItems();
         List<Product> GetLatestItems();
         //List<Product> SearchList(string? search);
         //List<Product> FilterByPrice(decimal? minPrice, decimal? maxPrice);
         List<Product> GetFilteredProducts(decimal? minPrice, decimal? maxPrice, string? search, int? cid);
-        void UpdateQuantity(Product product, int quantity, string sign);
+        void UpdateQuantity(Product product, ProductVariant pv, int quantity, string sign);
         void UpdateProduct(Product product);
         void AddProduct(Product product);
         List<BestSeller> getBestSellers();

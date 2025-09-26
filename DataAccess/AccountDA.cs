@@ -12,6 +12,11 @@ namespace Shopping_Web.DataAccess
             context.SaveChanges();
         }
 
+        public Account? GetAccountByEmail(string email, string status)
+        {
+            return context.Accounts.FirstOrDefault(x => x.Email == email && x.AccountStatus.Equals(status));
+        }
+
         public Account? GetAccountByUsername(string username)
         {
             return context.Accounts.FirstOrDefault(x => x.Username == username && x.AccountStatus.Equals("active"));

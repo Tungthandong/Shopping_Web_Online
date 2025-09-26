@@ -9,10 +9,20 @@ namespace Shopping_Web.DataAccess
         public string AddOrUpdateToCart(Cart c, int quantity)
         {
             var product = context.Products.FirstOrDefault(p => p.ProductId == c.ProductId);
-            if (product == null) return "Product not found";
+            if (product == null)
+                return "Product not found";
+
+            var proVar = context.ProductVariants.FirstOrDefault(p => p.VariantId == c.VariantId);
+            if (proVar == null)
+                return "Product variant not found";
+
+            if (quantity == 0)
+                return "Invalid quantity";
 
             var existing = context.Carts
-                .FirstOrDefault(ca => ca.Username == c.Username && ca.ProductId == c.ProductId);
+                .FirstOrDefault(ca => ca.Username == c.Username
+                                   && ca.ProductId == c.ProductId
+                                   && ca.VariantId == c.VariantId);
 
             if (existing == null && quantity < 0)
                 return "Product not in cart to decrease";
@@ -30,9 +40,9 @@ namespace Shopping_Web.DataAccess
                 return "Invalid quantity";
             }
 
-            if (totalQuantity > product.UnitsInStock)
+            if (totalQuantity > proVar.StockQuantity)
             {
-                return $"Only {product.UnitsInStock} item(s) available. You can add at most {product.UnitsInStock - (existing?.Quantity ?? 0)} more.";
+                return $"Only {proVar.StockQuantity} item(s) available. You can add at most {proVar.StockQuantity - (existing?.Quantity ?? 0)} more.";
             }
 
             if (existing != null)
@@ -57,11 +67,11 @@ namespace Shopping_Web.DataAccess
 
         public List<Cart> GetAllByUsername(string username)
         {
-            return context.Carts.Include(c => c.Product).Where(c => c.Username == username).ToList();
+            return context.Carts.Include(c => c.Product).Include(c => c.Variant).Where(c => c.Username == username).ToList();
         }
         public List<Cart> GetProductToCheckOut(string username, int[] selectedProducts)
         {
-            return context.Carts.Include(c => c.Product).Where(c => c.Username == username&&selectedProducts.Contains(c.Product.ProductId)).ToList();
+            return context.Carts.Include(c => c.Product).Include(c => c.Variant).Where(c => c.Username == username && selectedProducts.Contains(c.VariantId)).ToList();
         }
     }
 }

@@ -47,9 +47,9 @@ namespace Shopping_Web.Services
             _productDA.UpdateProduct(product);
         }
 
-        public void UpdateQuantity(Product product, int quantity, string sign)
+        public void UpdateQuantity(Product product, ProductVariant pv, int quantity, string sign)
         {
-            _productDA.UpdateQuantity(product, quantity, sign);
+            _productDA.UpdateQuantity(product, pv, quantity, sign);
         }
 
         public List<Product> GetProducts()
@@ -62,6 +62,10 @@ namespace Shopping_Web.Services
             return _productDA.getBestSellers();
         }
 
+        public ProductVariant GetProductVariantById(int id)
+        {
+            return _productDA.GetProductVariantById(id);
+        }
         //public List<Product>? GetProductsByCategory(int? cid = null)
         //{
         //    return _productDA.GetProductsByCategory(cid);

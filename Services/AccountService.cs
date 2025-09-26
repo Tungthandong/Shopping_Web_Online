@@ -15,6 +15,11 @@ namespace Shopping_Web.Services
             _accountDA.AddAccount(a);
         }
 
+        public Account? GetAccountByEmail(string email, string status)
+        {
+            return _accountDA.GetAccountByEmail(email, status);
+        }
+
         public Account? GetAccountByUsername(string username)
         {
             return _accountDA.GetAccountByUsername(username);

@@ -38,7 +38,8 @@ namespace Shopping_Web.DataAccess
                     OrderId = oid,
                     ProductId = c.Product.ProductId,
                     Quantity = c.Quantity,
-                    Price = c.Quantity*(int)c.Product.UnitPrice
+                    Price = c.Quantity*(int)c.Product.UnitPrice,
+                    VariantId = c.VariantId
                 };
                 context.OrderDetails.Add(detail);
             }

@@ -33,7 +33,7 @@ namespace Shopping_Web.DataAccess
 
         public Product GetProductById(int id)
         {
-            return context.Products.Include(p => p.Category).FirstOrDefault(p => p.ProductId == id && p.ProductStatus.Equals("active"));
+            return context.Products.Include(p => p.Category).Include(p => p.ProductVariants).FirstOrDefault(p => p.ProductId == id && p.ProductStatus.Equals("active"));
         }
 
         public List<Product> GetProducts()
@@ -83,15 +83,17 @@ namespace Shopping_Web.DataAccess
             return query.OrderBy(p => p.UnitPrice).ToList();
         }
 
-        public void UpdateQuantity(Product product, int quantity, string sign)
+        public void UpdateQuantity(Product product, ProductVariant pv, int quantity, string sign)
         {
             if (sign == "+")
             {
                 product.UnitsInStock += quantity;
+                pv.StockQuantity += quantity;
             }
             else
             {
                 product.UnitsInStock -= quantity;
+                pv.StockQuantity -= quantity;
             }
             product.ProductStatus = product.UnitsInStock > 0 ? "active" : "inactive";
             context.SaveChanges();
@@ -131,6 +133,11 @@ namespace Shopping_Web.DataAccess
                                   })
                             .ToList();
             return bestSeller;
+        }
+
+        public ProductVariant GetProductVariantById(int id)
+        {
+            return context.ProductVariants.FirstOrDefault(p => p.VariantId == id);
         }
     }
 }

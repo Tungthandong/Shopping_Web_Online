@@ -12,12 +12,22 @@
                     }
                     <form asp-action="Login" method="post">
                         <input type="text" placeholder="Username" name="Username" value="@username" />
-                        <input type="password" placeholder="Password" name="Password"/>
+                        <input type="password" placeholder="Password" name="Password" />
                         <span>
                             <input type="checkbox" class="checkbox" name="Remember" @(remember == "True" ? "checked" : "") />
                             Remember me
                         </span>
+                        <a asp-action="ForgotPass" asp-controller="Login"
+                           class="btn btn-light border mt-2">
+                            Forgot Password?
+                        </a>
                         <button type="submit" class="btn btn-default">Login</button>
+                    </form>
+                    <form asp-action="LoginGoogle" asp-controller="Login" method="post">
+                        <button type="submit" class="btn btn-light border d-flex align-items-center gap-2">
+                            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" width="20" height="20">
+                            <span>Login with Google</span>
+                        </button>
                     </form>
                 </div>
             </div>

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using Shopping_Web.DataAccess;
 using Shopping_Web.Models;
@@ -10,6 +12,16 @@ namespace Shopping_Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie().AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+            {
+                options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
+                options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+            });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -25,8 +37,10 @@ namespace Shopping_Web
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderDA, OrderDA>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddSession();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

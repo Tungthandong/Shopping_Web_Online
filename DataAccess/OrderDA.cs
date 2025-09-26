@@ -48,7 +48,7 @@ namespace Shopping_Web.DataAccess
 
         public List<Order> GetOrdersByUser(string username)
         {
-            return context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product).OrderByDescending(o => o.OrderDate).Where(o => o.Username==username).ToList();
+            return context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product).Include(o => o.OrderDetails).ThenInclude(od => od.Variant).OrderByDescending(o => o.OrderDate).Where(o => o.Username==username).ToList();
         }
 
         public void CancelOrder(int oid)

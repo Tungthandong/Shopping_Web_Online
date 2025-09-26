@@ -118,13 +118,14 @@
             <h3 class="mt-4 font-semibold">Products:</h3>
             <table class="min-w-full text-sm mt-2 border">
                 <thead class="bg-gray-100 text-gray-600">
-                    <tr><th class="px-3 py-2">Product</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th></tr>
+                    <tr><th class="px-3 py-2">Product</th><th>Size</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th></tr>
                 </thead>
                 <tbody>`;
 
         order.OrderDetails?.forEach(p => {
             html += `<tr>
                         <td class="px-3 py-2">${p.Product?.ProductName ?? ''}</td>
+                        <td>${p.Variant?.Size}</td>
                         <td>${p.Quantity}</td>
                         <td>${p.Product?.UnitPrice}</td>
                         <td>${(p.Quantity * p.Product.UnitPrice).toFixed(2)}</td>

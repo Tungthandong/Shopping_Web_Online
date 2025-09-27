@@ -1,36 +1,74 @@
 ﻿@model IEnumerable<Category>
 
-@foreach (var c in Model)
-{
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title"><a asp-action="Index" asp-controller="Product" asp-route-cid="@c.CategoryId" asp-route-search="@ViewBag.Search" asp-route-minPrice="@ViewBag.minPrice" asp-route-maxPrice="@ViewBag.maxPrice" asp-route-sort="@ViewBag.Sort">@c.CategoryName</a></h4>
-        </div>
+<!-- Categories -->
+<div class="card mb-4 border-0 shadow-sm rounded-3">
+    <div class="card-header bg-warning text-dark d-flex align-items-center fw-bold">
+        <i class="bi bi-list-ul me-2"></i>
+        <h6 class="mb-0">Danh mục</h6>
     </div>
-}
-<h2>Price</h2>
-<form asp-action="Index" asp-controller="Product">
-    <div class="form-group" style="display: flex; justify-content: center; gap: 8px;">
-        <input type="text" hidden name="cid" value="@ViewBag.Cid"/>
-        <input type="text" hidden name="search" value="@ViewBag.Search" />
-        <input type="number" name="minPrice" class="form-control" placeholder="Min"
-               value="@ViewBag.MinPrice" style="width: 100px;" min="0"/>
+    <ul class="list-group list-group-flush">
+        @foreach (var c in Model)
+        {
+            <li class="list-group-item px-3 py-2">
+                <a asp-action="Index" asp-controller="Product"
+                   asp-route-cid="@c.CategoryId"
+                   asp-route-search="@ViewBag.Search"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice"
+                   asp-route-sort="@ViewBag.Sort"
+                   class="text-decoration-none d-block text-dark fw-medium hover-link">
+                    <i class="bi bi-chevron-right small me-1 text-warning"></i>
+                    @c.CategoryName
+                </a>
+            </li>
+        }
+    </ul>
+</div>
 
-        <span style="font-weight: bold; line-height: 1;">_</span>
+<!-- Price Filter -->
+<div class="card mb-4 border-0 shadow-sm rounded-3">
+    <div class="card-header bg-warning text-dark d-flex align-items-center fw-bold">
+        <i class="bi bi-funnel me-2"></i>
+        <h6 class="mb-0">Lọc theo giá</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Index" asp-controller="Product" class="filter-form">
+            <input type="hidden" name="cid" value="@ViewBag.Cid" />
+            <input type="hidden" name="search" value="@ViewBag.Search" />
 
-        <input type="number" name="maxPrice" class="form-control" placeholder="Max"
-               value="@ViewBag.MaxPrice" style="width: 100px;" min="0"/>
+            <!-- Min - Max Price -->
+            <div class="d-flex align-items-center mb-3">
+                <div class="input-group me-2">
+                    <span class="input-group-text bg-light fw-bold">Min</span>
+                    <input type="number" name="minPrice" class="form-control"
+                           value="@ViewBag.MinPrice" min="0" />
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text bg-light fw-bold">Max</span>
+                    <input type="number" name="maxPrice" class="form-control"
+                           value="@ViewBag.MaxPrice" min="0" />
+                </div>
+            </div>
+
+            <!-- Sort -->
+            <div class="mb-3">
+                <label class="form-label fw-bold text-dark">Sắp xếp theo giá</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="sort" value="asc"
+                           @(ViewBag.Sort == "asc" || ViewBag.Sort == "" || ViewBag.Sort == null ? "checked" : "") />
+                    <label class="form-check-label">Thấp đến cao</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="sort" value="desc"
+                           @(ViewBag.Sort == "desc" ? "checked" : "") />
+                    <label class="form-check-label">Cao đến thấp</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 rounded-pill text-dark fw-bold">
+                <i class="bi bi-filter-circle me-1"></i> Áp dụng
+            </button>
+        </form>
     </div>
-    <div class="form-group" style="margin-top: 10px;">
-        <label><strong>Sort by Price:</strong></label><br />
-        <input type="radio" name="sort" value="asc" @(ViewBag.Sort == "asc" || ViewBag.Sort == "" || ViewBag.Sort == null ? "checked" : "") /> Low to High<br />
-        <input type="radio" name="sort" value="desc" @(ViewBag.Sort == "desc" ? "checked" : "") /> High to Low
-    </div>
-    <button type="submit" class="btn btn-danger btn-sm">Apply</button>
-</form>
-@* <script>
-    function resetFilters() {
-        document.getElementsByName("minPrice")[0].value = "";
-        document.getElementsByName("maxPrice")[0].value = "";
-    }
-</script> *@
+</div>
+

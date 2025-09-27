@@ -11,6 +11,5 @@ namespace Shopping_Web.ViewModels
         public string Note { get; set; }
         public IFormFile File { get; set; }  
         public int ProductId { get; set; }
-        public string ProductName { get; set; }
     }
 }

@@ -9,15 +9,14 @@ namespace Shopping_Web.Controllers
 {
     public class EmailController : Controller
     {
-        private readonly IEmailServices _emailService;
+        private readonly IEmailService _emailService;
         private readonly IConfiguration _configuration;
 
-        public EmailController(IEmailServices emailService, IConfiguration configuration)
+        public EmailController(IEmailService emailService, IConfiguration configuration)
         {
             _emailService = emailService;
             _configuration = configuration;
         }
-        [HttpPost("/submit-contact")]
         public async Task<IActionResult> Submit(ContactForm model)
         {
             if (!ModelState.IsValid)
@@ -53,7 +52,6 @@ namespace Shopping_Web.Controllers
                     <li><b>Email:</b> {model.Email}</li>
                     <li><b>Số lượng:</b> {model.Quantity}</li>
                     <li><b>Nội dung:</b> {model.Note}</li>
-                    <li><b>Tên sản phẩm:</b> {model.ProductName}</li>
                 </ul>
                 <p>Chúng tôi sẽ liên hệ lại bạn sớm nhất.</p>
                 <p>Trân trọng cảm ơn,<br/>The InkSideCrew</p>

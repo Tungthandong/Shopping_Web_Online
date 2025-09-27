@@ -1,11 +1,11 @@
 ﻿
 namespace Shopping_Web.Services
 {
-    public class EmailServices : IEmailServices
+    public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
 
-        public EmailServices(IConfiguration configuration)
+        public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;
         }

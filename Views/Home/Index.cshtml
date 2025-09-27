@@ -1,161 +1,282 @@
-﻿@using System.Linq
-@model IEnumerable<Product>
+﻿		<!-- Banner -->
+
+
+		@Html.Partial("_SliderPartial")
+
+
+<!-- /Banner -->
+<!-- Search -->
+<div class="section-search">
+	<div class="container">
+		<div class="search-box-banner">
+			<div class="section-heading" data-aos="fade-down">
+				<h2>Chào mừng đến với The InkSide</h2>
+				<p>
+					Tại đây, bạn không chỉ tìm thấy những chiếc áo đẹp và chất lượng, mà còn có thể thiết kế và in áo theo phong cách riêng của mình.
+				</p>
+                <br />
+				<p>Hãy bắt đầu hành trình sáng tạo ngay hôm nay và sở hữu chiếc áo mang dấu ấn riêng của bạn!</p>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Search -->
+<!-- services -->
+<section class="section services">
+	<div class="service-right">
+		<img src="~/img/bg/service-right.svg" class="img-fluid" alt="services right">
+	</div>
+	<div class="container">
+		<!-- Heading title-->
+		<div class="section-heading" data-aos="fade-down">
+			<h2>Quy trình in áo tại The InkSide</h2>
+
+		</div>
+		<!-- /Heading title -->
+		<div class="services-work">
+			<div class="row">
+				<div class="col-lg-4 col-md-4 col-12 d-flex" data-aos="fade-down">
+					<div class="services-group service-date flex-fill">
+						<div class="services-icon border-secondary">
+							<img class="icon-img bg-secondary" src="~/img/icons/form1-svgrepo-com.svg" alt="Choose Locations">
+						</div>
+						<div class="services-content">
+							<h3>
+								1. Tiếp nhận yêu cầu khách hàng
+							</h3>
+							<p>Determine the date & location for your car rental. Consider factors such as your travel itinerary, pickup/drop-off locations (e.g., airport, city center), and duration of rental.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-12 d-flex" data-aos="fade-down">
+					<div class="services-group service-loc flex-fill">
+						<div class="services-icon border-warning">
+							<img class="icon-img bg-warning" src="~/img/icons/services-icon-02.svg" alt="Choose Locations">
+						</div>
+						<div class="services-content">
+							<h3>2. Tư vấn, báo giá sản phẩm</h3>
+							<p>Check the availability of your desired vehicle type for your chosen dates and location. Ensure that the rental rates, taxes, fees, and any additional charges.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-12 d-flex" data-aos="fade-down">
+					<div class="services-group service-book flex-fill">
+						<div class="services-icon border-dark">
+							<img class="icon-img bg-dark" src="~/img/icons/shirt-svgrepo-com.svg" alt="Choose Locations">
+						</div>
+						<div class="services-content">
+							<h3>3. Xem trước sản phẩm in mẫu</h3>
+							<p>Once you've found car rental option, proceed to make a reservation. Provide the required information, including your details, driver's license, contact info, and payment details.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- /services -->
+@Html.Partial("_LatestProductPartial")
+
+<!-- Form contact -->
+<section class="section why-choose popular-explore">
+	<div class="user-app-group">
+		<div class="app-left">
+			<img src="~/img/bg/app-left.png" class="img-fluid" alt="App Available">
+		</div>
+		<div class="app-right">
+			<img src="~/img/bg/app-right.png" class="img-fluid" alt="App Available">
+		</div>
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="userapp-heading">
+					<h2 data-aos="fade-down">Liên hệ đặt hàng ngay!</h2>
+					<p data-aos="fade-down">Vui lòng điền thông tin bên dưới để nhận tư vấn và báo giá nếu bạn đặt hàng với số lượng lớn.</p>
+				</div>
+			</div>
+			<div class="col-lg-5 d-none d-lg-block">
+				<div class="container">
+					<form asp-controller="Email" asp-action="Submit" method="post" enctype="multipart/form-data" class="contact-form-box">
+
+						<div class="form-group mb-3">
+							<label for="FullName">Họ và tên *</label>
+							<input type="text" id="FullName" name="FullName" class="form-control" required />
+						</div>
+
+						<div class="form-group mb-3">
+							<label for="Phone">Số điện thoại *</label>
+							<input type="tel" id="Phone" name="Phone" class="form-control" required />
+						</div>
+
+						<div class="form-group mb-3">
+							<label for="Email">Email *</label>
+							<input type="email" id="Email" name="Email" class="form-control" required />
+						</div>
+
+						<div class="form-group mb-3">
+							<label for="Quantity">Số lượng cần tư vấn *</label>
+							<input type="number" id="Quantity" name="Quantity" class="form-control" required />
+						</div>
+
+						<div class="form-group mb-3">
+							<label for="File">File thiết kế (nếu có)</label>
+							<input type="file" id="File" name="File" class="form-control" required/>
+						</div>
+
+						<div class="form-group mb-3">
+							<label for="Note">Nội dung thiết kế (càng chi tiết càng tốt) *</label>
+							<textarea id="Note" name="Note" class="form-control" rows="4" required></textarea>
+						</div>
+
+						<button type="submit" class="btn btn-primary w-100">
+							NHẬN BÁO GIÁ NGAY →
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- /Form contact -->
 <style>
-    /* Modal */
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-
-        .modal.hidden {
-            display: none;
-        }
-
-    /* Nội dung modal */
-    .modal-content {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 500px;
-        position: relative;
-    }
-
-    /* Nút đóng */
-    .modal .close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 28px;
-        cursor: pointer;
-    }
+	.contact-form-box {
+		max-width: 600px;
+		margin: 0 auto;
+		background: #fff;
+		padding: 25px;
+		border-radius: 10px;
+		box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+	}
 </style>
-@Html.Partial("_SliderPartial")
 
-<div class="col-sm-3">
-    @Html.Partial("_SidebarPartial")
-</div>
+<!-- Why Choose Us -->
+<section class="section why-choose popular-explore">
+	<div class="choose-left">
+		<img src="~/img/bg/choose-left.png" class="img-fluid" alt="Why Choose Us">
+	</div>
+	<div class="container">
+		<!-- Heading title-->
+		<div class="row">
+			<div class="col-lg-4 mx-auto">
+				<div class="section-heading" data-aos="fade-down">
+					<h2>Lợi ích in áo theo yêu cầu</h2>
+				</div>
+			</div>
+		</div>
+		<!-- /Heading title -->
+		<div class="why-choose-group">
+			<div class="row">
+				<div class="col-lg-4 col-md-6 col-12 d-flex" data-aos="fade-down">
+					<div class="card flex-fill">
+						<div class="card-body">
+							<div class="choose-img choose-black">
+								<img src="~/img/icons/bx-selection.svg" alt="Icon">
+							</div>
+							<div class="choose-content">
+								<h4>Đặt hàng dễ dàng</h4>
+								<p>Đặt hàng thuận tiện, nhanh chóng ngay cả khi mua với số lượng lớn.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 col-12 d-flex" data-aos="fade-down">
+					<div class="card flex-fill">
+						<div class="card-body">
+							<div class="choose-img choose-secondary">
+								<img src="~/img/icons/bx-crown.svg" alt="Icon">
+							</div>
+							<div class="choose-content">
+								<h4>Tự do sáng tạo</h4>
+								<p>Lựa chọn thiết kế, màu sắc, vị trí in, kích thước. Chiếc áo sở hữu thiết kế có 1 0 2, tự do thể hiện sự sáng tạo, sở thích của bạn.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6 col-12 d-flex" data-aos="fade-down">
+					<div class="card flex-fill">
+						<div class="card-body">
+							<div class="choose-img choose-primary">
+								<img src="~/img/icons/bx-user-check.svg" alt="Icon">
+							</div>
+							<div class="choose-content">
+								<h4>Chất lượng đảm bảo</h4>
+								<p>Hình in đúng thiết kế, màu sắc tươi sáng, độ bền cao, không lo hình in bị bong tróc, nứt vỡ.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- /Why Choose Us -->
 
-<div class="col-sm-9 padding-right">
-    <div class="features_items">
-        <!--features_items-->
-        <h2 class="title text-center">Features Items</h2>
-        <div style="color:red">@ViewBag.Message</div>
-        @foreach (Product product in Model)
-        {
-            var message = Context.Request.Query["msg"].ToString();
-            var error = Context.Request.Query["error"].ToString();
-            int? productId = null;
-            if (int.TryParse(Context.Request.Query["pid"], out var pidVal))
-            {
-                productId = pidVal;
-            }
-            <div class="col-sm-4">
-                <div class="product-image-wrapper">
-                    <div class="single-products">
-                        <div class="productinfo text-center">
-                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
-                                <img src="@product.Image" alt="" width="255px" height="280px" />
-                            </a>
-                            <h2 style="color:#e70303;">@product.UnitPrice₫</h2>
-                            <p style="font-size: 12.3px; font-weight: 500">@product.ProductName</p>
-                            @{
-                                var username = Context.Session.GetString("Username");
-                                var returnUrl = Context.Request.Path + Context.Request.QueryString;
-                            }
-                            <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                                <input type="hidden" name="Username" value="@username" />
-                                <input type="hidden" name="ProductId" value="@product.ProductId" />
-                                <input type="hidden" name="Quantity" value="1" />
-                                <input type="hidden" name="returnUrl" value="@returnUrl" />
-                                <button type="submit" class="btn btn-default add-to-cart">
-                                    <i class="fa fa-shopping-cart"></i>Add to cart
-                                </button>
-                            </form>
-                            <!-- Nút mở modal -->
-                            <button type="button" class="btn btn-default add-to-cart" onclick="openModal(@product.ProductId)">
-                                <i class="fa fa-shopping-cart"></i> Liên hệ đặt hàng
-                            </button>
-
-                            <!-- Modal riêng cho từng sản phẩm -->
-                            <div id="contactModal-@product.ProductId" class="modal hidden">
-                                <div class="modal-content">
-                                    <span class="close" onclick="closeModal(@product.ProductId)">&times;</span>
-
-                                    <h3 class="text-center font-bold mb-3">LIÊN HỆ TƯ VẤN, BÁO GIÁ</h3>
-
-                                    <form action="/submit-contact" method="post" enctype="multipart/form-data">
-                                        <input type="hidden" name="ProductId" value="@product.ProductId" />
-                                        <input type="hidden" name="ProductName" value="@product.ProductName" />
-
-                                        <div class="form-group">
-                                            <input type="text" name="FullName" placeholder="Họ và tên *" required class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="tel" name="Phone" placeholder="Số điện thoại *" required class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="email" name="Email" placeholder="Email *" required class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="number" name="Quantity" placeholder="Số lượng cần tư vấn *" required class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="file" name="File" required class="form-control">
-                                        </div>
-                                        <div class="form-group">
-                                            <textarea name="Note" placeholder="Nội dung thiết kế (càng chi tiết càng tốt)" rows="4" required class="form-control"></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-danger btn-block">
-                                            NHẬN BÁO GIÁ NGAY →
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                         </div>
-                    </div>
-                    <div style="height: 20px; margin-top: 5px;">
-                        @if (productId == product.ProductId)
-                        {
-                            if (!string.IsNullOrEmpty(message))
-                            {
-                                <span style="color:green; font-size: 14px;">@message</span>
-                            }
-                            else if (!string.IsNullOrEmpty(error))
-                            {
-                                <span style="color:red; font-size: 14px;">@error</span>
-                            }
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-    </div><!--features_items-->
-    @Html.Partial("_LatestProductPartial")
-</div>
-@if (TempData["ShowWelcomeDialog"] != null && (bool)TempData["ShowWelcomeDialog"])
-{
-    <script>
-        window.onload = function () {
-            alert("🎉 Welcome! Your account has been created successfully. Please add more information.");
-            window.location.href = '/Account/Index';
-        }
-    </script>
-}
-<script>
-    function openModal(productId) {
-        document.getElementById("contactModal-" + productId).classList.remove("hidden");
-    }
-    function closeModal(productId) {
-        document.getElementById("contactModal-" + productId).classList.add("hidden");
-    }
-</script>
-
+<!-- FAQ  -->
+<section class="section faq-section bg-light-primary">
+	<div class="container">
+		<!-- Heading title-->
+		<div class="section-heading" data-aos="fade-down">
+			<h2>Câu hỏi thường gặp </h2>
+		</div>
+		<!-- /Heading title -->
+		<div class="faq-info">
+			<div class="faq-card bg-white" data-aos="fade-down">
+				<h4 class="faq-title">
+					<a class="collapseds" data-bs-toggle="collapse" href="#faqOne" aria-expanded="true">Làm sao để liên hệ với InkSide?</a>
+				</h4>
+				<div id="faqOne" class="card-collapse collapse show">
+					<p>Quý khách có thể liên hệ qua hotline & Zalo: 0886.543.668.</p>
+				</div>
+			</div>
+			<div class="faq-card bg-white" data-aos="fade-down">
+				<h4 class="faq-title">
+					<a class="collapsed" data-bs-toggle="collapse" href="#faqTwo" aria-expanded="false">Chi phí in ấn như thế nào?</a>
+				</h4>
+				<div id="faqTwo" class="card-collapse collapse">
+					<p>Sau khi tiếp nhận yêu cầu của quý khách, thông tin về hình in, chúng tôi sẽ tư vấn lựa chọn công nghệ in phù hợp và báo giá chi tiết.</p>
+				</div>
+			</div>
+			<div class="faq-card bg-white" data-aos="fade-down">
+				<h4 class="faq-title">
+					<a class="collapsed" data-bs-toggle="collapse" href="#faqThree" aria-expanded="false">Khi đã nhận hàng có còn được xưởng hỗ trợ?</a>
+				</h4>
+				<div id="faqThree" class="card-collapse collapse">
+					<p>Khi nhận hàng, quý khách cần kiểm tra số lượng, kiểm tra sản phẩm đúng yêu cầu, không có lỗi. Xưởng có chế độ bảo hành rõ ràng với từng công nghệ in. Hỗ trợ bảo hành, sửa chữa nếu có lỗi</p>
+				</div>
+			</div>
+			<div class="faq-card bg-white" data-aos="fade-down">
+				<h4 class="faq-title">
+					<a class="collapsed" data-bs-toggle="collapse" href="#faqFour" aria-expanded="false">The InkSide có nhận in số lượng ít không?</a>
+				</h4>
+				<div id="faqFour" class="card-collapse collapse">
+					<p>Có. Tại The InkSide bạn có thể đặt hàng với những đơn hàng số lượng từ 1 – 10 áo mà không giới hạn thiết kế, màu sắc và ý tưởng.</p>
+				</div>
+			</div>
+			<div class="faq-card bg-white" data-aos="fade-down">
+				<h4 class="faq-title">
+					<a class="collapsed" data-bs-toggle="collapse" href="#faqFive" aria-expanded="false">Chỉ có thiết kế hoặc ý tưởng thì phải làm sao?</a>
+				</h4>
+				<div id="faqFive" class="card-collapse collapse">
+					<p>Bạn yên tâm, hãy gửi cho chúng tôi mọi thiết kế và ý tưởng của bạn để được hiện thực hóa chân thực nhất có thể. Công nghệ in và quy trình in của chúng tôi luôn hướng tới sự hoàn hảo và thỏa mãn nhất cho khách hàng.</p>
+				</div>
+			</div>
+			<div class="faq-card bg-white" data-aos="fade-down">
+				<h4 class="faq-title">
+					<a class="collapsed" data-bs-toggle="collapse" href="#faqSix" aria-expanded="false">Có thể làm mẫu trước được không?</a>
+				</h4>
+				<div id="faqSix" class="card-collapse collapse">
+					<p>Có. Chúng tôi hỗ trợ làm mẫu sau khi khách hàng đã đặt cọc thành công trước khi sản xuất hàng loạt. Tùy theo yêu cầu sản phẩm mà sẽ có tính phí hay không tính phí sản xuất mẫu.</p>
+				</div>
+			</div>
+			<div class="faq-card bg-white" data-aos="fade-down">
+				<h4 class="faq-title">
+					<a class="collapsed" data-bs-toggle="collapse" href="#faqSeven" aria-expanded="false">Có thể đáp ứng được các đơn hàng cần gấp không?</a>
+				</h4>
+				<div id="faqSeven" class="card-collapse collapse">
+					<p>Có. Với những đơn hàng cần gấp chúng tôi sẽ ưu tiên và đáp ứng cho các bạn.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- /FAQ -->

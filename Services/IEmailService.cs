@@ -1,6 +1,6 @@
 ﻿namespace Shopping_Web.Services
 {
-    public interface IEmailServices
+    public interface IEmailService
     {
         Task SendEmailAsync(string toEmail, string subject, string body);
     }

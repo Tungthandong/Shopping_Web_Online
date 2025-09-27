@@ -2,69 +2,6 @@
 
 @Html.Partial("_SliderPartial")
 
-<<<<<<< HEAD
-<div class="col-sm-3">
-    @Html.Partial("_SidebarPartial")
-</div>
-
-<div class="col-sm-9 padding-right">
-    <div class="features_items">
-        <!--features_items-->
-        <h2 class="title text-center">Features Items</h2>
-        @if (Model == null||Model.Count() == 0)
-        {
-            <h2 class="title text-center" style="color:#e70303;">@ViewBag.Message</h2>
-        }
-        else
-        {
-            var message = Context.Request.Query["msg"].ToString();
-            var error = Context.Request.Query["error"].ToString();
-            int? productId = null;
-            if (int.TryParse(Context.Request.Query["pid"], out var pidVal))
-            {
-                productId = pidVal;
-            }
-            <h2 class="title text-center" style="color:#e70303;">@ViewBag.Message</h2>
-            @foreach (Product product in Model)
-            {
-                <div class="col-sm-4">
-                    <div class="product-image-wrapper">
-                        <div class="single-products">
-                            <div class="productinfo text-center">
-                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
-                                    <img src="@product.Image" alt="" width="255px" height="280px" />
-                                </a>
-                                <h2 style="color:#e70303;">@product.UnitPrice₫</h2>
-                                <p style="font-size: 12.3px; font-weight: 500">@product.ProductName</p>
-                                @{
-                                    var username = Context.Session.GetString("Username");
-                                    var returnUrl = Context.Request.Path + Context.Request.QueryString;
-                                }
-                                <form asp-controller="Product" asp-action="Detail">
-                                    @* <input type="hidden" name="Username" value="@username" /> *@
-                                    <input type="hidden" name="id" value="@product.ProductId" />
-                                    @* <input type="hidden" name="Quantity" value="1" />
-                                    <input type="hidden" name="returnUrl" value="@returnUrl" /> *@
-                                    <button type="submit" class="btn btn-default add-to-cart">
-                                        <i class="fa fa-info-circle"></i> View Details
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        <div style="height: 20px; margin-top: 5px;">
-                            @if (productId == product.ProductId)
-                            {
-                                if (!string.IsNullOrEmpty(message))
-                                {
-                                    <span style="color:green; font-size: 14px;">@message</span>
-                                }
-                                else if (!string.IsNullOrEmpty(error))
-                                {
-                                    <span style="color:red; font-size: 14px;">@error</span>
-                                }
-                            }
-                        </div>
-=======
 <!-- Car Grid View -->
 <section class="section car-listing pt-0 mt-5">
     <div class="container">
@@ -74,29 +11,12 @@
                 <div class="sidebar-form">
                     <div class="sidebar-heading">
                         <h3>Tìm kiếm sản phẩm</h3>
->>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
                     </div>
                     @Html.Partial("_SidebarPartial")
                 </div>
             </div>
             <!-- /Sidebar -->
 
-<<<<<<< HEAD
-        }
-    </div><!--features_items-->
-    @if (ViewBag.Totalpage > 1)
-    {
-        <ul class="pagination" style="display:flex; justify-content:center">
-            @for (int i = 1; i <= ViewBag.Totalpage; i++)
-            {
-                <li class="page-item @(i == ViewBag.Pageindex ? "active" : "")">
-                    <a class="page-link" asp-controller="Product" asp-route-cid="@ViewBag.Cid" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-minPrice="@ViewBag.minPrice" asp-route-maxPrice="@ViewBag.maxPrice" asp-route-sort="@ViewBag.Sort">@i</a>
-                </li>
-            }
-        </ul>
-    }
-</div>
-=======
             <!-- Products -->
             <div class="col-lg-9">
                 @if (Model == null || !Model.Any())
@@ -200,4 +120,3 @@
     </div>
 </section>
 <!-- /Car Grid View -->
->>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786

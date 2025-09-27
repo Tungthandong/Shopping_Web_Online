@@ -85,11 +85,7 @@ public partial class YugiohCardShopContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => new { e.Username, e.ProductId, e.VariantId });
-=======
-            entity.HasKey(e => new { e.Username, e.ProductId }).HasName("PK__Cart__389B091DDB66092B");
->>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
 
             entity.ToTable("Cart");
 
@@ -107,16 +103,12 @@ public partial class YugiohCardShopContext : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-<<<<<<< HEAD
                 .HasConstraintName("FK__Cart__username__3A4CA8FD");
 
             entity.HasOne(d => d.Variant).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.VariantId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Cart_ProductVariant");
-=======
-                .HasConstraintName("FK__Cart__username__38996AB5");
->>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -172,11 +164,7 @@ public partial class YugiohCardShopContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => new { e.OrderId, e.ProductId, e.VariantId });
-=======
-            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__OrderDet__08D097C17DDD31EB");
->>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
@@ -188,16 +176,12 @@ public partial class YugiohCardShopContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-<<<<<<< HEAD
                 .HasConstraintName("FK__OrderDeta__Produ__339FAB6E");
 
             entity.HasOne(d => d.Variant).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.VariantId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrderDetails_ProductVariant");
-=======
-                .HasConstraintName("FK__OrderDeta__Produ__3A81B327");
->>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
         });
 
         modelBuilder.Entity<Product>(entity =>

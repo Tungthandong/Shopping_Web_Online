@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.20" />
-=======
     <PackageReference Include="MailKit" Version="4.13.0" />
->>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">

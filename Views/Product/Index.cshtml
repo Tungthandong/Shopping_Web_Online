@@ -2,6 +2,7 @@
 
 @Html.Partial("_SliderPartial")
 
+<<<<<<< HEAD
 <div class="col-sm-3">
     @Html.Partial("_SidebarPartial")
 </div>
@@ -63,10 +64,24 @@
                                 }
                             }
                         </div>
+=======
+<!-- Car Grid View -->
+<section class="section car-listing pt-0 mt-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-xl-3 col-lg-4 col-sm-12 col-12 theiaStickySidebar">
+                <div class="sidebar-form">
+                    <div class="sidebar-heading">
+                        <h3>Tìm kiếm sản phẩm</h3>
+>>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
                     </div>
+                    @Html.Partial("_SidebarPartial")
                 </div>
-            }
+            </div>
+            <!-- /Sidebar -->
 
+<<<<<<< HEAD
         }
     </div><!--features_items-->
     @if (ViewBag.Totalpage > 1)
@@ -81,3 +96,108 @@
         </ul>
     }
 </div>
+=======
+            <!-- Products -->
+            <div class="col-lg-9">
+                @if (Model == null || !Model.Any())
+                {
+                    <h2 class="title text-center" style="color:#e70303;">@ViewBag.Message</h2>
+                }
+                else
+                {
+                    var message = Context.Request.Query["msg"].ToString();
+                    var error = Context.Request.Query["error"].ToString();
+                    int? productId = null;
+                    if (int.TryParse(Context.Request.Query["pid"], out var pidVal))
+                    {
+                        productId = pidVal;
+                    }
+
+                    <h2 class="title text-center" style="color:#e70303;">@ViewBag.Message</h2>
+
+                    <div class="row">
+                        @foreach (Product product in Model)
+                        {
+                            <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
+                                <div class="listing-item">
+                                    <div class="listing-img">
+                                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
+                                            <img src="@product.Image" alt="@product.ProductName" width="255" height="280" style="object-fit: cover;" />
+                                        </a>
+                                    </div>
+                                    <div class="listing-content">
+                                        <div class="listing-features d-flex align-items-end justify-content-between">
+                                            <div class="list-rating">
+                                                <h3 class="listing-title">
+                                                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
+                                                        @product.ProductName
+                                                    </a>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="listing-location-details">
+                                            <div class="listing-price">
+                                                <h6>@product.UnitPrice₫</h6>
+                                            </div>
+                                        </div>
+                                        <div class="listing-button">
+                                            @{
+                                                var username = Context.Session.GetString("Username");
+                                                var returnUrl = Context.Request.Path + Context.Request.QueryString;
+                                            }
+                                            <form asp-controller="Cart" asp-action="AddToCart">
+                                                <input type="hidden" name="Username" value="@username" />
+                                                <input type="hidden" name="ProductId" value="@product.ProductId" />
+                                                <input type="hidden" name="Quantity" value="1" />
+                                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                                <button type="submit" class="btn btn-order">
+                                                    <span><i class="feather-calendar me-2"></i></span> Thêm vào giỏ hàng
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div style="height: 20px; margin-top: 5px;">
+                                        @if (productId == product.ProductId)
+                                        {
+                                            if (!string.IsNullOrEmpty(message))
+                                            {
+                                                <span style="color:green; font-size: 14px;">@message</span>
+                                            }
+                                            else if (!string.IsNullOrEmpty(error))
+                                            {
+                                                <span style="color:red; font-size: 14px;">@error</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <!-- Pagination -->
+                @if (ViewBag.Totalpage > 1)
+                {
+                    <ul class="pagination" style="display:flex; justify-content:center">
+                        @for (int i = 1; i <= ViewBag.Totalpage; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Pageindex ? "active" : "")">
+                                <a class="page-link"
+                                   asp-controller="Product"
+                                   asp-route-page="@i"
+                                   asp-route-search="@ViewBag.Search"
+                                   asp-route-minPrice="@ViewBag.minPrice"
+                                   asp-route-maxPrice="@ViewBag.maxPrice"
+                                   asp-route-sort="@ViewBag.Sort">@i</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+            <!-- /Products -->
+        </div>
+    </div>
+</section>
+<!-- /Car Grid View -->
+>>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786

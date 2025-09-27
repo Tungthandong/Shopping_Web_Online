@@ -1,0 +1,175 @@
+﻿
+<script src="js/designscript.js" defer></script>
+<div class="container">
+	<div class="row justify-content-md-center">
+		<div class="col-md-3" style="min-height:100vh;">
+			<label class="Title">Shapes</label>
+			<ul class="options">
+				<li class="option">
+					<img src="~/images/icons/rectangle.svg" alt="" />
+					<span>Rectangle</span>
+				</li>
+				<li class="option">
+					<img src="~/images/icons/circle.svg" alt="" />
+					<span>Circle</span>
+				</li>
+				<li class="option">
+					<img src="~/images/icons/triangle.svg" alt="" />
+					<span>Triangle</span>
+				</li>
+			</ul>
+			<label class="Title">Options</label>
+			<ul class="options">
+				<li class="option active">
+					<img src="~/images/icons/brush.svg" alt="" />
+					<span>Brush</span>
+				</li>
+				<li class="option">
+					<img src="~/images/icons/eraser.svg" alt="" />
+					<span>Eraser</span>
+				</li>
+				<li class="option">
+					<input type="range" id="size-slider" />
+				</li>
+			</ul>
+			<div class="colors">
+				<label class="Title">Color</label>
+				<ul class="options">
+					<li class="option"></li>
+					<li class="option selected"></li>
+					<li class="option"></li>
+					<li class="option"></li>
+					<li class="option"></li>
+					<li class="option">
+						<input type="color" id="color-picker" value="#4A98F7" />
+					</li>
+				</ul>
+			</div>
+			<div class="buttons">
+				<button class="clear-canvas">Clear</button>
+				<button class="give-canvas">Contact</button>
+			</div>
+		</div>
+		<div class="drawing-broad col-md-9 ">
+			<canvas></canvas>
+		</div>
+	</div>
+</div>
+
+
+<style>
+	.options {
+		list-style: none;
+		margin: 10px 0 0 5px
+	}
+
+		.options .option {
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+			cursor: pointer;
+		}
+
+	.option:is(:hover, .active) img {
+		filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg) brightness(100%) contrast(100%);
+	}
+
+	.option #size-slider {
+		width: 100%;
+		height: 5px;
+		margin-top: 10px;
+	}
+
+	.colors .options {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.colors .option {
+		height: 20px;
+		width: 20px;
+		background: red;
+		border-radius: 50%;
+		margin-top: 3px;
+		position: relative;
+	}
+
+		.colors .option:nth-child(1) {
+			background: #fff;
+			border: 1px solid #bfbfbf;
+		}
+
+		.colors .option:nth-child(2) {
+			background: black
+		}
+
+		.colors .option:nth-child(3) {
+			background: red
+		}
+
+		.colors .option:nth-child(4) {
+			background: green
+		}
+
+		.colors .option:nth-child(5) {
+			background: blue
+		}
+
+		.colors .option.selected::before {
+			position: absolute;
+			content: "";
+			top: 50%;
+			left: 50%;
+			height: 12px;
+			width: 12px;
+			background: inherit;
+			border-radius: inherit;
+			border: 2px solid #fff;
+			transform: translate(-50%,-50%);
+		}
+
+		.colors .option:first-child.selected::before {
+			border-color: #ccc;
+		}
+
+	.option #color-picker {
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	.buttons button {
+		width: 100%;
+		color: #fff;
+		border: none;
+		outline: none;
+		padding: 11px 0;
+		font-size: 0.9rem;
+		margin-bottom: 13px;
+		background: none;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+	.buttons .clear-canvas {
+		color: #6C757D;
+		border: 1px solid #6C757D;
+		transition: all 0.3s ease;
+	}
+
+	.clear-canvas:hover {
+		color: #fff;
+		background: #4A98F7;
+	}
+
+	.buttons .give-canvas {
+		color: #4A98F7;
+		border: 1px solid #4A98F7;
+	}
+
+	.drawing-broad canvas{
+		width:100%;
+		height:100%;
+		border: 1px solid;
+		min-height: 100vh;
+	}
+</style>

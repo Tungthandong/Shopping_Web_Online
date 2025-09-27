@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Shopping_Web.Models;
+using Shopping_Web.Models.Vnpay;
 using Shopping_Web.Services;
+using Shopping_Web.Services.Vnpay;
 
 namespace Shopping_Web.Controllers
 {
@@ -10,12 +12,14 @@ namespace Shopping_Web.Controllers
         private IOrderService _orderService;
         private ICartService _cartService;
         private IProductService _productService;
+        private IVnPayService _vnPayService;
 
-        public CheckoutController(IOrderService orderService, ICartService cartService, IProductService productService)
+        public CheckoutController(IOrderService orderService, ICartService cartService, IProductService productService, IVnPayService vnPayService)
         {
             _orderService = orderService;
             _cartService = cartService;
             _productService = productService;
+            _vnPayService = vnPayService;
         }
         public IActionResult Index()
         {
@@ -41,7 +45,7 @@ namespace Shopping_Web.Controllers
                 PaymentMethod = PaymentMethod,
                 ShipCost = (ShippingMethod == "express" ? 50000 : 30000),
                 OrderDate = DateTime.Now,
-                OrderStatus = "Pending",
+                OrderStatus = (PaymentMethod == "VnPay" ? "Cancelled" : "Pending"),
                 PhoneNumber = PhoneNumber,
                 TotalAmount = TotalAmount
             };
@@ -55,6 +59,20 @@ namespace Shopping_Web.Controllers
                 _cartService.Delete(c);
             }
             HttpContext.Session.Remove("Cart");
+
+            if (PaymentMethod == "VnPay")
+            {
+                PaymentInformationModel model = new PaymentInformationModel()
+                {
+                    Name = username,
+                    Amount = TotalAmount,
+                    OrderDescription = "Checkout by VNPAY,time:"+DateTime.Now,
+                    OrderType = "other"
+                };
+
+                return Redirect(_vnPayService.CreatePaymentUrl(model, HttpContext));
+            }
+
             TempData["Msg"] = "Checkout successfully";
             return RedirectToAction("Index", "Checkout");
         }
@@ -94,6 +112,24 @@ namespace Shopping_Web.Controllers
             }
             _orderService.CancelOrder(oid);
             return RedirectToAction("OrderHistory", "Checkout");
+        }
+        [HttpGet]
+        public IActionResult PaymentCallbackVnpay()
+        {
+            var response = _vnPayService.PaymentExecute(Request.Query);
+
+            if (response.VnPayResponseCode == "00")
+            {
+                var username = HttpContext.Session.GetString("Username");
+                Order order = _orderService.GetOrdersByUser(username)[0];
+                _orderService.UpdateOrderStatus(order.OrderId, "Pending");
+                TempData["Msg"] = "Checkout successfully";
+            }
+            else
+            {
+                TempData["Msg"] = "Checkout failed";
+            }
+            return RedirectToAction("Index", "Checkout");
         }
     }
 }

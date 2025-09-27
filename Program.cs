@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Shopping_Web.DataAccess;
 using Shopping_Web.Models;
 using Shopping_Web.Services;
+using Shopping_Web.Services.Vnpay;
 
 namespace Shopping_Web
 {
@@ -37,6 +38,10 @@ namespace Shopping_Web
             builder.Services.AddScoped<ICartService, CartService>();
             builder.Services.AddScoped<IOrderDA, OrderDA>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+<<<<<<< HEAD
+=======
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
+>>>>>>> ed068d502c9d5e2f55561b23e062ee5542cd2786
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddSession();

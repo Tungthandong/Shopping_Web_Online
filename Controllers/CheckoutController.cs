@@ -45,7 +45,7 @@ namespace Shopping_Web.Controllers
                 PaymentMethod = PaymentMethod,
                 ShipCost = (ShippingMethod == "express" ? 50000 : 30000),
                 OrderDate = DateTime.Now,
-                OrderStatus = "Pending",
+                OrderStatus = (PaymentMethod == "VnPay" ? "Cancelled" : "Pending"),
                 PhoneNumber = PhoneNumber,
                 TotalAmount = TotalAmount
             };
@@ -120,13 +120,13 @@ namespace Shopping_Web.Controllers
 
             if (response.VnPayResponseCode == "00")
             {
+                var username = HttpContext.Session.GetString("Username");
+                Order order = _orderService.GetOrdersByUser(username)[0];
+                _orderService.UpdateOrderStatus(order.OrderId, "Pending");
                 TempData["Msg"] = "Checkout successfully";
             }
             else
             {
-                var username = HttpContext.Session.GetString("Username");
-                Order order = _orderService.GetOrdersByUser(username)[0];
-                _orderService.UpdateOrderStatus(order.OrderId, "Cancelled");
                 TempData["Msg"] = "Checkout failed";
             }
             return RedirectToAction("Index", "Checkout");

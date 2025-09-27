@@ -15,8 +15,8 @@ namespace Shopping_Web.Controllers
     public class LoginController : Controller
     {
         IAccountService _accountService;
-        Services.IEmailSender _emailSender;
-        public LoginController(IAccountService accountService, Services.IEmailSender emailSender)
+        Services.IEmailService _emailSender;
+        public LoginController(IAccountService accountService, Services.IEmailService emailSender)
         {
             _accountService = accountService;
             _emailSender = emailSender;

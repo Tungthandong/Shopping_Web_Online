@@ -75,7 +75,7 @@
             @for (int i = 1; i <= ViewBag.Totalpage; i++)
             {
                 <li class="page-item @(i == ViewBag.Pageindex ? "active" : "")">
-                    <a class="page-link" asp-controller="Product" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-minPrice="@ViewBag.minPrice" asp-route-maxPrice="@ViewBag.maxPrice" asp-route-sort="@ViewBag.Sort">@i</a>
+                    <a class="page-link" asp-controller="Product" asp-route-cid="@ViewBag.Cid" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-minPrice="@ViewBag.minPrice" asp-route-maxPrice="@ViewBag.maxPrice" asp-route-sort="@ViewBag.Sort">@i</a>
                 </li>
             }
         </ul>

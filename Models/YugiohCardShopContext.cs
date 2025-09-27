@@ -147,7 +147,7 @@ public partial class YugiohCardShopContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__OrderDet__08D097C1A827380B");
+            entity.HasKey(e => new { e.OrderId, e.ProductId, e.VariantId });
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
@@ -163,6 +163,7 @@ public partial class YugiohCardShopContext : DbContext
 
             entity.HasOne(d => d.Variant).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.VariantId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrderDetails_ProductVariant");
         });
 

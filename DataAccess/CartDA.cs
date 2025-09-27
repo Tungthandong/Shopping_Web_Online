@@ -61,8 +61,16 @@ namespace Shopping_Web.DataAccess
 
         public void Delete(Cart c)
         {
-            context.Remove(c);
-            context.SaveChanges();
+            var existing = context.Carts
+                .FirstOrDefault(x => x.Username == c.Username
+                                  && x.ProductId == c.ProductId
+                                  && x.VariantId == c.VariantId);
+
+            if (existing != null)
+            {
+                context.Carts.Remove(existing);
+                context.SaveChanges();
+            }
         }
 
         public List<Cart> GetAllByUsername(string username)

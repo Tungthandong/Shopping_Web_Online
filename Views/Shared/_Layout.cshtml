@@ -43,122 +43,238 @@
 </head><!--/head-->
 
 <body>
+    <style>
+        /* Container cố định góc phải */
+        .actionFix {
+            position: fixed;
+            right: 15px;
+            bottom: 100px;
+            z-index: 99;
+        }
+
+            .actionFix ul {
+                padding: 0;
+                margin: 0;
+            }
+
+                .actionFix ul li {
+                    list-style: none;
+                    width: 52px;
+                    height: 52px;
+                    margin-bottom: 12px;
+                }
+
+                    /* Tất cả nút */
+                    .actionFix ul li a {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 52px;
+                        height: 52px;
+                        border-radius: 50%;
+                        background: #fff;
+                        overflow: hidden;
+                        position: relative;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                        text-decoration: none;
+                    }
+
+                        /* Icon hình ảnh */
+                        .actionFix ul li a img {
+                            width: 35px;
+                            height: 35px;
+                            object-fit: contain;
+                        }
+
+                        /* Icon font-awesome */
+                        .actionFix ul li a i {
+                            font-size: 22px;
+                            line-height: 1;
+                            color: #fff;
+                        }
+
+                    /* Riêng nút phone */
+                    .actionFix ul li.phone a {
+                        background: #d93536;
+                        color: #fff;
+                        animation: icon-luc-lac 1s infinite;
+                        z-index: 2;
+                        overflow: visible;
+                    }
+
+                        /* Sóng lan tỏa */
+                        .actionFix ul li.phone a::after {
+                            content: '';
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            width: 52px;
+                            height: 52px;
+                            border-radius: 50%;
+                            background: rgba(217, 53, 54, 0.4);
+                            transform: translate(-50%, -50%) scale(1);
+                            animation: roundScale 1.5s ease-out infinite;
+                            z-index: 1;
+                        }
+
+        /* Animation rung */
+        @@keyframes icon-luc-lac {
+            0%
+
+        {
+            transform: rotate(0deg);
+        }
+
+        25% {
+            transform: rotate(8deg);
+        }
+
+        50% {
+            transform: rotate(0deg);
+        }
+
+        75% {
+            transform: rotate(-8deg);
+        }
+
+        100% {
+            transform: rotate(0deg);
+        }
+
+        }
+
+        /* Animation sóng tròn */
+        @@keyframes roundScale {
+            0%
+
+        {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.6;
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(2);
+            opacity: 0;
+        }
+
+        }
+    </style>
 
     <div class="main-wrapper">
-		<!-- Header -->
-		<header class="header">
-			<div class="container-fluid">
-				<div class="contactinfo">
-					<ul class="nav nav-pills">
-						<li><a href="#"><i class="fa fa-phone"></i> +84 86 50 69 618</a></li>
-						<li><a href="#"><i class="fa fa-envelope"></i> vungoctung098@gmail.com</a></li>
-					</ul>
-				</div>
-				<nav class="navbar navbar-expand-lg header-nav">
-					<div class="navbar-header">
-						<a id="mobile_btn" href="javascript:void(0);">
-							<span class="bar-icon">
-								<span></span>
-								<span></span>
-								<span></span>
-							</span>
-						</a>
-						<a asp-controller="Home" asp-action="Index" class="navbar-brand logo">
-							<img src="~/images/Screenshot 2025-09-16 232527.png" class="img-fluid" alt="Logo">
-						</a>
-						<a asp-controller="Home" asp-action="Index" class="navbar-brand logo-small">
-							<img src="~/img/logo-small.png" class="img-fluid" alt="Logo">
-						</a>
-					</div>
+        <!-- Header -->
+        <header class="header">
+            <div class="container-fluid">
+                <div class="contactinfo">
+                    <ul class="nav nav-pills">
+                        <li><a href="#"><i class="fa fa-phone"></i> +84 86 50 69 618</a></li>
+                        <li><a href="#"><i class="fa fa-envelope"></i> vungoctung098@gmail.com</a></li>
+                    </ul>
+                </div>
+                <nav class="navbar navbar-expand-lg header-nav">
+                    <div class="navbar-header">
+                        <a id="mobile_btn" href="javascript:void(0);">
+                            <span class="bar-icon">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="navbar-brand logo">
+                            <img src="~/images/Screenshot 2025-09-16 232527.png" class="img-fluid" alt="Logo">
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="navbar-brand logo-small">
+                            <img src="~/img/logo-small.png" class="img-fluid" alt="Logo">
+                        </a>
+                    </div>
 
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav ml-auto">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
 
-							<!-- Admin Dashboard -->
-							@{
-								var username = Context.Session.GetString("Username");
-								var role = Context.Session.GetString("Role");
-							}
-							@if (username != null && role == "admin")
-							{
-								<li class="nav-item">
-									<a class="nav-link" asp-action="Index" asp-controller="Admin">
-										<i class="fa fa-user"></i> Admin Dashboard
-									</a>
-								</li>
-							}
+                            <!-- Admin Dashboard -->
+                            @{
+                                var username = Context.Session.GetString("Username");
+                                var role = Context.Session.GetString("Role");
+                            }
+                            @if (username != null && role == "admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="Index" asp-controller="Admin">
+                                        <i class="fa fa-user"></i> Admin Dashboard
+                                    </a>
+                                </li>
+                            }
 
-							<!-- Account -->
-							<li class="nav-item">
-								<a class="nav-link" asp-action="Index" asp-controller="Account">
-									<i class="fa fa-user"></i> Account
-								</a>
-							</li>
+                            <!-- Account -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Index" asp-controller="Account">
+                                    <i class="fa fa-user"></i> Account
+                                </a>
+                            </li>
 
-							<!-- Checkout -->
-							<li class="nav-item">
-								<a class="nav-link" asp-controller="Checkout" asp-action="Index">
-									<i class="fa fa-crosshairs"></i> Checkout
-								</a>
-							</li>
+                            <!-- Checkout -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Checkout" asp-action="Index">
+                                    <i class="fa fa-crosshairs"></i> Checkout
+                                </a>
+                            </li>
 
-							<!-- Cart -->
-							<li class="nav-item">
-								<a class="nav-link" asp-controller="Cart" asp-action="Index">
-									<i class="fa fa-shopping-cart"></i> Cart
-								</a>
-							</li>
+                            <!-- Cart -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                    <i class="fa fa-shopping-cart"></i> Cart
+                                </a>
+                            </li>
 
-							<!-- Order History -->
-							<li class="nav-item">
-								<a class="nav-link" asp-controller="Checkout" asp-action="OrderHistory">
-									&#128221; Order History
-								</a>
-							</li>
+                            <!-- Order History -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Checkout" asp-action="OrderHistory">
+                                    &#128221; Order History
+                                </a>
+                            </li>
 
-							<!-- Login / Logout -->
-							@if (!string.IsNullOrEmpty(username))
-							{
-								<li class="nav-item">
-									<a class="nav-link" asp-controller="Login" asp-action="Logout">
-										<i class="fa fa-lock"></i> Logout
-									</a>
-								</li>
-							}
-							else
-							{
-								<li class="nav-item">
-									<a class="nav-link" asp-controller="Login" asp-action="Index">
-										<i class="fa fa-lock"></i> Login
-									</a>
-								</li>
-							}
+                            <!-- Login / Logout -->
+                            @if (!string.IsNullOrEmpty(username))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Login" asp-action="Logout">
+                                        <i class="fa fa-lock"></i> Logout
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Login" asp-action="Index">
+                                        <i class="fa fa-lock"></i> Login
+                                    </a>
+                                </li>
+                            }
 
-							<!-- Welcome user -->
-							@if (!string.IsNullOrEmpty(username))
-							{
-								<li class="nav-item">
-									<span class="nav-link">
-										<i class="fa fa-user"></i> Welcome, @username!
-									</span>
-								</li>
-							}
+                            <!-- Welcome user -->
+                            @if (!string.IsNullOrEmpty(username))
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link">
+                                        <i class="fa fa-user"></i> Welcome, @username!
+                                    </span>
+                                </li>
+                            }
 
-							<!-- Search -->
-							<li class="nav-item">
-								<form asp-controller="Product" asp-action="Index" method="get" class="form-inline">
-									<input type="hidden" name="cid" value="@ViewBag.Cid" />
-									<input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
-									<input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
-									<input class="form-control" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
-								</form>
-							</li>
-						</ul>
-					</div>
-				</nav>
-			</div>
-		</header>
-		<!-- /Header -->
+                            <!-- Search -->
+                            <li class="nav-item">
+                                <form asp-controller="Product" asp-action="Index" method="get" class="form-inline">
+                                    <input type="hidden" name="cid" value="@ViewBag.Cid" />
+                                    <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
+                                    <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
+                                    <input class="form-control" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- /Header -->
 
 
         <div>
@@ -265,6 +381,53 @@
 			</div>
 			<!-- /Footer Top -->
 		</footer>
+		<!-- /Footer -->
+
+	</div>
+										</li>
+										<li>
+											<a href="javascript:void(0)"><i class="fab fa-linkedin fi-icon"></i></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Footer Top -->
+			<!-- Footer Bottom -->
+			<div class="footer-bottom">
+				<div class="container">
+					<!-- Copyright -->
+					<div class="copyright">
+						<div class="row align-items-center">
+							<div class="col-md-6">
+								<div class="copyright-text">
+									<p>© 2024 Dreams Rent. All Rights Reserved.</p>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<!-- Copyright Menu -->
+								<div class="copyright-menu">
+									<div class="vistors-details">
+										<ul class="d-flex">
+											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/paypal.svg" alt="Paypal"></a></li>
+											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/visa.svg" alt="Visa"></a></li>
+											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/master.svg" alt="Master"></a></li>
+											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/applegpay.svg" alt="applegpay"></a></li>
+										</ul>
+									</div>
+								</div>
+								<!-- /Copyright Menu -->
+							</div>
+						</div>
+					</div>
+					<!-- /Copyright -->
+				</div>
+			</div>
+			<!-- /Footer Bottom -->
+		</footer> *@
 		<!-- /Footer -->
 
 	</div>

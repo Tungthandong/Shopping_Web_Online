@@ -1,36 +1,46 @@
 ﻿@model Account
 @{
-	ViewData["title"] = "Enter New Password";
+    ViewData["Title"] = "Enter New Password";
 }
 
-<section>
-	<!--form-->
-	<div class="container">
-		<div class="row">
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg border-0 rounded-3">
+                    <div class="card-body p-4">
+                        <h3 class="text-center mb-4">Đặt mật khẩu mới</h3>
 
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
 
-			<div class="col-sm-8 col-sm-offset-1">
-				<div class="signup-form">
-					<!--sign up form-->
-					<h2>Enter New Password</h2>
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-					<form asp-action="UpdateNewPassword" asp-controller="Login">
-						<div class="form-group">
-							<label>Email</label>
-							<input asp-for="Email" readonly value="@ViewBag.Email" class="form-control"/>
-							<span asp-validation-for="Email" class="text-danger"></span>
-						</div>
-						<div class="form-group">
-							<label>New Password</label>
-							<input asp-for="Password" class="form-control" name="newpass"/>
-							<span asp-validation-for="Password" class="text-danger"></span>
-							
-						</div>
+                        <form asp-action="UpdateNewPassword" asp-controller="Login" method="post">
+                            <div class="form-group mb-3">
+                                <label asp-for="Email" class="form-label fw-bold">Email</label>
+                                <input asp-for="Email" readonly value="@ViewBag.Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
 
-						<button type="submit" class="btn btn-default">Apply</button>
-					</form>
-				</div><!--/sign up form-->
-			</div>
-		</div>
-	</div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Password" class="form-label fw-bold">Mật khẩu mới</label>
+                                <input asp-for="Password"
+                                       class="form-control"
+                                       type="password"
+                                       name="newpass"
+                                       placeholder="Nhập mật khẩu mới" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-light w-100">Xác nhận</button>
+                        </form>
+
+                        <div class="text-center mt-3">
+                            <a asp-action="Login" asp-controller="Logout" class="small text-dark">
+                                <i class="fa fa-arrow-left me-1"></i> Quay lại đăng nhập
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

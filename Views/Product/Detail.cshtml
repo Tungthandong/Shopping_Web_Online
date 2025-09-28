@@ -1,141 +1,130 @@
 ﻿@model Product
-<div class="col-sm-3">
-    @Html.Partial("_SidebarPartial")
-</div>
-<div class=" col-sm-9 padding-right">
-    <div class="product-details">
-        <!--product-details-->
-        <div class="col-sm-4">
-            @* <div class="view-product" > *@
-            <img src="@Model.Image" alt="" width="255px" height="280px" />
-            @* </div> *@
-            @* <div id="similar-product" class="carousel slide" data-ride="carousel"> *@
+<section class="section car-listing pt-0 mt-5">
+    <div class="container">
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 mb-4">
+        @Html.Partial("_SidebarPartial")
+    </div>
 
-            @* 	<!-- Wrapper for slides --> *@
-            @* 	<div class="carousel-inner"> *@
-            @* 		<div class="item active"> *@
-            @* 			<a href=""><img src="images/product-details/similar1.jpg" alt=""></a> *@
-            @* 			<a href=""><img src="images/product-details/similar2.jpg" alt=""></a> *@
-            @* 			<a href=""><img src="images/product-details/similar3.jpg" alt=""></a> *@
-            @* 		</div> *@
-            @* 		<div class="item"> *@
-            @* 			<a href=""><img src="images/product-details/similar1.jpg" alt=""></a> *@
-            @* 			<a href=""><img src="images/product-details/similar2.jpg" alt=""></a> *@
-            @* 			<a href=""><img src="images/product-details/similar3.jpg" alt=""></a> *@
-            @* 		</div> *@
-            @* 		<div class="item"> *@
-            @* 			<a href=""><img src="images/product-details/similar1.jpg" alt=""></a> *@
-            @* 			<a href=""><img src="images/product-details/similar2.jpg" alt=""></a> *@
-            @* 			<a href=""><img src="images/product-details/similar3.jpg" alt=""></a> *@
-            @* 		</div> *@
 
-            @* 	</div> *@
+    <!-- Product Detail -->
+    <div class="col-lg-9">
+        <div class="card border-0 rounded-3">
+            <div class="row g-0">
+                <!-- Product Image -->
+                <div class="col-md-5 text-center p-4">
+                    <img src="@Model.Image" alt="@Model.ProductName" 
+                         class="img-fluid rounded" 
+                         style="max-height: 320px; object-fit: contain;" />
+                </div>
 
-            @* 	<!-- Controls --> *@
-            @* 	<a class="left item-control" href="#similar-product" data-slide="prev"> *@
-            @* 		<i class="fa fa-angle-left"></i> *@
-            @* 	</a> *@
-            @* 	<a class="right item-control" href="#similar-product" data-slide="next"> *@
-            @* 		<i class="fa fa-angle-right"></i> *@
-            @* 	</a> *@
-            @* </div> *@
+                <!-- Product Info -->
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">@Model.ProductName</h3>
 
-        </div>
-        <div class="col-sm-8">
-            <div class="product-information">
-                <h2>@Model.ProductName</h2>
-                <span>
-                    <span style="color:#e70303;">@Model.UnitPrice₫</span>
-                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                        <div style="margin: 10px 0; display: flex; align-items: center; gap: 8px;">
-                            <label for="sizeSelect" style="margin: 0;">Size:</label>
-                            <select id="sizeSelect" name="VariantId" class="form-control"
-                                    style="width: 130px; display: inline-block;">
-                                @foreach (var variant in Model.ProductVariants)
-                                {
-                                    if (variant.StockQuantity > 0)
+                        <h4 class="text-danger fw-bold mb-4">@Model.UnitPrice ₫</h4>
+
+                        <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                            <!-- Size -->
+                            <div class="mb-3">
+                                <label for="sizeSelect" class="form-label fw-bold">Size</label>
+                                <select id="sizeSelect" name="VariantId" class="form-select w-auto">
+                                    @foreach (var variant in Model.ProductVariants)
                                     {
-                                        <option value="@variant.VariantId" data-stock="@variant.StockQuantity">
-                                            @variant.Size (@variant.StockQuantity remains)
-                                        </option>
+                                        if (variant.StockQuantity > 0)
+                                        {
+                                            <option value="@variant.VariantId" data-stock="@variant.StockQuantity">
+                                                @variant.Size (@variant.StockQuantity còn)
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@variant.VariantId" disabled>
+                                                @variant.Size (Hết hàng)
+                                            </option>
+                                        }
                                     }
-                                    else
-                                    {
-                                        <option value="@variant.VariantId" disabled>
-                                            @variant.Size (Out of stock)
-                                        </option>
-                                    }
-                                }
-                            </select>
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                            <label style="margin: 0;">Quantity:</label>
-                            <div class="input-group" style="display: flex; align-items: center;">
-                                <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="changeQuantity(-1)">-</button>
-                                <input type="text" id="quantityInput" name="Quantity" value="1"
-                                       class="form-control text-center" style="width: 60px; height: 32px; padding: 0 6px;" />
-                                <button type="button" class="btn btn-outline-secondary py-1 px-2" onclick="changeQuantity(1)">+</button>
+                                </select>
                             </div>
-                        </div>
 
+                            <!-- Quantity -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Số lượng</label>
+                                <div class="input-group" style="max-width: 150px;">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(-1)">-</button>
+                                    <input type="text" id="quantityInput" name="Quantity" value="1"
+                                           class="form-control text-center" />
+                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(1)">+</button>
+                                </div>
+                            </div>
+
+                            <!-- Hidden fields -->
+                            @{
+                                var username = Context.Session.GetString("Username");
+                                var returnUrl = Context.Request.Path + Context.Request.QueryString;
+                            }
+                            <input type="hidden" name="Username" value="@username" />
+                            <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                            <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                            <!-- Add to Cart -->
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <i class="fa fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
+                            </button>
+                        </form>
+
+                        <!-- Extra info -->
+                        <p><b>Tình trạng:</b> @(Model.UnitsInStock > 0 ? "Còn hàng" : "Hết hàng")</p>
+                        <p><b>Danh mục:</b> @(Model.Category != null ? Model.Category.CategoryName : "Không rõ")</p>
+
+                        <!-- Alerts -->
                         @{
-                            var username = Context.Session.GetString("Username");
-                            var returnUrl = Context.Request.Path + Context.Request.QueryString;
+                            var message = Context.Request.Query["msg"].ToString();
+                            var error = Context.Request.Query["error"].ToString();
                         }
-                        <input type="hidden" name="Username" value="@username" />
-                        <input type="hidden" name="ProductId" value="@Model.ProductId" />
-                        <input type="hidden" name="returnUrl" value="@returnUrl" />
-
-                        <button type="submit" class="btn btn-default add-to-cart" style="margin: 0;">
-                            <i class="fa fa-shopping-cart"></i> Add to cart
-                        </button>
-                    </form>
-                </span>
-
-                <p><b>Availability:</b> @(Model.UnitsInStock > 0 ? "In Stock" : "Out of Stock")</p>
-                <p><b>Category:</b> @(Model.Category != null ? Model.Category.CategoryName : "Unknown")</p>
-
-                @{
-                    var message = Context.Request.Query["msg"].ToString();
-                    var error = Context.Request.Query["error"].ToString();
-                }
-                @if (!string.IsNullOrEmpty(message))
-                {
-                    <div class="alert alert-success">@message</div>
-                }
-                else if (!string.IsNullOrEmpty(error))
-                {
-                    <div class="alert alert-danger">@error</div>
-                }
+                        @if (!string.IsNullOrEmpty(message))
+                        {
+                            <div class="alert alert-success mt-3">@message</div>
+                        }
+                        else if (!string.IsNullOrEmpty(error))
+                        {
+                            <div class="alert alert-danger mt-3">@error</div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
-
-        <script>
-            const sizeSelect = document.getElementById("sizeSelect");
-            const input = document.getElementById("quantityInput");
-
-            function getMaxStock() {
-                const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
-                return parseInt(selectedOption.getAttribute("data-stock")) || 0;
-            }
-
-            function changeQuantity(amount) {
-                let value = parseInt(input.value) || 1;
-                const maxStock = getMaxStock();
-
-                value += amount;
-                if (value < 1) value = 1;
-                if (value > maxStock) value = maxStock;
-
-                input.value = value;
-            }
-
-            sizeSelect.addEventListener("change", () => {
-                input.value = 1;
-            });
-        </script>
-
-    </div><!--/product-details-->
-    @Html.Partial("_LatestProductPartial")
+    </div>
 </div>
+</div>
+    <!-- Latest Products -->
+    <div class="mt-5">
+        @Html.Partial("_LatestProductPartial")
+    </div>
+</section>
+<script>
+    const sizeSelect = document.getElementById("sizeSelect");
+    const input = document.getElementById("quantityInput");
+
+    function getMaxStock() {
+        const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+        return parseInt(selectedOption.getAttribute("data-stock")) || 0;
+    }
+
+    function changeQuantity(amount) {
+        let value = parseInt(input.value) || 1;
+        const maxStock = getMaxStock();
+
+        value += amount;
+        if (value < 1) value = 1;
+        if (value > maxStock) value = maxStock;
+
+        input.value = value;
+    }
+
+    sizeSelect.addEventListener("change", () => {
+        input.value = 1;
+    });
+</script>

@@ -1,78 +1,91 @@
-﻿<section id="login">
-    <!--form-->
+﻿
+<section id="login" class="py-5">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-4 col-sm-offset-1">
-                <div class="login-form">
-                    <h2>Login to your account</h2>
-                    <div style="color:red">@ViewBag.Error</div>
-                    @{
-                        var username = Context.Request.Cookies["Username"];
-                        var remember = Context.Request.Cookies["Remember"];
-                    }
-                    <form asp-action="Login" method="post">
-                        <input type="text" placeholder="Username" name="Username" value="@username" />
-                        <input type="password" placeholder="Password" name="Password" />
-                        <span>
-                            <input type="checkbox" class="checkbox" name="Remember" @(remember == "True" ? "checked" : "") />
-                            Remember me
-                        </span>
-                        <a asp-action="ForgotPass" asp-controller="Login"
-                           class="btn btn-light border mt-2">
-                            Forgot Password?
-                        </a>
-                        <button type="submit" class="btn btn-default">Login</button>
-                    </form>
-                    <form asp-action="LoginGoogle" asp-controller="Login" method="post">
-                        <button type="submit" class="btn btn-light border d-flex align-items-center gap-2">
-                            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" width="20" height="20">
-                            <span>Login with Google</span>
-                        </button>
-                    </form>
+        <div class="row justify-content-center">
+            <!-- Login -->
+            <div class="col-lg-5 col-md-6 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h3 class="mb-3 text-center">Đăng nhập</h3>
+                        <div class="text-danger mb-2">@ViewBag.Error</div>
+                        @{
+                            var username = Context.Request.Cookies["Username"];
+                            var remember = Context.Request.Cookies["Remember"];
+                        }
+                        <form asp-action="Login" method="post">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="Tên đăng nhập" name="Username" value="@username" />
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" placeholder="Mật khẩu" name="Password" />
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" name="Remember" id="rememberCheck"
+                                       @(remember == "True" ? "checked" : "") />
+                                <label class="form-check-label" for="rememberCheck">Nhớ đăng nhập</label>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <a asp-action="ForgotPass" asp-controller="Login" class="small text-dark">Quên mật khẩu?</a>
+                            </div>
+                            <button type="submit" class="btn btn-outline-light w-100 mb-3">Đăng nhập</button>
+                        </form>
+
+                        <form asp-action="LoginGoogle" asp-controller="Login" method="post">
+                            <button type="submit" class="btn btn-light border w-100 d-flex align-items-center justify-content-center gap-2">
+                                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" width="20" height="20">
+                                <span>Đăng nhập với Google</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-1">
-                <h2 class="or">OR</h2>
-            </div>
-            <div class="col-sm-4">
-                <div class="signup-form">
-                    <h2>New User Signup!</h2>
-                    <form asp-action="Signup" method="post">
-                        <input type="text" class="form-control" name="Username"
-                               placeholder="Enter your username"
-                               required
-                               oninvalid="this.setCustomValidity('Please enter your user name')"
-                               oninput="this.setCustomValidity('')">
 
-                        <input type="email" class="form-control" name="Email"
-                               placeholder="Enter your email"
-                               required
-                               oninvalid="this.setCustomValidity('Please enter a valid email')"
-                               oninput="this.setCustomValidity('')">
+            <!-- Signup -->
+            <div class="col-lg-5 col-md-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h3 class="mb-3 text-center">Đăng ký tài khoản</h3>
+                        <form asp-action="Signup" method="post">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="Username"
+                                       placeholder="Tên đăng nhập" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập tên đăng nhập')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
 
-                        <input type="tel" class="form-control" name="Phonenumber"
-                               placeholder="Enter your phone number"
-                               required
-                               pattern="^\d{10,11}$"
-                               oninvalid="this.setCustomValidity('Please enter a valid phone number (10–11 digits)')"
-                               oninput="this.setCustomValidity('')">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" name="Email"
+                                       placeholder="Email" required
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập email hợp lệ')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
 
-                        <input type="password" class="form-control" name="Password"
-                               placeholder="Enter password"
-                               required
-                               minlength="6"
-                               oninvalid="this.setCustomValidity('Please enter a password with at least 6 characters')"
-                               oninput="this.setCustomValidity('')">
+                            <div class="mb-3">
+                                <input type="tel" class="form-control" name="Phonenumber"
+                                       placeholder="Số điện thoại (10–11 số)" required
+                                       pattern="^\d{10,11}$"
+                                       oninvalid="this.setCustomValidity('Vui lòng nhập số điện thoại hợp lệ (10–11 số)')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
 
-                        <input type="password" class="form-control" name="ConfirmPassword"
-                               placeholder="Confirm password"
-                               required
-                               oninvalid="this.setCustomValidity('Please confirm your password')"
-                               oninput="this.setCustomValidity('')">
+                            <div class="mb-3">
+                                <input type="password" class="form-control" name="Password"
+                                       placeholder="Mật khẩu" required minlength="6"
+                                       oninvalid="this.setCustomValidity('Mật khẩu phải có ít nhất 6 ký tự')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
 
-                        <button type="submit" class="btn btn-default">Signup</button>
-                        <div style="color:red">@ViewBag.Message</div>
-                    </form>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" name="ConfirmPassword"
+                                       placeholder="Xác nhận mật khẩu" required
+                                       oninvalid="this.setCustomValidity('Vui lòng xác nhận mật khẩu')"
+                                       oninput="this.setCustomValidity('')">
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-light w-100">Đăng ký</button>
+                            <div class="text-danger mt-2">@ViewBag.Message</div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

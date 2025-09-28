@@ -31,13 +31,13 @@ public partial class YugiohCardShopContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("server=LAPTOP-M59U4987;database=YugiohCardShop;uid=sa;pwd=123;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("server=DESKTOP-5OO4AJH\\NGUYENHOANGVIET;database=YugiohCardShop;uid=sa;pwd=123;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Account__F3DBC573FA701569");
+            entity.HasKey(e => e.Username).HasName("PK__Account__F3DBC57301FF41D0");
 
             entity.ToTable("Account");
 
@@ -96,12 +96,12 @@ public partial class YugiohCardShopContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__ProductID__3B40CD36");
+                .HasConstraintName("FK__Cart__ProductID__3B75D760");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__username__3A4CA8FD");
+                .HasConstraintName("FK__Cart__username__3C69FB99");
 
             entity.HasOne(d => d.Variant).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.VariantId)
@@ -111,7 +111,7 @@ public partial class YugiohCardShopContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B4B177406");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2BCDCF3F00");
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(50);
@@ -119,7 +119,7 @@ public partial class YugiohCardShopContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFC20D934F");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF4AA645A2");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.OrderDate).HasColumnType("datetime");
@@ -142,7 +142,7 @@ public partial class YugiohCardShopContext : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Orders__username__2BFE89A6");
+                .HasConstraintName("FK__Orders__username__412EB0B6");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
@@ -154,12 +154,12 @@ public partial class YugiohCardShopContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__OrderDeta__Order__32AB8735");
+                .HasConstraintName("FK__OrderDeta__Order__3E52440B");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Produ__339FAB6E");
+                .HasConstraintName("FK__OrderDeta__Produ__3F466844");
 
             entity.HasOne(d => d.Variant).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.VariantId)
@@ -169,7 +169,7 @@ public partial class YugiohCardShopContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED91F3B881");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6EDE9C0F269");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
@@ -182,12 +182,12 @@ public partial class YugiohCardShopContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__Products__Catego__06CD04F7");
+                .HasConstraintName("FK__Products__Catego__4222D4EF");
         });
 
         modelBuilder.Entity<ProductVariant>(entity =>
         {
-            entity.HasKey(e => e.VariantId).HasName("PK__ProductV__0EA233E470724130");
+            entity.HasKey(e => e.VariantId).HasName("PK__ProductV__0EA233E4220A1AE9");
 
             entity.ToTable("ProductVariant");
 

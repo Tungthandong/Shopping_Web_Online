@@ -43,293 +43,362 @@
 </head><!--/head-->
 
 <body>
+    <style>
+        /* Container cố định góc phải */
+        .actionFix {
+            position: fixed;
+            right: 15px;
+            bottom: 100px;
+            z-index: 99;
+        }
+
+            .actionFix ul {
+                padding: 0;
+                margin: 0;
+            }
+
+                .actionFix ul li {
+                    list-style: none;
+                    width: 52px;
+                    height: 52px;
+                    margin-bottom: 12px;
+                }
+
+                    /* Tất cả nút */
+                    .actionFix ul li a {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 52px;
+                        height: 52px;
+                        border-radius: 50%;
+                        background: #fff;
+                        overflow: hidden;
+                        position: relative;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                        text-decoration: none;
+                    }
+
+                        /* Icon hình ảnh */
+                        .actionFix ul li a img {
+                            width: 35px;
+                            height: 35px;
+                            object-fit: contain;
+                        }
+
+                        /* Icon font-awesome */
+                        .actionFix ul li a i {
+                            font-size: 22px;
+                            line-height: 1;
+                            color: #fff;
+                        }
+
+                    /* Riêng nút phone */
+                    .actionFix ul li.phone a {
+                        background: #d93536;
+                        color: #fff;
+                        animation: icon-luc-lac 1s infinite;
+                        z-index: 2;
+                        overflow: visible;
+                    }
+
+                        /* Sóng lan tỏa */
+                        .actionFix ul li.phone a::after {
+                            content: '';
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            width: 52px;
+                            height: 52px;
+                            border-radius: 50%;
+                            background: rgba(217, 53, 54, 0.4);
+                            transform: translate(-50%, -50%) scale(1);
+                            animation: roundScale 1.5s ease-out infinite;
+                            z-index: 1;
+                        }
+
+        /* Animation rung */
+        @@keyframes icon-luc-lac {
+            0%
+
+        {
+            transform: rotate(0deg);
+        }
+
+        25% {
+            transform: rotate(8deg);
+        }
+
+        50% {
+            transform: rotate(0deg);
+        }
+
+        75% {
+            transform: rotate(-8deg);
+        }
+
+        100% {
+            transform: rotate(0deg);
+        }
+
+        }
+
+        /* Animation sóng tròn */
+        @@keyframes roundScale {
+            0%
+
+        {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.6;
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(2);
+            opacity: 0;
+        }
+
+        }
+    </style>
 
     <div class="main-wrapper">
-		<!-- Header -->
-		<header class="header">
-			<div class="container-fluid">
-				<div class="contactinfo">
-					<ul class="nav nav-pills">
-						<li><a href="#"><i class="fa fa-phone"></i> +84 86 50 69 618</a></li>
-						<li><a href="#"><i class="fa fa-envelope"></i> vungoctung098@gmail.com</a></li>
-					</ul>
-				</div>
-				<nav class="navbar navbar-expand-lg header-nav">
-					<div class="navbar-header">
-						<a id="mobile_btn" href="javascript:void(0);">
-							<span class="bar-icon">
-								<span></span>
-								<span></span>
-								<span></span>
-							</span>
-						</a>
-						<a asp-controller="Home" asp-action="Index" class="navbar-brand logo">
-							<img src="~/images/Screenshot 2025-09-16 232527.png" class="img-fluid" alt="Logo">
-						</a>
-						<a asp-controller="Home" asp-action="Index" class="navbar-brand logo-small">
-							<img src="~/img/logo-small.png" class="img-fluid" alt="Logo">
-						</a>
-					</div>
+        <!-- Header -->
+        <header class="header">
+            <div class="container-fluid">
+                <div class="contactinfo">
+                    <ul class="nav nav-pills">
+                        <li><a href="#"><i class="fa fa-phone"></i> +84 86 50 69 618</a></li>
+                        <li><a href="#"><i class="fa fa-envelope"></i> vungoctung098@gmail.com</a></li>
+                    </ul>
+                </div>
+                <nav class="navbar navbar-expand-lg header-nav">
+                    <div class="navbar-header">
+                        <a id="mobile_btn" href="javascript:void(0);">
+                            <span class="bar-icon">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="navbar-brand logo">
+                            <img src="~/images/Screenshot 2025-09-16 232527.png" class="img-fluid" alt="Logo">
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="navbar-brand logo-small">
+                            <img src="~/img/logo-small.png" class="img-fluid" alt="Logo">
+                        </a>
+                    </div>
 
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav ml-auto">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
 
-							<!-- Admin Dashboard -->
-							@{
-								var username = Context.Session.GetString("Username");
-								var role = Context.Session.GetString("Role");
-							}
-							@if (username != null && role == "admin")
-							{
-								<li class="nav-item">
-									<a class="nav-link" asp-action="Index" asp-controller="Admin">
-										<i class="fa fa-user"></i> Admin Dashboard
-									</a>
-								</li>
-							}
+                            <!-- Admin Dashboard -->
+                            @{
+                                var username = Context.Session.GetString("Username");
+                                var role = Context.Session.GetString("Role");
+                            }
+                            @if (username != null && role == "admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="Index" asp-controller="Admin">
+                                        <i class="fa fa-user"></i> Admin Dashboard
+                                    </a>
+                                </li>
+                            }
 
-							<!-- Account -->
-							<li class="nav-item">
-								<a class="nav-link" asp-action="Index" asp-controller="Account">
-									<i class="fa fa-user"></i> Account
-								</a>
-							</li>
+                            <!-- Account -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Index" asp-controller="Account">
+                                    <i class="fa fa-user"></i> Account
+                                </a>
+                            </li>
 
-							<!-- Checkout -->
-							<li class="nav-item">
-								<a class="nav-link" asp-controller="Checkout" asp-action="Index">
-									<i class="fa fa-crosshairs"></i> Checkout
-								</a>
-							</li>
+                            <!-- Checkout -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Checkout" asp-action="Index">
+                                    <i class="fa fa-crosshairs"></i> Checkout
+                                </a>
+                            </li>
 
-							<!-- Cart -->
-							<li class="nav-item">
-								<a class="nav-link" asp-controller="Cart" asp-action="Index">
-									<i class="fa fa-shopping-cart"></i> Cart
-								</a>
-							</li>
+                            <!-- Cart -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                    <i class="fa fa-shopping-cart"></i> Cart
+                                </a>
+                            </li>
 
-							<!-- Order History -->
-							<li class="nav-item">
-								<a class="nav-link" asp-controller="Checkout" asp-action="OrderHistory">
-									&#128221; Order History
-								</a>
-							</li>
+                            <!-- Order History -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Checkout" asp-action="OrderHistory">
+                                    &#128221; Order History
+                                </a>
+                            </li>
 
-							<!-- Login / Logout -->
-							@if (!string.IsNullOrEmpty(username))
-							{
-								<li class="nav-item">
-									<a class="nav-link" asp-controller="Login" asp-action="Logout">
-										<i class="fa fa-lock"></i> Logout
-									</a>
-								</li>
-							}
-							else
-							{
-								<li class="nav-item">
-									<a class="nav-link" asp-controller="Login" asp-action="Index">
-										<i class="fa fa-lock"></i> Login
-									</a>
-								</li>
-							}
+                            <!-- Login / Logout -->
+                            @if (!string.IsNullOrEmpty(username))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Login" asp-action="Logout">
+                                        <i class="fa fa-lock"></i> Logout
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Login" asp-action="Index">
+                                        <i class="fa fa-lock"></i> Login
+                                    </a>
+                                </li>
+                            }
 
-							<!-- Welcome user -->
-							@if (!string.IsNullOrEmpty(username))
-							{
-								<li class="nav-item">
-									<span class="nav-link">
-										<i class="fa fa-user"></i> Welcome, @username!
-									</span>
-								</li>
-							}
+                            <!-- Welcome user -->
+                            @if (!string.IsNullOrEmpty(username))
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link">
+                                        <i class="fa fa-user"></i> Welcome, @username!
+                                    </span>
+                                </li>
+                            }
 
-							<!-- Search -->
-							<li class="nav-item">
-								<form asp-controller="Product" asp-action="Index" method="get" class="form-inline">
-									<input type="hidden" name="cid" value="@ViewBag.Cid" />
-									<input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
-									<input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
-									<input class="form-control" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
-								</form>
-							</li>
-						</ul>
-					</div>
-				</nav>
-			</div>
-		</header>
-		<!-- /Header -->
+                            <!-- Search -->
+                            <li class="nav-item">
+                                <form asp-controller="Product" asp-action="Index" method="get" class="form-inline">
+                                    <input type="hidden" name="cid" value="@ViewBag.Cid" />
+                                    <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
+                                    <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
+                                    <input class="form-control" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- /Header -->
 
 
         <div>
             @RenderBody()
         </div>
-		<!-- Footer -->
-		@* <footer class="footer">
-			<!-- Footer Top -->
-			<div class="footer-top aos" data-aos="fade-down">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-7">
-							<div class="row">
-								<div class="col-lg-4 col-md-6">
-									<!-- Footer Widget -->
-									<div class="footer-widget footer-menu">
-										<h5 class="footer-title">About Company</h5>
-										<ul>
-											<li>
-												<a href="about.html">Our Company</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Shop Toyota</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Dreamsrentals USA</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Dreamsrentals Worldwide</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Dreamsrental Category</a>
-											</li>
-										</ul>
-									</div>
-									<!-- /Footer Widget -->
-								</div>
-								<div class="col-lg-4 col-md-6">
-									<!-- Footer Widget -->
-									<div class="footer-widget footer-menu">
-										<h5 class="footer-title">Vehicles Type</h5>
-										<ul>
-											<li>
-												<a href="javascript:void(0)">All  Vehicles</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">SUVs</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Trucks</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Cars</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Crossovers</a>
-											</li>
-										</ul>
-									</div>
-									<!-- /Footer Widget -->
-								</div>
-								<div class="col-lg-4 col-md-6">
-									<!-- Footer Widget -->
-									<div class="footer-widget footer-menu">
-										<h5 class="footer-title">Quick links</h5>
-										<ul>
-											<li>
-												<a href="javascript:void(0)">My Account</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Champaigns</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Dreamsrental Dealers</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Deals and Incentive</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Financial Services</a>
-											</li>
-										</ul>
-									</div>
-									<!-- /Footer Widget -->
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-5">
-							<div class="footer-contact footer-widget">
-								<h5 class="footer-title">Contact Info</h5>
-								<div class="footer-contact-info">
-									<div class="footer-address">
-										<span><i class="feather-phone-call"></i></span>
-										<div class="addr-info">
-											<a href="tel:+1(888)7601940">+ 1 (888) 760 1940</a>
-										</div>
-									</div>
-									<div class="footer-address">
-										<span><i class="feather-mail"></i></span>
-										<div class="addr-info">
-											<a href="/cdn-cgi/l/email-protection#6c1f191c1c031e182c09140d011c0009420f0301"><span class="__cf_email__" data-cfemail="91e2e4e1e1fee3e5d1f4e9f0fce1fdf4bff2fefc">[email&#160;protected]</span></a>
-										</div>
-									</div>
-									<div class="update-form">
-										<form action="#">
-											<span><i class="feather-mail"></i></span>
-											<input type="email" class="form-control" placeholder="Enter You Email Here">
-											<button type="submit" class="btn btn-subscribe"><span><i class="feather-send"></i></span></button>
-										</form>
-									</div>
-								</div>
-								<div class="footer-social-widget">
-									<ul class="nav-social">
-										<li>
-											<a href="javascript:void(0)"><i class="fa-brands fa-facebook-f fa-facebook fi-icon"></i></a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-instagram fi-icon"></i></a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-behance fi-icon"></i></a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-twitter fi-icon"></i> </a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-linkedin fi-icon"></i></a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Footer Top -->
-			<!-- Footer Bottom -->
-			<div class="footer-bottom">
-				<div class="container">
-					<!-- Copyright -->
-					<div class="copyright">
-						<div class="row align-items-center">
-							<div class="col-md-6">
-								<div class="copyright-text">
-									<p>© 2024 Dreams Rent. All Rights Reserved.</p>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<!-- Copyright Menu -->
-								<div class="copyright-menu">
-									<div class="vistors-details">
-										<ul class="d-flex">
-											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/paypal.svg" alt="Paypal"></a></li>
-											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/visa.svg" alt="Visa"></a></li>
-											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/master.svg" alt="Master"></a></li>
-											<li><a href="javascript:void(0)"><img class="img-fluid" src="assets/img/icons/applegpay.svg" alt="applegpay"></a></li>
-										</ul>
-									</div>
-								</div>
-								<!-- /Copyright Menu -->
-							</div>
-						</div>
-					</div>
-					<!-- /Copyright -->
-				</div>
-			</div>
-			<!-- /Footer Bottom -->
-		</footer> *@
-		<!-- /Footer -->
+        <!-- Footer -->
+        <footer class="footer">
+            <!-- Footer Top -->
+            <div class="footer-top aos" data-aos="fade-down">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6">
+                                    <!-- Footer Widget -->
+                                    <div class="footer-widget footer-menu">
+                                        <h5 class="footer-title">About Company</h5>
+                                        <ul>
+                                            <li>
+                                                <a href="about.html">Our Company</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Shop Toyota</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Dreamsrentals USA</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Dreamsrentals Worldwide</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Dreamsrental Category</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /Footer Widget -->
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <!-- Footer Widget -->
+                                    <div class="footer-widget footer-menu">
+                                        <h5 class="footer-title">Vehicles Type</h5>
+                                        <ul>
+                                            <li>
+                                                <a href="javascript:void(0)">All  Vehicles</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">SUVs</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Trucks</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Cars</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Crossovers</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /Footer Widget -->
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <!-- Footer Widget -->
+                                    <div class="footer-widget footer-menu">
+                                        <h5 class="footer-title">Quick links</h5>
+                                        <ul>
+                                            <li>
+                                                <a href="javascript:void(0)">My Account</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Champaigns</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Dreamsrental Dealers</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Deals and Incentive</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Financial Services</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /Footer Widget -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- /Footer -->
 
-	</div>
+    </div>
+
+    <div class="actionFix">
+        <ul>
+            <li class="phone">
+                <a href="tel:0989248835" title="Hotline">
+                    <i class="fa fa-phone" aria-hidden="true"></i>
+                </a>
+            </li>
+            <li class="icon">
+                <a href="https://zalo.me/0865069618" target="_blank">
+                    <img alt="Zalo" src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png" />
+                </a>
+            </li>
+            <li class="icon">
+                <a href="https://www.messenger.com/t/1847033885584162" target="_blank">
+                    <img alt="Messenger" src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png" />
+                </a>
+            </li>
+            <li class="icon">
+                <a href="https://shopee.vn/aobongda.net" target="_blank">
+                    <img alt="Shopee" src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-52_3532_HasThumb_Thumb.png" />
+                </a>
+            </li>
+            <li class="icon">
+                <a href="https://www.tiktok.com/@@aobongdanet.official" target="_blank">
+                    <img alt="Tiktok" src="https://aobongda.net/pic/banner/tiktokicon_5273_HasThumb_Thumb.png" />
+                </a>
+            </li>
+        </ul>
+    </div>
 
     <!-- scrollToTop start -->
     <div class="progress-wrap active-progress">

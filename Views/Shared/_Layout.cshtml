@@ -119,44 +119,38 @@
 
         /* Animation rung */
         @@keyframes icon-luc-lac {
-            0%
+            0% {
+                transform: rotate(0deg);
+            }
 
-        {
-            transform: rotate(0deg);
-        }
+            25% {
+                transform: rotate(8deg);
+            }
 
-        25% {
-            transform: rotate(8deg);
-        }
+            50% {
+                transform: rotate(0deg);
+            }
 
-        50% {
-            transform: rotate(0deg);
-        }
+            75% {
+                transform: rotate(-8deg);
+            }
 
-        75% {
-            transform: rotate(-8deg);
-        }
-
-        100% {
-            transform: rotate(0deg);
-        }
-
+            100% {
+                transform: rotate(0deg);
+            }
         }
 
         /* Animation sóng tròn */
         @@keyframes roundScale {
-            0%
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.6;
+            }
 
-        {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 0.6;
-        }
-
-        100% {
-            transform: translate(-50%, -50%) scale(2);
-            opacity: 0;
-        }
-
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
         }
     </style>
 
@@ -280,110 +274,143 @@
         <div>
             @RenderBody()
         </div>
-		<!-- Footer -->
-		<footer class="footer">
-			<!-- Footer Top -->
-			<div class="footer-top aos" data-aos="fade-down">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-7">
-							<div class="row">
-								<div class="col-lg-4 col-md-6">
-									<!-- Footer Widget -->
-									<div class="footer-widget footer-menu">
-										<h5 class="footer-title">Vehicles Type</h5>
-										<ul>
-											<li>
-												<a href="javascript:void(0)">All  Vehicles</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">SUVs</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Trucks</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Cars</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Crossovers</a>
-											</li>
-										</ul>
-									</div>
-									<!-- /Footer Widget -->
-								</div>
-								<div class="col-lg-4 col-md-6">
-									<!-- Footer Widget -->
-									<div class="footer-widget footer-menu">
-										<h5 class="footer-title">Quick links</h5>
-										<ul>
-											<li>
-												<a href="javascript:void(0)">My Account</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Champaigns</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Dreamsrental Dealers</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Deals and Incentive</a>
-											</li>
-											<li>
-												<a href="javascript:void(0)">Financial Services</a>
-											</li>
-										</ul>
-									</div>
-									<!-- /Footer Widget -->
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-5">
-							<div class="footer-contact footer-widget">
-								<h5 class="footer-title">Contact Info</h5>
-								<div class="footer-contact-info">
-									<div class="footer-address">
-										<span><i class="feather-phone-call"></i></span>
-										<div class="addr-info">
-											<h6>+84 865 069 618</h6>
-										</div>
-									</div>
-									<div class="footer-address">
-										<span><i class="feather-mail"></i></span>
-										<div class="addr-info">
-											<h6>vungoctung098@gmail.com</h6>
-										</div>
-									</div>
-								</div>
-								<div class="footer-social-widget">
-									<ul class="nav-social">
-										<li>
-											<a href="javascript:void(0)"><i class="fa-brands fa-facebook-f fa-facebook fi-icon"></i></a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-instagram fi-icon"></i></a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-behance fi-icon"></i></a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-twitter fi-icon"></i> </a>
-										</li>
-										<li>
-											<a href="javascript:void(0)"><i class="fab fa-linkedin fi-icon"></i></a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Footer Top -->
-		</footer>
-		<!-- /Footer -->
-	</div>
+        <!-- Footer -->
+        <footer class="footer">
+            <!-- Footer Top -->
+            <div class="footer-top aos" data-aos="fade-down">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6">
+                                    <!-- Footer Widget -->
+                                    <div class="footer-widget footer-menu">
+                                        <h5 class="footer-title">Vehicles Type</h5>
+                                        <ul>
+                                            <li>
+                                                <a href="javascript:void(0)">All  Vehicles</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">SUVs</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Trucks</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Cars</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Crossovers</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /Footer Widget -->
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <!-- Footer Widget -->
+                                    <div class="footer-widget footer-menu">
+                                        <h5 class="footer-title">Quick links</h5>
+                                        <ul>
+                                            <li>
+                                                <a href="javascript:void(0)">My Account</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Champaigns</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Dreamsrental Dealers</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Deals and Incentive</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">Financial Services</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- /Footer Widget -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="footer-contact footer-widget">
+                                <h5 class="footer-title">Contact Info</h5>
+                                <div class="footer-contact-info">
+                                    <div class="footer-address">
+                                        <span><i class="feather-phone-call"></i></span>
+                                        <div class="addr-info">
+                                            <h6>+84 865 069 618</h6>
+                                        </div>
+                                    </div>
+                                    <div class="footer-address">
+                                        <span><i class="feather-mail"></i></span>
+                                        <div class="addr-info">
+                                            <h6>vungoctung098@gmail.com</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="footer-social-widget">
+                                    <ul class="nav-social">
+                                        <li>
+                                            <a href="javascript:void(0)"><i class="fa-brands fa-facebook-f fa-facebook fi-icon"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)"><i class="fab fa-instagram fi-icon"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)"><i class="fab fa-behance fi-icon"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)"><i class="fab fa-twitter fi-icon"></i> </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)"><i class="fab fa-linkedin fi-icon"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Footer Top -->
+        </footer>
+        <!-- /Footer -->
+    </div>
+    <div class="actionFix">
+        <ul>
+            <li class="phone">
+                <a href="tel:0989248835" title="Hotline">
+                    <i class="fa fa-phone" aria-hidden="true"></i>
+                </a>
+            </li>
 
+
+            <li class="icon">
+                <a href="https://zalo.me/0943039054" target="_blank" title="">
+                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png">
+                </a>
+            </li>
+
+            <li class="icon">
+                <a href="https://www.messenger.com/t/1847033885584162/?messaging_source=source%3Apages%3Amessage_shortlink&amp;source_id=1441792&amp;recurring_notification=0" target="_blank" title="">
+                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png">
+                </a>
+            </li>
+
+            <li class="icon">
+                <a href="https://shopee.vn/aobongda.net" target="_blank" title="">
+                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-52_3532_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-52_3532_HasThumb_Thumb.png">
+                </a>
+            </li>
+
+            <li class="icon">
+                <a href="https://www.tiktok.com/@@aobongdanet.official" target="_blank" title="">
+                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/tiktokicon_5273_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/tiktokicon_5273_HasThumb_Thumb.png">
+                </a>
+            </li>
+        </ul>
+    </div>
     <!-- scrollToTop start -->
     <div class="progress-wrap active-progress">
         <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">

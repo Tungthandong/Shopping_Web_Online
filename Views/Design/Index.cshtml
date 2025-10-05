@@ -1,8 +1,42 @@
 ﻿
 <script src="js/designscript.js" defer></script>
 <div class="container">
+	
 	<div class="row justify-content-md-center">
 		<div class="col-md-3" style="min-height:100vh;">
+			<div class="image-dropdown">
+				<label>Choose your sample:</label>
+				<button class="dropdown-btn">
+					<img id="selected-image" src="images/design-sample/ao-1.jfif" alt="Selected" />
+				</button>
+				<div class="dropdown-content">
+					<img src="images/design-sample/ao-1.jfif" alt="sample 1" />
+					<img src="images/design-sample/ao-2.jfif" alt="sample 2" />
+				</div>
+			</div>
+			<br />
+			<br />
+			<div class="upload-file" style="border:solid">
+				<label>
+					Choose your image file
+					<input id="file-in" type="file" onchange="loadFile(event)" name="myImage" accept="image/png, image/gif, image/jpeg" />
+				</label>
+				<img id="img-out" style="max-width:200px;height:auto" />
+				<br />
+				<input type="range" id="img-slider" min="60" max="200" value="150" />
+			</div>
+
+			<script>// load input img
+				var loadFile = function(event) {
+				  var output = document.getElementById('img-out');
+				  output.src = URL.createObjectURL(event.target.files[0]);
+				  output.onload = function() {
+					URL.revokeObjectURL(output.src) // free memory
+					output.width = 150;
+				  }
+				};
+			</script>
+
 			<label class="Title">Shapes</label>
 			<ul class="options">
 				<li class="option tool" id="rectangle">
@@ -54,6 +88,7 @@
 				<button class="save-canvas">Contact</button>
 			</div>
 		</div>
+		
 		<div class="drawing-broad col-md-9 ">
 			<canvas></canvas>
 		</div>
@@ -176,5 +211,45 @@
 		border: 1px solid;
 		min-height: 100vh;
 		background-color:white;
+	}
+</style>
+
+<style>
+	.image-dropdown {
+		position: relative;
+		display: inline-block;
+	}
+
+	.dropdown-btn img {
+		width: 50px;
+		height: 30px;
+		border: 1px solid #ccc;
+		cursor: pointer;
+	}
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background: #fff;
+		border: 1px solid #ccc;
+		padding: 5px;
+		box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+		z-index: 10;
+	}
+
+		.dropdown-content img {
+			width: 50px;
+			height: 30px;
+			margin: 3px;
+			cursor: pointer;
+			transition: transform 0.2s;
+		}
+
+			.dropdown-content img:hover {
+				transform: scale(1.1);
+			}
+
+	.image-dropdown.open .dropdown-content {
+		display: flex;
 	}
 </style>

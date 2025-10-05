@@ -10,6 +10,42 @@ const canvas = document.querySelector("canvas"),
 	saveImg = document.querySelector(".save-canvas"),
 	ctx = canvas.getContext("2d");
 
+
+var background = new Image();
+background.src = "images/design-sample/ao-1.jfif";
+
+// img input resize
+const imgSlider = document.querySelector("#img-slider"),
+	imgOut = document.getElementById('img-out');
+
+imgSlider.addEventListener("change", () => {
+	imgOut.width = imgSlider.value;
+	console.log(imgSlider.value);
+});
+//
+
+// dropdown start
+const dropdown = document.querySelector(".image-dropdown");
+const selectedImage = document.getElementById("selected-image");
+
+dropdown.querySelector(".dropdown-btn").addEventListener("click", () => {
+	dropdown.classList.toggle("open");
+});
+
+dropdown.querySelectorAll(".dropdown-content img").forEach(img => {
+	img.addEventListener("click", (e) => {
+		selectedImage.src = e.target.src;
+		dropdown.classList.remove("open");
+		background.src = selectedImage.src;
+		setCanvasBackground();
+	});
+});
+
+window.addEventListener("click", (e) => {
+	if (!dropdown.contains(e.target)) dropdown.classList.remove("open");
+});
+
+// dropdown end
 // global var
 
 let prevMouseX, prevMouseY, snapshot,
@@ -19,8 +55,9 @@ selectedTool = "brush",
 selectedColor = "#000";
 
 const setCanvasBackground = () => {
-	ctx.fillStyle = "#fff";// draw the whole canvas white
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.drawImage(background, (canvas.width - canvas.height) / 2, 0, canvas.height, canvas.height);
+	//ctx.fillStyle = "#fff";// draw the whole canvas white
+	//ctx.fillRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = selectedColor;//setting fillstyle back to the selected color
 }
 

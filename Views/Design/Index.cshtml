@@ -21,9 +21,10 @@
 					Choose your image file
 					<input id="file-in" type="file" onchange="loadFile(event)" name="myImage" accept="image/png, image/gif, image/jpeg" />
 				</label>
-				<img id="img-out" style="max-width:200px;height:auto" />
+				<img id="img-out"  />
+				@* style="max-width:200px;height:auto" *@
 				<br />
-				<input type="range" id="img-slider" min="60" max="200" value="150" />
+				<input type="range" id="img-slider" min="60" max="400" value="150" />
 			</div>
 
 			<script>// load input img

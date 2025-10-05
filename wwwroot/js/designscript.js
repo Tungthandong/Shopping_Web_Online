@@ -35,7 +35,7 @@ document.addEventListener("mouseup", (e) => {
 const drawingImg = (e) => {
 	if (!isDrawingImg) return; // if isDrawing is false return from here
 	ctx.putImageData(snapshot, 0, 0); //adding copied canvas data on to this canvas
-	ctx.drawImage(imgOut, e.offsetX - imgOut.width / 2, e.offsetY - imgOut.height/2, imgOut.width, imgOut.height);
+	ctx.drawImage(imgOut, e.offsetX - imgOut.width / 2, e.offsetY - imgOut.height / 2, imgOut.width, imgOut.height);
 }
 
 // img input resize
@@ -145,6 +145,7 @@ const drawing = (e) => {
 	} else if (selectedTool === "triangle") {
 		drawTriangle(e);
 	}
+	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
 toolBtns.forEach(btn => {
@@ -176,6 +177,7 @@ colorPicker.addEventListener("change", () => {
 clearCanvas.addEventListener("click", () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	setCanvasBackground();
+	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
 
 saveImg.addEventListener("click", () => {

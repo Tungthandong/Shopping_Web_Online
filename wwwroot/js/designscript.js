@@ -14,13 +14,35 @@ const canvas = document.querySelector("canvas"),
 var background = new Image();
 background.src = "images/design-sample/ao-1.jfif";
 
+
+const imgSlider = document.querySelector("#img-slider");
+var	imgOut = document.getElementById('img-out');
+
+let isDrawingImg = false;
+// global var
+
+// Start dragging if mouse is on image
+imgOut.addEventListener("mousedown", (e) => {
+	isDrawingImg = true;
+});
+
+document.addEventListener("mouseup", (e) => {
+	if (isDrawingImg) {
+		isDrawingImg = false;
+	}
+});
+
+const drawingImg = (e) => {
+	if (!isDrawingImg) return; // if isDrawing is false return from here
+	ctx.putImageData(snapshot, 0, 0); //adding copied canvas data on to this canvas
+	ctx.drawImage(imgOut, e.offsetX - imgOut.width / 2, e.offsetY - imgOut.height/2, imgOut.width, imgOut.height);
+}
+
 // img input resize
-const imgSlider = document.querySelector("#img-slider"),
-	imgOut = document.getElementById('img-out');
+
 
 imgSlider.addEventListener("change", () => {
 	imgOut.width = imgSlider.value;
-	console.log(imgSlider.value);
 });
 //
 
@@ -46,7 +68,7 @@ window.addEventListener("click", (e) => {
 });
 
 // dropdown end
-// global var
+
 
 let prevMouseX, prevMouseY, snapshot,
 isDrawing = false;
@@ -120,7 +142,7 @@ const drawing = (e) => {
 		drawRect(e);
 	} else if (selectedTool === "circle") {
 		drawCircle(e);
-	} else {
+	} else if (selectedTool === "triangle") {
 		drawTriangle(e);
 	}
 }
@@ -163,6 +185,19 @@ saveImg.addEventListener("click", () => {
 	link.click();
 });
 
-canvas.addEventListener("mousedown", startDraw);
-canvas.addEventListener("mousemove", drawing);
-canvas.addEventListener("mouseup", () => isDrawing = false);
+canvas.addEventListener("mousedown", (e) => {
+	if (isDrawingImg) {
+		isDrawingImg = false;
+	}
+	startDraw(e);
+});
+canvas.addEventListener("mousemove", (e) => {
+	if (isDrawingImg) {
+		drawingImg(e);
+		return;
+	}
+	drawing(e);
+});
+canvas.addEventListener("mouseup", () => {
+	isDrawing = false;
+});

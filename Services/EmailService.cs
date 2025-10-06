@@ -1,7 +1,7 @@
 ﻿
 using System.Net;
 using System.Net.Mail;
-﻿
+
 namespace Shopping_Web.Services
 {
     public class EmailService : IEmailService
@@ -26,6 +26,31 @@ namespace Shopping_Web.Services
                 client.EnableSsl = true;
 
                 var mail = new System.Net.Mail.MailMessage(senderEmail, to, subject, body);
+                mail.IsBodyHtml = true;
+                await client.SendMailAsync(mail);
+            }
+        }
+
+        public async Task SendEmailAsync(string to, string subject, string body, List<Attachment> attachments )
+        {
+            var smtpServer = _configuration["EmailSettings:SmtpServer"];
+            var smtpPort = int.Parse(_configuration["EmailSettings:SmtpPort"]);
+            var senderEmail = _configuration["EmailSettings:SenderEmail"];
+            var senderPassword = _configuration["EmailSettings:SenderPassword"];
+
+            using (var client = new System.Net.Mail.SmtpClient(smtpServer, smtpPort))
+            {
+                client.Credentials = new System.Net.NetworkCredential(senderEmail, senderPassword);
+                client.EnableSsl = true;
+
+                var mail = new System.Net.Mail.MailMessage(senderEmail, to, subject, body);
+                if (attachments != null)
+                {
+                    foreach (var attachment in attachments)
+                    {
+                        mail.Attachments.Add(attachment);
+                    }
+                }
                 mail.IsBodyHtml = true;
                 await client.SendMailAsync(mail);
             }

@@ -7,7 +7,7 @@ const canvas = document.querySelector("canvas"),
 	colorBtns = document.querySelectorAll(".colors .option"),
 	colorPicker = document.querySelector("#color-picker"),
 	clearCanvas = document.querySelector(".clear-canvas"),
-	saveImg = document.querySelector(".save-canvas"),
+	saveImg = document.querySelector("#send-image"),
 	ctx = canvas.getContext("2d");
 
 
@@ -20,6 +20,41 @@ var	imgOut = document.getElementById('img-out');
 
 let isDrawingImg = false;
 // global var
+
+//gui qua controller
+saveImg.addEventListener("click", () => {
+	const fullname = document.getElementById("FullName").value;
+	const phone = document.getElementById("Phone").value;
+	const email = document.getElementById("Email").value;
+	const quantity = document.getElementById("Quantity").value;
+	const note = document.getElementById("Note").value;
+	const fileInput = document.getElementById("File");
+	const userFile = fileInput.files[0];
+
+	canvas.toBlob((blob) => {
+		const formData = new FormData();
+		formData.append("canvasFile", blob, "canvas-file.jpg");
+		if (userFile) formData.append("userFile", userFile);
+		formData.append("fullname", fullname);
+		formData.append("phone", phone);
+		formData.append("email", email);
+		formData.append("quantity", quantity);
+		formData.append("note", note);
+
+		fetch("/Design/SaveImage", {
+			method: "POST",
+			body: formData
+		})
+			.then(res => res.json()) // return this!
+			.then(data => {
+				alert("success");
+				window.location.href = "/Design";
+			})
+			.catch(err => console.error("Error:", err));
+	});
+});
+
+
 
 // Start dragging if mouse is on image
 imgOut.addEventListener("mousedown", (e) => {
@@ -81,6 +116,7 @@ const setCanvasBackground = () => {
 	//ctx.fillStyle = "#fff";// draw the whole canvas white
 	//ctx.fillRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = selectedColor;//setting fillstyle back to the selected color
+	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
 window.addEventListener("load", () => {
@@ -145,7 +181,6 @@ const drawing = (e) => {
 	} else if (selectedTool === "triangle") {
 		drawTriangle(e);
 	}
-	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
 toolBtns.forEach(btn => {
@@ -180,12 +215,6 @@ clearCanvas.addEventListener("click", () => {
 	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 });
 
-saveImg.addEventListener("click", () => {
-	const link = document.createElement("a");
-	link.download = `${Date.now()}.jpg`;
-	link.href = canvas.toDataURL();
-	link.click();
-});
 
 canvas.addEventListener("mousedown", (e) => {
 	if (isDrawingImg) {

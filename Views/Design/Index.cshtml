@@ -1,7 +1,6 @@
 ﻿
 <script src="js/designscript.js" defer></script>
 <div class="container">
-	
 	<div class="row justify-content-md-center">
 		<div class="col-md-3" style="min-height:100vh;">
 			<div class="image-dropdown">
@@ -21,21 +20,22 @@
 					Choose your image file
 					<input id="file-in" type="file" onchange="loadFile(event)" name="myImage" accept="image/png, image/gif, image/jpeg" />
 				</label>
-				<img id="img-out"  />
+				<img id="img-out" />
 				@* style="max-width:200px;height:auto" *@
 				<br />
 				<input type="range" id="img-slider" min="60" max="400" value="150" />
 			</div>
 
-			<script>// load input img
-				var loadFile = function(event) {
-				  var output = document.getElementById('img-out');
-				  output.src = URL.createObjectURL(event.target.files[0]);
-				  output.onload = function() {
-					URL.revokeObjectURL(output.src) // free memory
-					output.width = 150;
-				  }
-				};
+			<script>
+				// load input img
+								var loadFile = function(event) {
+								  var output = document.getElementById('img-out');
+								  output.src = URL.createObjectURL(event.target.files[0]);
+								  output.onload = function() {
+									URL.revokeObjectURL(output.src) // free memory
+									output.width = 150;
+								  }
+								};
 			</script>
 
 			<label class="Title">Shapes</label>
@@ -68,7 +68,7 @@
 					<span>Eraser</span>
 				</li>
 				<li class="option">
-					<input type="range" id="size-slider" min="1" max="30" value="5"/>
+					<input type="range" id="size-slider" min="1" max="30" value="5" />
 				</li>
 			</ul>
 			<div class="colors">
@@ -86,16 +86,95 @@
 			</div>
 			<div class="buttons">
 				<button class="clear-canvas">Clear</button>
-				<button class="save-canvas">Contact</button>
+				<button class="save-canvas" onclick="openModal()">Contact</button>
 			</div>
 		</div>
-		
+
 		<div class="drawing-broad col-md-9 ">
 			<canvas></canvas>
 		</div>
+
+
+	</div>
+</div>
+<div id="contactModal" class="modal">
+	<div class="modal-content">
+		<span class="close" onclick="closeModal()">&times;</span>
+		<h3 id="modalTitle" class="text-center font-bold mb-3"></h3>
+
+		<div class="form-group mb-2">
+			<label>Họ và tên</label>
+			<input type="text" id="FullName" placeholder="Họ và tên *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Số điện thoại</label>
+			<input type="tel" id="Phone" placeholder="Số điện thoại *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Email</label>
+			<input type="email" id="Email" placeholder="Email *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Số lượng cần tư vấn</label>
+			<input type="number" id="Quantity" placeholder="Số lượng cần tư vấn *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<input type="file" id="File" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Lời nhắn</label>
+			<textarea id="Note" placeholder="Nội dung thiết kế (càng chi tiết càng tốt)" class="form-control"></textarea>
+		</div>
+		<button type="submit" id="send-image" class=" btn btn-primary w-100 mt-3">Gửi yêu cầu</button>
+
 	</div>
 </div>
 
+ 
+
+<style>
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 1000;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.6);
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modal-content {
+		background: #fff;
+		padding: 20px;
+		border-radius: 10px;
+		width: 400px;
+		max-width: 90%;
+	}
+
+	.modal.active {
+		display: flex;
+	}
+
+	.modal .close {
+		float: right;
+		font-size: 20px;
+		cursor: pointer;
+	}
+</style>
+<!-- /Rental deals -->
+<script>
+	function openModal() {
+		document.getElementById("modalTitle").innerText = "Liên hệ đặt hàng: ";
+		document.getElementById("contactModal").classList.add("active");
+	}
+
+	function closeModal() {
+		document.getElementById("contactModal").classList.remove("active");
+	}
+</script>
 
 <style>
 	.options {
@@ -206,12 +285,12 @@
 		border: 1px solid #4A98F7;
 	}
 
-	.drawing-broad canvas{
-		width:100%;
-		height:100%;
+	.drawing-broad canvas {
+		width: 100%;
+		height: 100%;
 		border: 1px solid;
 		min-height: 100vh;
-		background-color:white;
+		background-color: white;
 	}
 </style>
 

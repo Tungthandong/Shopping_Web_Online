@@ -21,9 +21,9 @@ namespace Shopping_Web.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> SaveImage(IFormFile canvasFile, IFormFile userFile, string fullname, string phone, string email, int quantity, string note)
+        public async Task<IActionResult> SaveImage(IFormFile canvasFile, List<IFormFile> userFiles, string fullname, string phone, string email, int quantity, string note)
         {
-            if (canvasFile == null && userFile == null)
+            if (canvasFile == null && userFiles == null)
                 return BadRequest("No files uploaded.");
 
             string subject = "Báo giá thiết kế - The InkSideCrew";
@@ -52,13 +52,17 @@ namespace Shopping_Web.Controllers
                 attachments.Add(new Attachment(ms, canvasFile.FileName, canvasFile.ContentType));
             }
 
-            if (userFile != null && userFile.Length > 0)
+            if (userFiles != null && userFiles.Count > 0)
             {
-                var ms = new MemoryStream();
-                await userFile.CopyToAsync(ms);
-                ms.Position = 0;
-                attachments.Add(new Attachment(ms, userFile.FileName, userFile.ContentType));
+                foreach (var file in userFiles)
+                {
+                    var ms = new MemoryStream();
+                    await file.CopyToAsync(ms);
+                    ms.Position = 0;
+                    attachments.Add(new Attachment(ms, file.FileName, file.ContentType));
+                }
             }
+
 
 
             await _emailService.SendEmailAsync(email, subject, body,attachments);

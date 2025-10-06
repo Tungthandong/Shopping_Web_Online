@@ -12,7 +12,7 @@ const canvas = document.querySelector("canvas"),
 
 
 var background = new Image();
-background.src = "images/design-sample/ao-1.jfif";
+background.src = "images/design-sample/mau-ao-1.jfif";
 
 
 const imgSlider = document.querySelector("#img-slider");
@@ -28,13 +28,13 @@ saveImg.addEventListener("click", () => {
 	const email = document.getElementById("Email").value;
 	const quantity = document.getElementById("Quantity").value;
 	const note = document.getElementById("Note").value;
-	const fileInput = document.getElementById("File");
-	const userFile = fileInput.files[0];
-
+	const files = document.getElementById("File").files;
 	canvas.toBlob((blob) => {
 		const formData = new FormData();
 		formData.append("canvasFile", blob, "canvas-file.jpg");
-		if (userFile) formData.append("userFile", userFile);
+		for (let i = 0; i < files.length; i++) {
+			formData.append("userFiles", files[i]);
+		}
 		formData.append("fullname", fullname);
 		formData.append("phone", phone);
 		formData.append("email", email);

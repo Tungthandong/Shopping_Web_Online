@@ -58,14 +58,10 @@ saveImg.addEventListener("click", () => {
 
 // Start dragging if mouse is on image
 imgOut.addEventListener("mousedown", (e) => {
+	snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
 	isDrawingImg = true;
 });
 
-document.addEventListener("mouseup", (e) => {
-	if (isDrawingImg) {
-		isDrawingImg = false;
-	}
-});
 
 const drawingImg = (e) => {
 	if (!isDrawingImg) return; // if isDrawing is false return from here
@@ -168,12 +164,14 @@ const startDraw = (e) => {
 const drawing = (e) => {
 	if (!isDrawing) return; // if isDrawing is false return from here
 	ctx.putImageData(snapshot, 0, 0); //adding copied canvas data on to this canvas
-	if (selectedTool === "brush" || selectedTool === "eraser") {
-		//if selected tool is eraser then set strokeStyle to white
-		//to paint white color on to the existing canvas content else set the mouse pointer
-		ctx.strokeStyle = selectedTool === "eraser" ? "#fff" : selectedColor;
+	if (selectedTool === "brush") {
+		ctx.strokeStyle = selectedColor;
 		ctx.lineTo(e.offsetX, e.offsetY); //creating line according to the mouse pointer
 		ctx.stroke();//drawing /filling line with color
+	} else if (selectedTool === "eraser") {
+
+		ctx.lineTo(e.offsetX, e.offsetY);
+		ctx.stroke();
 	} else if (selectedTool === "rectangle") {
 		drawRect(e);
 	} else if (selectedTool === "circle") {

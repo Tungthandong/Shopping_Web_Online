@@ -64,13 +64,20 @@ namespace Shopping_Web.Controllers
             TempData["Var"] = var;
             return RedirectToAction("Index", "Cart");
         }
-        public IActionResult DeleteItemInCart(int productId)
+        public IActionResult DeleteItemInCart(int productId, int variantId)
         {
             var username = HttpContext.Session.GetString("Username");
-            var cartItem = new Cart { Username = username, ProductId = productId };
+            var cartItem = new Cart
+            {
+                Username = username,
+                ProductId = productId,
+                VariantId = variantId
+            };
+
             _cartService.Delete(cartItem);
             return RedirectToAction("Index", "Cart");
         }
+
         public IActionResult GoCheckout(int[] selectedProducts)
         {
             var username = HttpContext.Session.GetString("Username");

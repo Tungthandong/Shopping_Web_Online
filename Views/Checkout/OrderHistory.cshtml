@@ -5,8 +5,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <div class="flex-1 p-6 bg-gray-50 min-h-screen">
-    <div class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="p-6 border-b border-gray-200">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
                 <i class="fas fa-history"></i> Order History
             </h2>
@@ -16,91 +16,92 @@
             }
         </div>
 
-        <div class="overflow-auto">
-            <table class="min-w-full text-sm text-left text-gray-800">
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-sm text-left text-gray-700">
                 <thead class="bg-gray-100 text-xs text-gray-600 uppercase">
-                <tr>
-                    <th class="px-5 py-3">Date</th>
-                    <th class="px-5 py-3">Total</th>
-                    <th class="px-5 py-3">Ship Cost</th>
-                    <th class="px-5 py-3">Status</th>
-                    <th class="px-5 py-3 text-center">Actions</th>
-                </tr>
+                    <tr>
+                        <th class="px-5 py-3">Date</th>
+                        <th class="px-5 py-3">Total</th>
+                        <th class="px-5 py-3">Ship Cost</th>
+                        <th class="px-5 py-3">Status</th>
+                        <th class="px-5 py-3 text-center">Actions</th>
+                    </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
-                @foreach (var o in Model)
-                {
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-5 py-3">@o.OrderDate.ToString("dd/MM/yyyy")</td>
-                        <td class="px-5 py-3">@o.TotalAmount.ToString("N0") ₫</td>
-                        <td class="px-5 py-3">@o.ShipCost.ToString("N0") ₫</td>
-                        <td class="px-5 py-3">@o.OrderStatus</td>
-                        <td class="px-5 py-3 text-center">
-                            <button type="button"
-                                    onclick='showOrderDetail(@Html.Raw(JsonConvert.SerializeObject(o, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })))'
-                                    class="text-blue-600 hover:text-blue-800">
-                                👁 View
-                            </button>
-                            <br></br>
-                            @if (o.OrderStatus != "Cancelled" && o.OrderStatus != "Delivered" && o.OrderStatus != "Completed")
-                            {
-                                <form asp-action="CancelOrder" asp-controller="Checkout">
-                                    <input type="hidden" name="oid" value="@o.OrderId" />
-                                    <button type="submit"
-                                            class="text-green-600 hover:text-green-800"
-                                            onclick="return confirm('Are you sure you want to cancel this order?');">
-                                        Cancel Order
-                                    </button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
+                    @foreach (var o in Model)
+                    {
+                        string statusClass = o.OrderStatus switch
+                        {
+                            "Delivered" => "bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold",
+                            "Cancelled" => "bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold",
+                            "Pending" => "bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-semibold",
+                            _ => "bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold"
+                        };
+
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-5 py-3">@o.OrderDate.ToString("dd/MM/yyyy")</td>
+                            <td class="px-5 py-3 font-semibold">@o.TotalAmount.ToString("N0") ₫</td>
+                            <td class="px-5 py-3">@o.ShipCost.ToString("N0") ₫</td>
+                            <td class="px-5 py-3">
+                                <span class="@statusClass">@o.OrderStatus</span>
+                            </td>
+                            <td class="px-5 py-3 text-center space-x-2">
+                                <button type="button"
+                                        onclick='showOrderDetail(@Html.Raw(JsonConvert.SerializeObject(o, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore })))'
+                                        class="inline-flex items-center px-3 py-1 text-sm text-blue-600 hover:text-white border border-blue-600 hover:bg-blue-600 rounded-md transition">
+                                    <i class="fa fa-eye mr-1"></i> View
+                                </button>
+                                @if (o.OrderStatus != "Cancelled" && o.OrderStatus != "Delivered" && o.OrderStatus != "Completed")
+                                {
+                                    <form asp-action="CancelOrder" asp-controller="Checkout" class="inline-block">
+                                        <input type="hidden" name="oid" value="@o.OrderId" />
+                                        <button type="submit"
+                                                class="inline-flex items-center px-3 py-1 text-sm text-red-600 hover:text-white border border-red-600 hover:bg-red-600 rounded-md transition"
+                                                onclick="return confirm('Are you sure you want to cancel this order?');">
+                                            <i class="fa fa-times mr-1"></i> Cancel
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Pagination -->
     @if (ViewBag.Totalpage > 1)
     {
-        <ul class="pagination">
-            @for (int i = 1; i <= ViewBag.Totalpage; i++)
-            {
-                <li class="page-item @(i == ViewBag.Pageindex ? "active" : "")">
-                    <a class="page-link" asp-controller="Checkout" asp-action="OrderHistory" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-minPrice="@ViewBag.minPrice" asp-route-maxPrice="@ViewBag.maxPrice" asp-route-sort="@ViewBag.Sort">@i</a>
-                </li>
-            }
-        </ul>
+        <div class="mt-6 flex justify-center">
+            <ul class="inline-flex items-center space-x-1">
+                @for (int i = 1; i <= ViewBag.Totalpage; i++)
+                {
+                    <li>
+                        <a class="px-3 py-1 rounded-md border @(i == ViewBag.Pageindex ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100")"
+                           asp-controller="Checkout"
+                           asp-action="OrderHistory"
+                           asp-route-page="@i"
+                           asp-route-search="@ViewBag.Search"
+                           asp-route-minPrice="@ViewBag.minPrice"
+                           asp-route-maxPrice="@ViewBag.maxPrice"
+                           asp-route-sort="@ViewBag.Sort">
+                            @i
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
     }
 </div>
 
-@* <a asp-action="Reorder" asp-controller="Order" asp-route-id="@Model.OrderId"
-   class="btn btn-warning">
-    <i class="fas fa-redo"></i> Mua lại
-</a> *@
-
-@* public IActionResult Reorder(int id)
-{
-    var oldOrder = _orderService.GetOrderById(id);
-    if (oldOrder == null) return NotFound();
-
-    foreach (var item in oldOrder.OrderItems)
-    {
-        _cartService.AddToCart(item.ProductId, item.Quantity);
-    }
-
-    TempData["Message"] = "Các sản phẩm đã được thêm vào giỏ hàng!";
-    return RedirectToAction("Index", "Cart");
-} *@
-
-
-
-<!-- Modal giống admin -->
+<!-- Modal -->
 <div id="orderModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white w-full max-w-2xl rounded-lg shadow-lg p-6 relative">
-        <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-black text-xl">
-            &times;
-        </button>
-        <h2 class="text-lg font-semibold mb-4">Order Details</h2>
+    <div class="bg-white w-full max-w-3xl rounded-lg shadow-lg p-6 relative">
+        <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-black text-2xl">&times;</button>
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+            <i class="fa fa-file-invoice"></i> Order Details
+        </h2>
         <div id="orderDetailContent" class="text-sm text-gray-700"></div>
     </div>
 </div>
@@ -111,28 +112,45 @@
         const content = document.getElementById("orderDetailContent");
 
         let html = `
-            <p><strong>Date:</strong> ${order.OrderDate}</p>
-            <p><strong>Total:</strong> ${order.TotalAmount} ₫</p>
-            <p><strong>Ship Cost:</strong> ${order.ShipCost} ₫</p>
+            <p><strong>Date:</strong> ${new Date(order.OrderDate).toLocaleDateString()}</p>
+            <p><strong>Total:</strong> ${order.TotalAmount.toLocaleString()} ₫</p>
+            <p><strong>Ship Cost:</strong> ${order.ShipCost.toLocaleString()} ₫</p>
             <p><strong>Status:</strong> ${order.OrderStatus}</p>
             <h3 class="mt-4 font-semibold">Products:</h3>
-            <table class="min-w-full text-sm mt-2 border">
+            <table class="w-full text-sm mt-2 border rounded-lg overflow-hidden">
                 <thead class="bg-gray-100 text-gray-600">
-                    <tr><th class="px-3 py-2">Product</th><th>Size</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th></tr>
+                    <tr>
+                        <th class="px-3 py-2">Product</th>
+                        <th>Size</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                    </tr>
                 </thead>
-                <tbody>`;
+                <tbody class="divide-y divide-gray-200">`;
 
+        let total = 0;
         order.OrderDetails?.forEach(p => {
-            html += `<tr>
+            let subtotal = p.Quantity * p.Product.UnitPrice;
+            total += subtotal;
+            html += `<tr class="hover:bg-gray-50">
                         <td class="px-3 py-2">${p.Product?.ProductName ?? ''}</td>
-                        <td>${p.Variant?.Size}</td>
-                        <td>${p.Quantity}</td>
-                        <td>${p.Product?.UnitPrice}</td>
-                        <td>${(p.Quantity * p.Product.UnitPrice).toFixed(2)}</td>
+                        <td class="text-center">${p.Variant?.Size ?? '-'}</td>
+                        <td class="text-center">${p.Quantity}</td>
+                        <td class="text-right">${p.Product?.UnitPrice.toLocaleString()} ₫</td>
+                        <td class="text-right font-semibold">${subtotal.toLocaleString()} ₫</td>
                     </tr>`;
         });
 
-        html += `</tbody></table>`;
+        html += `</tbody>
+            <tfoot class="bg-gray-50 font-semibold">
+                <tr>
+                    <td colspan="4" class="px-3 py-2 text-right">Grand Total:</td>
+                    <td class="text-right px-3 py-2 text-red-600">${total.toLocaleString()} ₫</td>
+                </tr>
+            </tfoot>
+        </table>`;
+
         content.innerHTML = html;
         modal.classList.remove("hidden");
         modal.classList.add("flex");

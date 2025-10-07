@@ -6,7 +6,7 @@
 			<div class="image-dropdown">
 				<label>Choose your sample:</label>
 				<button class="dropdown-btn">
-					<img id="selected-image" src="images/design-sample/ao-1.jfif" alt="Selected" />
+					<img id="selected-image" src="images/design-sample/mau-ao-1.jfif" alt="sample 1" />
 				</button>
 				<div class="dropdown-content">
 					<img src="images/design-sample/mau-ao-1.jfif" alt="sample 1" />
@@ -18,15 +18,14 @@
 			</div>
 			<br />
 			<br />
-			<div class="upload-file" style="border:solid">
+			<div class="upload-file" style="border:solid;width:100%" >
 				<label>
 					Choose your image file
 					<input id="file-in" type="file" onchange="loadFile(event)" name="myImage" accept="image/png, image/gif, image/jpeg" />
 				</label>
-				<img id="img-out" />
-				@* style="max-width:200px;height:auto" *@
+				<img id="img-out" style="height:auto" />
 				<br />
-				<input type="range" id="img-slider" min="60" max="400" value="150" />
+				<input type="range" id="img-slider" min="60" max="600" value="150"/>
 			</div>
 
 			<script>
@@ -94,10 +93,11 @@
 		</div>
 
 		<div class="drawing-broad col-md-9 ">
-			<canvas></canvas>
+			<div id="canvas-container" style="position:relative;">
+				<canvas id="backgroundCanvas" style="position: absolute;" height="900" width="700"></canvas>
+				<canvas id="canvas" style="position: absolute;background:transparent;" height="900" width="700"></canvas>
+			</div>
 		</div>
-
-
 	</div>
 </div>
 <div id="contactModal" class="modal">

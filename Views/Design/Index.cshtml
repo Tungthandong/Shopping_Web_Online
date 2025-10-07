@@ -3,33 +3,75 @@
 <div class="container">
 	<div class="row justify-content-md-center">
 		<div class="col-md-3" style="min-height:100vh;">
+			<div class="image-dropdown">
+				<label>Choose your sample:</label>
+				<button class="dropdown-btn">
+					<img id="selected-image" src="images/design-sample/ao-1.jfif" alt="Selected" />
+				</button>
+				<div class="dropdown-content">
+					<img src="images/design-sample/mau-ao-1.jfif" alt="sample 1" />
+					<img src="images/design-sample/mau-ao-2.jfif" alt="sample 2" />
+					<img src="images/design-sample/mau-ao-3.jfif" alt="sample 3" />
+					<img src="images/design-sample/mau-ao-4.jfif" alt="sample 4" />
+					<img src="images/design-sample/mau-ao-5.jfif" alt="sample 5" />
+				</div>
+			</div>
+			<br />
+			<br />
+			<div class="upload-file" style="border:solid">
+				<label>
+					Choose your image file
+					<input id="file-in" type="file" onchange="loadFile(event)" name="myImage" accept="image/png, image/gif, image/jpeg" />
+				</label>
+				<img id="img-out" />
+				@* style="max-width:200px;height:auto" *@
+				<br />
+				<input type="range" id="img-slider" min="60" max="400" value="150" />
+			</div>
+
+			<script>
+				// load input img
+								var loadFile = function(event) {
+								  var output = document.getElementById('img-out');
+								  output.src = URL.createObjectURL(event.target.files[0]);
+								  output.onload = function() {
+									URL.revokeObjectURL(output.src) // free memory
+									output.width = 150;
+								  }
+								};
+			</script>
+
 			<label class="Title">Shapes</label>
 			<ul class="options">
-				<li class="option">
+				<li class="option tool" id="rectangle">
 					<img src="~/images/icons/rectangle.svg" alt="" />
 					<span>Rectangle</span>
 				</li>
-				<li class="option">
+				<li class="option tool" id="circle">
 					<img src="~/images/icons/circle.svg" alt="" />
 					<span>Circle</span>
 				</li>
-				<li class="option">
+				<li class="option tool" id="triangle">
 					<img src="~/images/icons/triangle.svg" alt="" />
 					<span>Triangle</span>
+				</li>
+				<li class="option">
+					<input type="checkbox" id="fill-color" />
+					<label for="fill-color">Fill color</label>
 				</li>
 			</ul>
 			<label class="Title">Options</label>
 			<ul class="options">
-				<li class="option active">
+				<li class="option active tool" id="brush">
 					<img src="~/images/icons/brush.svg" alt="" />
 					<span>Brush</span>
 				</li>
-				<li class="option">
+				<li class="option tool" id="eraser">
 					<img src="~/images/icons/eraser.svg" alt="" />
 					<span>Eraser</span>
 				</li>
 				<li class="option">
-					<input type="range" id="size-slider" />
+					<input type="range" id="size-slider" min="1" max="30" value="5" />
 				</li>
 			</ul>
 			<div class="colors">
@@ -47,15 +89,95 @@
 			</div>
 			<div class="buttons">
 				<button class="clear-canvas">Clear</button>
-				<button class="give-canvas">Contact</button>
+				<button class="save-canvas" onclick="openModal()">Contact</button>
 			</div>
 		</div>
+
 		<div class="drawing-broad col-md-9 ">
 			<canvas></canvas>
 		</div>
+
+
+	</div>
+</div>
+<div id="contactModal" class="modal">
+	<div class="modal-content">
+		<span class="close" onclick="closeModal()">&times;</span>
+		<h3 id="modalTitle" class="text-center font-bold mb-3"></h3>
+
+		<div class="form-group mb-2">
+			<label>Họ và tên</label>
+			<input type="text" id="FullName" placeholder="Họ và tên *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Số điện thoại</label>
+			<input type="tel" id="Phone" placeholder="Số điện thoại *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Email</label>
+			<input type="email" id="Email" placeholder="Email *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Số lượng cần tư vấn</label>
+			<input type="number" id="Quantity" placeholder="Số lượng cần tư vấn *" class="form-control" required />
+		</div>
+		<div class="form-group mb-2">
+			<input type="file" id="File" class="form-control" multiple required />
+		</div>
+		<div class="form-group mb-2">
+			<label>Lời nhắn</label>
+			<textarea id="Note" placeholder="Nội dung thiết kế (càng chi tiết càng tốt)" class="form-control"></textarea>
+		</div>
+		<button type="submit" id="send-image" class=" btn btn-primary w-100 mt-3">Gửi yêu cầu</button>
+
 	</div>
 </div>
 
+ 
+
+<style>
+	.modal {
+		display: none;
+		position: fixed;
+		z-index: 1000;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.6);
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modal-content {
+		background: #fff;
+		padding: 20px;
+		border-radius: 10px;
+		width: 400px;
+		max-width: 90%;
+	}
+
+	.modal.active {
+		display: flex;
+	}
+
+	.modal .close {
+		float: right;
+		font-size: 20px;
+		cursor: pointer;
+	}
+</style>
+<!-- /Rental deals -->
+<script>
+	function openModal() {
+		document.getElementById("modalTitle").innerText = "Liên hệ đặt hàng: ";
+		document.getElementById("contactModal").classList.add("active");
+	}
+
+	function closeModal() {
+		document.getElementById("contactModal").classList.remove("active");
+	}
+</script>
 
 <style>
 	.options {
@@ -95,24 +217,24 @@
 	}
 
 		.colors .option:nth-child(1) {
-			background: #fff;
+			background-color: #fff;
 			border: 1px solid #bfbfbf;
 		}
 
 		.colors .option:nth-child(2) {
-			background: black
+			background-color: black
 		}
 
 		.colors .option:nth-child(3) {
-			background: red
+			background-color: red
 		}
 
 		.colors .option:nth-child(4) {
-			background: green
+			background-color: green
 		}
 
 		.colors .option:nth-child(5) {
-			background: blue
+			background-color: blue
 		}
 
 		.colors .option.selected::before {
@@ -161,15 +283,56 @@
 		background: #4A98F7;
 	}
 
-	.buttons .give-canvas {
+	.buttons .save-canvas {
 		color: #4A98F7;
 		border: 1px solid #4A98F7;
 	}
 
-	.drawing-broad canvas{
-		width:100%;
-		height:100%;
+	.drawing-broad canvas {
+		width: 100%;
+		height: 100%;
 		border: 1px solid;
 		min-height: 100vh;
+		background-color: white;
+	}
+</style>
+
+<style>
+	.image-dropdown {
+		position: relative;
+		display: inline-block;
+	}
+
+	.dropdown-btn img {
+		width: 50px;
+		height: 30px;
+		border: 1px solid #ccc;
+		cursor: pointer;
+	}
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background: #fff;
+		border: 1px solid #ccc;
+		padding: 5px;
+		box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+		z-index: 10;
+	}
+
+		.dropdown-content img {
+			width: 50px;
+			height: 30px;
+			margin: 3px;
+			cursor: pointer;
+			transition: transform 0.2s;
+		}
+
+			.dropdown-content img:hover {
+				transform: scale(1.1);
+			}
+
+	.image-dropdown.open .dropdown-content {
+		display: flex;
 	}
 </style>

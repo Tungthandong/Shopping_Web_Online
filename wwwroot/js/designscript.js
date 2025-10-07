@@ -220,6 +220,9 @@ canvas.addEventListener("mousedown", (e) => {
 	}
 	startDraw(e);
 });
+canvas.addEventListener("mouseleave", () => {
+	isDrawing = false;
+});
 canvas.addEventListener("mousemove", (e) => {
 	if (isDrawingImg) {
 		drawingImg(e);

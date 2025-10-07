@@ -1,6 +1,7 @@
 ﻿
 
-const canvas = document.querySelector("canvas"),
+const canvas = document.querySelector("#canvas"),
+	backgroundCanvas = document.querySelector("#backgroundCanvas"),
 	toolBtns = document.querySelectorAll(".tool"),
 	fillColor = document.querySelector("#fill-color"),
 	sizeSlider = document.querySelector("#size-slider"),
@@ -8,7 +9,8 @@ const canvas = document.querySelector("canvas"),
 	colorPicker = document.querySelector("#color-picker"),
 	clearCanvas = document.querySelector(".clear-canvas"),
 	saveImg = document.querySelector("#send-image"),
-	ctx = canvas.getContext("2d");
+	ctx = canvas.getContext("2d"),
+	backgroundCtx = backgroundCanvas.getContext("2d");
 
 
 var background = new Image();
@@ -29,7 +31,10 @@ saveImg.addEventListener("click", () => {
 	const quantity = document.getElementById("Quantity").value;
 	const note = document.getElementById("Note").value;
 	const files = document.getElementById("File").files;
-	canvas.toBlob((blob) => {
+
+	backgroundCtx.drawImage(canvas, 0, 0);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	backgroundCanvas.toBlob((blob) => {
 		const formData = new FormData();
 		formData.append("canvasFile", blob, "canvas-file.jpg");
 		for (let i = 0; i < files.length; i++) {
@@ -108,7 +113,7 @@ selectedTool = "brush",
 selectedColor = "#000";
 
 const setCanvasBackground = () => {
-	ctx.drawImage(background, (canvas.width - canvas.height) / 2, 0, canvas.height, canvas.height);
+	backgroundCtx.drawImage(background, (canvas.width - canvas.height) / 2, 0, canvas.height, canvas.height);
 	//ctx.fillStyle = "#fff";// draw the whole canvas white
 	//ctx.fillRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = selectedColor;//setting fillstyle back to the selected color
@@ -117,7 +122,8 @@ const setCanvasBackground = () => {
 
 window.addEventListener("load", () => {
 	//setting canvas width/height .. offsetwidth/height returns viewable width/height of an element
-
+	backgroundCanvas.width = backgroundCanvas.offsetWidth;
+	backgroundCanvas.height = backgroundCanvas.offsetHeight;
 	canvas.width = canvas.offsetWidth;
 	canvas.height = canvas.offsetHeight;
 	setCanvasBackground();
@@ -165,18 +171,22 @@ const drawing = (e) => {
 	if (!isDrawing) return; // if isDrawing is false return from here
 	ctx.putImageData(snapshot, 0, 0); //adding copied canvas data on to this canvas
 	if (selectedTool === "brush") {
+		ctx.globalCompositeOperation = 'source-over';
 		ctx.strokeStyle = selectedColor;
 		ctx.lineTo(e.offsetX, e.offsetY); //creating line according to the mouse pointer
 		ctx.stroke();//drawing /filling line with color
 	} else if (selectedTool === "eraser") {
-
+		ctx.globalCompositeOperation = 'destination-out'
 		ctx.lineTo(e.offsetX, e.offsetY);
 		ctx.stroke();
 	} else if (selectedTool === "rectangle") {
+		ctx.globalCompositeOperation = 'source-over';
 		drawRect(e);
 	} else if (selectedTool === "circle") {
+		ctx.globalCompositeOperation = 'source-over';
 		drawCircle(e);
 	} else if (selectedTool === "triangle") {
+		ctx.globalCompositeOperation = 'source-over';
 		drawTriangle(e);
 	}
 }
@@ -225,6 +235,7 @@ canvas.addEventListener("mouseleave", () => {
 });
 canvas.addEventListener("mousemove", (e) => {
 	if (isDrawingImg) {
+		ctx.globalCompositeOperation = 'source-over';
 		drawingImg(e);
 		return;
 	}

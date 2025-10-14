@@ -118,7 +118,7 @@
                                     </p>
                                 </td>
                                 <td class="cart_price text-center">
-                                    <p>@cart.Product.UnitPrice₫</p>
+                                    <p>@Convert.ToDecimal(@cart.Product.UnitPrice).ToString("N0") VND</p>
                                 </td>
                                 <td class="cart_quantity text-center">
                                     <div class="cart_quantity_button d-flex justify-content-center align-items-center">
@@ -128,7 +128,7 @@
                                     </div>
                                 </td>
                                 <td class="cart_total text-center">
-                                    <p class="cart_total_price">@(cart.Product.UnitPrice* cart.Quantity)₫</p>
+                                    <p class="cart_total_price">@Convert.ToDecimal(cart.Product.UnitPrice * cart.Quantity).ToString("N0") VND</p>
                                     <div style="display: none;">@(cartTotal += cart.Product.UnitPrice * cart.Quantity)</div>
                                 </td>
                                 <td class="cart_delete text-center">
@@ -151,7 +151,7 @@
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4">
-                <h5 class="fw-bold">Total: <span class="text-danger">@cartTotal₫</span></h5>
+                <h5 class="fw-bold">Total: <span class="text-danger">@Convert.ToDecimal(cartTotal).ToString("N0") VND</span></h5>
                 <button type="submit" class="btn btn-dark px-4" @(Model == null || !Model.Any() ? "disabled" : "")>
                     Proceed to Checkout
                 </button>

@@ -27,7 +27,7 @@
 													@item.ProductName
 												</a>
 											</h3>
-											<h4 class="text-danger">@item.UnitPrice₫</h4>
+											<h4 class="text-danger">@Convert.ToDecimal(item.UnitPrice).ToString("N0") VND</h4>
 										</div>
 										<div class="listing-button">
 											@{

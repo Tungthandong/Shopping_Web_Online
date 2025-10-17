@@ -27,22 +27,21 @@
 													@item.ProductName
 												</a>
 											</h3>
-											<h4 class="text-danger">@item.UnitPrice₫</h4>
+											<h4 class="text-danger">@Convert.ToDecimal(item.UnitPrice).ToString("N0") VND</h4>
 										</div>
 										<div class="listing-button">
 											@{
 												var username = Context.Session.GetString("Username");
 												var returnUrl = Context.Request.Path + Context.Request.QueryString;
 											}
-											<form asp-controller="Cart" asp-action="AddToCart" method="post">
+											
 												<input type="hidden" name="Username" value="@username" />
 												<input type="hidden" name="ProductId" value="@item.ProductId" />
 												<input type="hidden" name="Quantity" value="1" />
 												<input type="hidden" name="returnUrl" value="@returnUrl" />
-												<button type="submit" class="btn btn-order">
+											<a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="btn btn-order">
 													<span><i class="feather-calendar me-2"></i></span>Đặt hàng ngay!
-												</button>
-											</form>
+												</a>
 											<button type="button" class="btn btn-order mt-2"
 													onclick="openModal(@item.ProductId, '@item.ProductName')">
 												<span><i class="feather-send me-2"></i></span>Liên hệ đặt hàng

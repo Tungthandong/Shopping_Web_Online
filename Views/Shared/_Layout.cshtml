@@ -6,6 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Home | E-Shopper</title>
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="~/img/favicon.png">
 
@@ -152,21 +153,66 @@
                 opacity: 0;
             }
         }
+        /* Hiển thị dropdown khi hover */
+        .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0;
+        }
+
+        /* Nền sáng, chữ đen */
+        .navbar, .nav {
+            background-color: #fff !important;
+        }
+
+        .nav-link {
+            color: #000 !important;
+            transition: color 0.3s ease;
+        }
+
+            .nav-link:hover {
+                color: #007bff !important;
+            }
+
+        /* Dropdown styling */
+        .dropdown-menu {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #007bff;
+        }
+
+        /* Thanh header */
+        .header {
+            border-bottom: 1px solid #eee;
+        }
     </style>
 
     <div class="main-wrapper">
         <!-- Header -->
-        <header class="header">
+        <header class="header bg-white shadow-sm">
             <div class="container-fluid">
-                <div class="contactinfo">
-                    <ul class="nav nav-pills">
-                        <li><a href="#"><i class="fa fa-phone"></i> +84 86 50 69 618</a></li>
-                        <li><a href="#"><i class="fa fa-envelope"></i> vungoctung098@gmail.com</a></li>
+                <div class="contactinfo py-1 border-bottom">
+                    <ul class="nav nav-pills small text-dark">
+                        <li class="nav-item me-3">
+                            <a href="#" class="nav-link text-dark">
+                                <i class="fa fa-phone"></i> +84 86 50 69 618
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-dark">
+                                <i class="fa fa-envelope"></i> vungoctung098@gmail.com
+                            </a>
+                        </li>
                     </ul>
                 </div>
+
                 <nav class="navbar navbar-expand-lg header-nav">
-                    <div class="navbar-header">
-                        <a id="mobile_btn" href="javascript:void(0);">
+                    <div class="navbar-header d-flex align-items-center">
+                        <a id="mobile_btn" href="javascript:void(0);" class="me-2">
                             <span class="bar-icon">
                                 <span></span>
                                 <span></span>
@@ -174,62 +220,62 @@
                             </span>
                         </a>
                         <a asp-controller="Home" asp-action="Index" class="navbar-brand logo">
-                            <img src="~/images/Screenshot 2025-09-16 232527.png" class="img-fluid" alt="Logo">
-                        </a>
-                        <a asp-controller="Home" asp-action="Index" class="navbar-brand logo-small">
-                            <img src="~/img/logo-small.png" class="img-fluid" alt="Logo">
+                            <img src="~/images/logo_shoppingweb.jpg" class="img-fluid" alt="Logo" width="80" height="60">
                         </a>
                     </div>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ml-auto">
-
-                            <!-- Admin Dashboard -->
+                        <ul class="nav justify-content-center bg-white py-2">
                             @{
                                 var username = Context.Session.GetString("Username");
                                 var role = Context.Session.GetString("Role");
                             }
+
+                            <!-- Admin Dashboard -->
                             @if (username != null && role == "admin")
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-action="Index" asp-controller="Admin">
-                                        <i class="fa fa-user"></i> Admin Dashboard
+                                    <a class="nav-link text-dark" asp-action="Index" asp-controller="Admin">
+                                        <i class="fa fa-user-shield"></i> Admin Dashboard
                                     </a>
                                 </li>
                             }
 
-                            <!-- Account -->
-                            <li class="nav-item">
-                                <a class="nav-link" asp-action="Index" asp-controller="Account">
+                            <!-- Account Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" href="#" id="accountDropdown" role="button">
                                     <i class="fa fa-user"></i> Account
                                 </a>
+                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="accountDropdown">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-controller="Account" asp-action="Index">
+                                            <i class="fa fa-user-circle"></i> My Account
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-controller="Checkout" asp-action="Index">
+                                            <i class="fa fa-crosshairs"></i> Checkout
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-controller="Checkout" asp-action="OrderHistory">
+                                            &#128221; Order History
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
 
                             <!-- Design -->
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Design" asp-action="Index">
+                                <a class="nav-link text-dark" asp-controller="Design" asp-action="Index">
                                     <i class="fa fa-upload"></i> Design
-                                </a>
-                            </li>
-
-                            <!-- Checkout -->
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Checkout" asp-action="Index">
-                                    <i class="fa fa-crosshairs"></i> Checkout
                                 </a>
                             </li>
 
                             <!-- Cart -->
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
                                     <i class="fa fa-shopping-cart"></i> Cart
-                                </a>
-                            </li>
-
-                            <!-- Order History -->
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Checkout" asp-action="OrderHistory">
-                                    &#128221; Order History
                                 </a>
                             </li>
 
@@ -237,7 +283,7 @@
                             @if (!string.IsNullOrEmpty(username))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Login" asp-action="Logout">
+                                    <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout">
                                         <i class="fa fa-lock"></i> Logout
                                     </a>
                                 </li>
@@ -245,7 +291,7 @@
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Login" asp-action="Index">
+                                    <a class="nav-link text-dark" asp-controller="Login" asp-action="Index">
                                         <i class="fa fa-lock"></i> Login
                                     </a>
                                 </li>
@@ -255,19 +301,19 @@
                             @if (!string.IsNullOrEmpty(username))
                             {
                                 <li class="nav-item">
-                                    <span class="nav-link">
+                                    <span class="nav-link text-dark">
                                         <i class="fa fa-user"></i> Welcome, @username!
                                     </span>
                                 </li>
                             }
 
                             <!-- Search -->
-                            <li class="nav-item">
-                                <form asp-controller="Product" asp-action="Index" method="get" class="form-inline">
+                            <li class="nav-item ms-3">
+                                <form asp-controller="Product" asp-action="Index" method="get" class="d-flex">
                                     <input type="hidden" name="cid" value="@ViewBag.Cid" />
                                     <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
                                     <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
-                                    <input class="form-control" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
+                                    <input class="form-control form-control-sm border" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
                                 </form>
                             </li>
                         </ul>
@@ -276,6 +322,8 @@
             </div>
         </header>
         <!-- /Header -->
+
+
 
 
         <div>
@@ -356,25 +404,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="footer-social-widget">
-                                    <ul class="nav-social">
-                                        <li>
-                                            <a href="javascript:void(0)"><i class="fa-brands fa-facebook-f fa-facebook fi-icon"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)"><i class="fab fa-instagram fi-icon"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)"><i class="fab fa-behance fi-icon"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)"><i class="fab fa-twitter fi-icon"></i> </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)"><i class="fab fa-linkedin fi-icon"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -394,26 +423,14 @@
 
 
             <li class="icon">
-                <a href="https://zalo.me/0943039054" target="_blank" title="">
+                <a href="https://zalo.me/0865069618" target="_blank" title="">
                     <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png">
                 </a>
             </li>
 
             <li class="icon">
-                <a href="https://www.messenger.com/t/1847033885584162/?messaging_source=source%3Apages%3Amessage_shortlink&amp;source_id=1441792&amp;recurring_notification=0" target="_blank" title="">
+                <a href="https://www.facebook.com/messages/t/840078915850272;source_id=1441792&amp;recurring_notification=0" target="_blank" title="">
                     <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png">
-                </a>
-            </li>
-
-            <li class="icon">
-                <a href="https://shopee.vn/aobongda.net" target="_blank" title="">
-                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-52_3532_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-52_3532_HasThumb_Thumb.png">
-                </a>
-            </li>
-
-            <li class="icon">
-                <a href="https://www.tiktok.com/@@aobongdanet.official" target="_blank" title="">
-                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/tiktokicon_5273_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/tiktokicon_5273_HasThumb_Thumb.png">
                 </a>
             </li>
         </ul>

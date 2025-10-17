@@ -85,9 +85,9 @@
                                 <tr>
                                     <td>@c.Product.ProductName</td>
                                     <td>@c.Quantity</td>
-                                    <td>@c.Product.UnitPrice</td>
+                                    <td>@Convert.ToDecimal(c.Product.UnitPrice).ToString("N0") VND</td>
                                     <td class="cart-item-total" data-total="@(c.Quantity* c.Product.UnitPrice)">
-                                        @(c.Quantity* c.Product.UnitPrice) ₫
+                                        @Convert.ToDecimal(c.Quantity * c.Product.UnitPrice).ToString("N0") VND
                                     </td>
                                 </tr>
                             }

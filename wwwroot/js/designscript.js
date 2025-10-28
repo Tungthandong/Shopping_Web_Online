@@ -14,7 +14,7 @@ const canvas = document.querySelector("#canvas"),
 
 
 var background = new Image();
-background.src = "images/design-sample/mau-ao-1.jfif";
+background.src = "images/design-sample/mau-ao-1.png";
 
 
 const imgSlider = document.querySelector("#img-slider");
@@ -113,7 +113,8 @@ selectedTool = "brush",
 selectedColor = "#000";
 
 const setCanvasBackground = () => {
-	backgroundCtx.drawImage(background, (canvas.width - canvas.height) / 2, 0, canvas.height, canvas.height);
+	backgroundCtx.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+	backgroundCtx.drawImage(background, (backgroundCanvas.width - backgroundCanvas.height) / 2, 0, backgroundCanvas.height, backgroundCanvas.height);
 	//ctx.fillStyle = "#fff";// draw the whole canvas white
 	//ctx.fillRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = selectedColor;//setting fillstyle back to the selected color

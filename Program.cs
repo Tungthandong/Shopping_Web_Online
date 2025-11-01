@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using Shopping_Web.DataAccess;
@@ -13,6 +13,14 @@ namespace Shopping_Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Đọc đường dẫn file key từ appsettings
+            var googleCredentialsPath = builder.Configuration["GoogleApplicationCredentials"];
+            if (!string.IsNullOrEmpty(googleCredentialsPath))
+            {
+                // Set biến môi trường để thư viện Google tự động tìm thấy
+                Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", googleCredentialsPath);
+            }
 
             builder.Services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -42,7 +50,10 @@ namespace Shopping_Web
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddSession();
-
+            // Thêm IHttpClientFactory
+            builder.Services.AddHttpClient();
+            builder.Configuration.AddUserSecrets<Program>();
+            builder.Services.AddControllersWithViews();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -58,9 +69,13 @@ namespace Shopping_Web
 
             app.UseSession();
 
+            app.MapControllers();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
             app.Run();
         }

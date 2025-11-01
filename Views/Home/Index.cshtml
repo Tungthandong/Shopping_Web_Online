@@ -1,9 +1,47 @@
-﻿		<!-- Banner -->
+﻿<style>
+	/* CSS cho Chatbox */
+	.message {
+		margin-bottom: 15px;
+		display: flex;
+	}
 
+		.message.user {
+			justify-content: flex-end;
+		}
 
+		.message.bot {
+			justify-content: flex-start;
+		}
+
+	.message-content {
+		padding: 10px 15px;
+		border-radius: 18px;
+		max-width: 80%;
+		background-color: #f1f0f0;
+		word-wrap: break-word;
+	}
+
+	.message.user .message-content {
+		background-color: #0d6efd; /* Màu xanh primary của Bootstrap */
+		color: white;
+	}
+
+	.message-content img {
+		max-width: 100%;
+		border-radius: 10px;
+		margin-top: 10px;
+		display: block;
+		cursor: pointer;
+	}
+
+	.ai-generated-image {
+		background: #f9f9f9;
+		border: 1px solid #eee;
+		padding: 10px;
+	}
+</style>
+<!-- Banner -->
 		@Html.Partial("_SliderPartial")
-
-
 <!-- /Banner -->
 <!-- Search -->
 <div class="section-search">
@@ -76,7 +114,40 @@
 	</div>
 </section>
 <!-- /services -->
-@Html.Partial("_LatestProductPartial")
+
+<!-- chatbox ai-->
+<div class="container mt-4">
+	<div class="section-heading" data-aos="fade-down">
+		<h2>Dùng AI để biến ý tưởng của bạn thành hiện thực !!!</h2>
+	</div>
+	<div class="row d-flex justify-content-center">
+		<div class="col-md-8 col-lg-6">
+			<div class="card shadow-sm">
+				<div class="card-header bg-primary text-white">
+					<h4 class="mb-0">✨ AI T-Shirt Designer</h4>
+				</div>
+				<div class="card-body" style="height: 450px; overflow-y: auto;" id="chat-box">
+					<div class="message bot">
+						<div class="message-content">
+							Xin chào! Hãy mô tả ý tưởng áo của bạn (ví dụ: 'một con mèo phi hành gia').
+						</div>
+					</div>
+				</div>
+
+				<div class="card-footer bg-light p-3">
+					<div id="loadingIndicator" style="display:none; text-align:center; margin-bottom:10px;">
+						<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+						AI đang vẽ, vui lòng chờ...
+					</div>
+					<div class="input-group">
+						<input type="text" id="userInput" class="form-control" placeholder="Nhập mô tả của bạn...">
+						<button class="btn btn-primary" id="sendButton">Gửi</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <!-- Form contact -->
 <section class="section why-choose popular-explore">
@@ -280,3 +351,109 @@
 	</div>
 </section>
 <!-- /FAQ -->
+@section Scripts {
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			// Lấy các phần tử HTML
+			const sendButton = document.getElementById("sendButton");
+			const userInput = document.getElementById("userInput");
+			const chatBox = document.getElementById("chat-box");
+			const loadingIndicator = document.getElementById("loadingIndicator");
+
+			// Gán sự kiện cho nút Gửi
+			sendButton.addEventListener("click", sendMessage);
+			userInput.addEventListener("keypress", function(e) {
+				if (e.key === "Enter") {
+					e.preventDefault();
+					sendMessage();
+				}
+			});
+
+			async function sendMessage() {
+				const prompt = userInput.value;
+				if (prompt.trim() === "") return;
+
+				addMessage(prompt, "user");
+				userInput.value = "";
+
+				// Hiển thị loading và khóa input
+				loadingIndicator.style.display = "block";
+				sendButton.disabled = true;
+				userInput.disabled = true;
+
+				try {
+					// Gửi request tới API backend
+					const response = await fetch('/api/ChatBoxAI/generate', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ prompt: prompt })
+					});
+
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.error || "Lỗi máy chủ.");
+					}
+
+					const data = await response.json();
+
+					// Hiển thị ảnh AI trả về
+					addAiImage(data.imageUrl, prompt);
+
+				} catch (error) {
+					// Xử lý nếu có lỗi
+					console.error("Error:", error);
+					addMessage("Lỗi: " + error.message, "bot");
+				} finally {
+					// Ẩn loading và mở khóa input
+					loadingIndicator.style.display = "none";
+					sendButton.disabled = false;
+					userInput.disabled = false;
+					userInput.focus();
+				}
+			}
+
+			// Hàm helper để thêm tin nhắn (text)
+			function addMessage(text, sender) {
+				const messageElement = document.createElement("div");
+				messageElement.classList.add("message", sender);
+
+				const contentElement = document.createElement("div");
+				contentElement.classList.add("message-content");
+				contentElement.textContent = text;
+
+				messageElement.appendChild(contentElement);
+				chatBox.appendChild(messageElement);
+				scrollToBottom();
+			}
+
+			// Hàm helper để thêm tin nhắn (ảnh)
+			function addAiImage(imageUrl, promptText) {
+				const messageElement = document.createElement("div");
+				messageElement.classList.add("message", "bot");
+
+				const contentElement = document.createElement("div");
+				contentElement.classList.add("message-content", "ai-generated-image");
+
+				const textElement = document.createElement("p");
+				textElement.textContent = "Đây là thiết kế cho: '" + promptText + "'";
+				contentElement.appendChild(textElement);
+
+				const imageElement = document.createElement("img");
+				imageElement.src = imageUrl;
+				imageElement.alt = promptText;
+
+				contentElement.appendChild(imageElement);
+				messageElement.appendChild(contentElement);
+				chatBox.appendChild(messageElement);
+				scrollToBottom();
+			}
+
+			// Hàm helper: Tự động cuộn chatbox
+			function scrollToBottom() {
+				chatBox.scrollTop = chatBox.scrollHeight;
+			}
+		});
+	</script>
+}

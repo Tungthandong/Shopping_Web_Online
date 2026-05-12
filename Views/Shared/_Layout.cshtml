@@ -8,7 +8,7 @@
     <title>Home | E-Shopper</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="~/img/favicon.png">
+    <link rel="shortcut icon" href="~/images/logo_shoppingweb.jpg">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
@@ -189,6 +189,25 @@
         .header {
             border-bottom: 1px solid #eee;
         }
+        /* Giãn đều các mục menu */
+        .navbar-nav .nav-item {
+            margin: 0 8px;
+        }
+
+        /* Căn giữa nội dung header */
+        .navbar {
+            padding: 6px 20px;
+        }
+
+            /* Ô search nhỏ gọn, sát phải */
+            .navbar form {
+                width: 220px;
+            }
+
+            .navbar .form-control {
+                height: 34px;
+                font-size: 14px;
+            }
     </style>
 
     <div class="main-wrapper">
@@ -204,7 +223,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-dark">
-                                <i class="fa fa-envelope"></i> vungoctung098@gmail.com
+                                <i class="fa fa-envelope"></i> theinkside20s@gmail.com
                             </a>
                         </li>
                     </ul>
@@ -244,38 +263,44 @@
                             <!-- Account Dropdown -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link text-dark dropdown-toggle" href="#" id="accountDropdown" role="button">
-                                    <i class="fa fa-user"></i> Account
+                                    <i class="fa fa-user"></i> Tài khoản
                                 </a>
                                 <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="accountDropdown">
                                     <li>
                                         <a class="dropdown-item text-dark" asp-controller="Account" asp-action="Index">
-                                            <i class="fa fa-user-circle"></i> My Account
+                                            <i class="fa fa-user-circle"></i> Tài khoản của tôi
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item text-dark" asp-controller="Checkout" asp-action="Index">
-                                            <i class="fa fa-crosshairs"></i> Checkout
+                                            <i class="fa fa-crosshairs"></i> Thanh toán
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item text-dark" asp-controller="Checkout" asp-action="OrderHistory">
-                                            &#128221; Order History
+                                            &#128221; Lịch sử mua hàng
                                         </a>
                                     </li>
                                 </ul>
                             </li>
 
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">
+                                    <i class="fa fa-box"></i> Sản phẩm
+                                </a>
+                            </li>
+
                             <!-- Design -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Design" asp-action="Index">
-                                    <i class="fa fa-upload"></i> Design
+                                    <i class="fa fa-upload"></i> Thiết kế
                                 </a>
                             </li>
 
                             <!-- Cart -->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
-                                    <i class="fa fa-shopping-cart"></i> Cart
+                                    <i class="fa fa-shopping-cart"></i> Giỏ hàng
                                 </a>
                             </li>
 
@@ -284,7 +309,7 @@
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout">
-                                        <i class="fa fa-lock"></i> Logout
+                                        <i class="fa fa-lock"></i> Đăng xuất
                                     </a>
                                 </li>
                             }
@@ -292,7 +317,7 @@
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Login" asp-action="Index">
-                                        <i class="fa fa-lock"></i> Login
+                                        <i class="fa fa-lock"></i> Đăng nhập
                                     </a>
                                 </li>
                             }
@@ -302,12 +327,12 @@
                             {
                                 <li class="nav-item">
                                     <span class="nav-link text-dark">
-                                        <i class="fa fa-user"></i> Welcome, @username!
+                                        <i class="fa fa-user"></i> Xin chào, @username!
                                     </span>
                                 </li>
                             }
 
-                            <!-- Search -->
+                            @*   <!-- Search -->
                             <li class="nav-item ms-3">
                                 <form asp-controller="Product" asp-action="Index" method="get" class="d-flex">
                                     <input type="hidden" name="cid" value="@ViewBag.Cid" />
@@ -315,8 +340,14 @@
                                     <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
                                     <input class="form-control form-control-sm border" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
                                 </form>
-                            </li>
+                            </li> *@
                         </ul>
+                        <form asp-controller="Product" asp-action="Index" method="get" class="d-flex ms-auto">
+                            <input type="hidden" name="cid" value="@ViewBag.Cid" />
+                            <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
+                            <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
+                            <input class="form-control form-control-sm border" type="text" name="search" placeholder="Tìm kiếm..." value="@ViewBag.Search" />
+                        </form>
                     </div>
                 </nav>
             </div>
@@ -337,58 +368,6 @@
             <div class="footer-top aos" data-aos="fade-down">
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-7">
-                            <div class="row">
-                                <div class="col-lg-4 col-md-6">
-                                    <!-- Footer Widget -->
-                                    <div class="footer-widget footer-menu">
-                                        <h5 class="footer-title">Vehicles Type</h5>
-                                        <ul>
-                                            <li>
-                                                <a href="javascript:void(0)">All  Vehicles</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">SUVs</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">Trucks</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">Cars</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">Crossovers</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!-- /Footer Widget -->
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <!-- Footer Widget -->
-                                    <div class="footer-widget footer-menu">
-                                        <h5 class="footer-title">Quick links</h5>
-                                        <ul>
-                                            <li>
-                                                <a href="javascript:void(0)">My Account</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">Champaigns</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">Dreamsrental Dealers</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">Deals and Incentive</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:void(0)">Financial Services</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!-- /Footer Widget -->
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-lg-5">
                             <div class="footer-contact footer-widget">
                                 <h5 class="footer-title">Contact Info</h5>
@@ -402,7 +381,7 @@
                                     <div class="footer-address">
                                         <span><i class="feather-mail"></i></span>
                                         <div class="addr-info">
-                                            <h6>vungoctung098@gmail.com</h6>
+                                            <h6>theinkside20s@gmail.com</h6>
                                         </div>
                                     </div>
                                 </div>

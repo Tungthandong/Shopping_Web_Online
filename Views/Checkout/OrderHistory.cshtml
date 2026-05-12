@@ -8,7 +8,7 @@
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <div class="p-6 border-b border-gray-200 flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                <i class="fas fa-history"></i> Order History
+                <i class="fas fa-history"></i> Lịch sử đơn hàng
             </h2>
             @if (!string.IsNullOrEmpty(ViewBag.Msg))
             {
@@ -20,11 +20,11 @@
             <table class="min-w-full text-sm text-left text-gray-700">
                 <thead class="bg-gray-100 text-xs text-gray-600 uppercase">
                     <tr>
-                        <th class="px-5 py-3">Date</th>
-                        <th class="px-5 py-3">Total</th>
-                        <th class="px-5 py-3">Ship Cost</th>
-                        <th class="px-5 py-3">Status</th>
-                        <th class="px-5 py-3 text-center">Actions</th>
+                        <th class="px-5 py-3">Ngày</th>
+                        <th class="px-5 py-3">Tổng</th>
+                        <th class="px-5 py-3">Tiền ship</th>
+                        <th class="px-5 py-3">Trạng thái</th>
+                        <th class="px-5 py-3 text-center"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -100,7 +100,7 @@
     <div class="bg-white w-full max-w-3xl rounded-lg shadow-lg p-6 relative">
         <button id="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-black text-2xl">&times;</button>
         <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-            <i class="fa fa-file-invoice"></i> Order Details
+            <i class="fa fa-file-invoice"></i> Chi tiết đơn hàng
         </h2>
         <div id="orderDetailContent" class="text-sm text-gray-700"></div>
     </div>

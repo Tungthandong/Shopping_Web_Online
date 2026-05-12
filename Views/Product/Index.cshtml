@@ -65,13 +65,9 @@
                                                 var username = Context.Session.GetString("Username");
                                                 var returnUrl = Context.Request.Path + Context.Request.QueryString;
                                             }
-                                            <form asp-controller="Cart" asp-action="AddToCart">
-                                                <input type="hidden" name="Username" value="@username" />
-                                                <input type="hidden" name="ProductId" value="@product.ProductId" />
-                                                <input type="hidden" name="Quantity" value="1" />
-                                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                            <form asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
                                                 <button type="submit" class="btn btn-order">
-                                                    <span><i class="feather-calendar me-2"></i></span> Thêm vào giỏ hàng
+                                                    <span><i class="feather-calendar me-2"></i></span> Xem chi tiết
                                                 </button>
                                             </form>
                                         </div>
@@ -109,7 +105,9 @@
                                    asp-route-search="@ViewBag.Search"
                                    asp-route-minPrice="@ViewBag.minPrice"
                                    asp-route-maxPrice="@ViewBag.maxPrice"
-                                   asp-route-sort="@ViewBag.Sort">@i</a>
+                                   asp-route-sort="@ViewBag.Sort"
+                                   asp-route-cid="@ViewBag.Cid">@i
+                                   </a>
                             </li>
                         }
                     </ul>

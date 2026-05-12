@@ -89,11 +89,11 @@
                     <thead class="table-dark">
                         <tr>
                             <th></th>
-                            <th class="text-center">Item</th>
-                            <th>Description</th>
-                            <th class="text-center">Price</th>
-                            <th class="text-center">Quantity</th>
-                            <th class="text-center">Total</th>
+                            <th class="text-center">Sản phẩm</th>
+                            <th class="text-center">Mô tả</th>
+                            <th class="text-center">Giá</th>
+                            <th class="text-center">Số lượng</th>
+                            <th class="text-center">Tổng</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -151,9 +151,9 @@
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4">
-                <h5 class="fw-bold">Total: <span class="text-danger">@Convert.ToDecimal(cartTotal).ToString("N0") VND</span></h5>
+                <h5 class="fw-bold">Tổng: <span class="text-danger">@Convert.ToDecimal(cartTotal).ToString("N0") VND</span></h5>
                 <button type="submit" class="btn btn-dark px-4" @(Model == null || !Model.Any() ? "disabled" : "")>
-                    Proceed to Checkout
+                    Tiến hành thanh toán
                 </button>
             </div>
         </form>
@@ -162,13 +162,13 @@
 
 <script>
     function confirmDelete() {
-        return confirm("Do you want to delete this item from your cart?");
+        return confirm("Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng?");
     }
 
     function confirmDeleteNoItem(inputId, href) {
         const quantity = parseInt(document.getElementById(inputId).value);
         if (quantity === 1) {
-            if (confirm("Quantity is 0. Do you want to remove this item from your cart?")) {
+            if (confirm("Số lượng về 0. Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng?")) {
                 window.location.href = href;
             }
             return false;

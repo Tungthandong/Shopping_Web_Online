@@ -1,104 +1,121 @@
 ﻿@model Product
 <section class="section car-listing pt-0 mt-5">
     <div class="container">
-<div class="row">
-    <!-- Sidebar -->
-    <div class="col-lg-3 mb-4">
-        @Html.Partial("_SidebarPartial")
-    </div>
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                @Html.Partial("_SidebarPartial")
+            </div>
 
 
-    <!-- Product Detail -->
-    <div class="col-lg-9">
-        <div class="card border-0 rounded-3">
-            <div class="row g-0">
-                <!-- Product Image -->
-                <div class="col-md-5 text-center p-4">
-                    <img src="@Model.Image" alt="@Model.ProductName" 
-                         class="img-fluid rounded" 
-                         style="max-height: 320px; object-fit: contain;" />
-                </div>
+            <!-- Product Detail -->
+            <div class="col-lg-9">
+                <div class="card border-0 rounded-3">
+                    <div class="row g-0">
+                        <!-- Product Image -->
+                        <div class="col-md-5 text-center p-4">
+                            <img src="@Model.Image" alt="@Model.ProductName"
+                                 class="img-fluid rounded"
+                                 style="max-height: 320px; object-fit: contain;" />
+                        </div>
 
-                <!-- Product Info -->
-                <div class="col-md-7">
-                    <div class="card-body">
-                        <h3 class="card-title mb-3">@Model.ProductName</h3>
+                        <!-- Product Info -->
+                        <div class="col-md-7">
+                            <div class="card-body">
+                                <h3 class="card-title mb-3">@Model.ProductName</h3>
 
                                 <h4 class="text-danger fw-bold mb-4">@Convert.ToDecimal(@Model.UnitPrice).ToString("N0") VND</h4>
 
-                        <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                            <!-- Size -->
-                            <div class="mb-3">
-                                <label for="sizeSelect" class="form-label fw-bold">Size</label>
-                                <select id="sizeSelect" name="VariantId" class="form-select w-auto">
-                                    @foreach (var variant in Model.ProductVariants)
-                                    {
-                                        if (variant.StockQuantity > 0)
-                                        {
-                                            <option value="@variant.VariantId" data-stock="@variant.StockQuantity">
-                                                @variant.Size (@variant.StockQuantity còn)
-                                            </option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@variant.VariantId" disabled>
-                                                @variant.Size (Hết hàng)
-                                            </option>
-                                        }
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                                    <!-- Size -->
+                                    <div class="mb-3">
+                                        <label for="sizeSelect" class="form-label fw-bold">Size</label>
+                                        <select id="sizeSelect" name="VariantId" class="form-select w-auto">
+                                            @foreach (var variant in Model.ProductVariants)
+                                            {
+                                                if (variant.StockQuantity > 0)
+                                                {
+                                                    <option value="@variant.VariantId" data-stock="@variant.StockQuantity">
+                                                        @variant.Size (@variant.StockQuantity còn)
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@variant.VariantId" disabled>
+                                                        @variant.Size (Hết hàng)
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Quantity -->
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Số lượng</label>
+                                        <div class="input-group" style="max-width: 150px;">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(-1)">-</button>
+                                            <input type="text" id="quantityInput" name="Quantity" value="1"
+                                                   class="form-control text-center" />
+                                            <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(1)">+</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden fields -->
+                                    @{
+                                        var username = Context.Session.GetString("Username");
+                                        var returnUrl = Context.Request.Path + Context.Request.QueryString;
                                     }
-                                </select>
+                                    <input type="hidden" name="Username" value="@username" />
+                                    <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                                    <!-- Add to Cart -->
+                                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                                        <i class="fa fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
+                                    </button>
+                                </form>
+
+                                <!-- Extra info -->
+                                <p><b>Tình trạng:</b> @(Model.UnitsInStock > 0 ? "Còn hàng" : "Hết hàng")</p>
+                                <p><b>Danh mục:</b> @(Model.Category != null ? Model.Category.CategoryName : "Không rõ")</p>
+
+                                <!-- Alerts -->
+                                @{
+                                    var message = Context.Request.Query["msg"].ToString();
+                                    var error = Context.Request.Query["error"].ToString();
+                                }
+                                @if (!string.IsNullOrEmpty(message))
+                                {
+                                    <div class="alert alert-success mt-3">@message</div>
+                                }
+                                else if (!string.IsNullOrEmpty(error))
+                                {
+                                    <div class="alert alert-danger mt-3">@error</div>
+                                }
                             </div>
-
-                            <!-- Quantity -->
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Số lượng</label>
-                                <div class="input-group" style="max-width: 150px;">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(-1)">-</button>
-                                    <input type="text" id="quantityInput" name="Quantity" value="1"
-                                           class="form-control text-center" />
-                                    <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(1)">+</button>
-                                </div>
+                        </div>
+                        <div class="row mt-4 justify-content-center text-center">
+                            <div class="col-md-5 col-12 mb-3 mb-md-0">
+                                <img src="~/images/products/z7184458665409_37a98fb26640f4ee43cc1b084daee2f2.jpg"
+                                     alt="Banner 1"
+                                     class="img-fluid rounded shadow-sm"
+                                     style="width:100%; object-fit:cover;">
+                                <h6 class="mt-2 fw-semibold" style="color:#333;">Size áo bóng đá</h6>
                             </div>
+                            <div class="col-md-5 col-12">
+                                <img src="~/images/products/z7184440654902_54824f6e111fe3a33d2b2d16d36e6bd0.jpg"
+                                     alt="Banner 2"
+                                     class="img-fluid rounded shadow-sm"
+                                     style="width:100%; object-fit:cover;">
+                                <h6 class="mt-2 fw-semibold" style="color:#333;">Size áo thun</h6>
+                            </div>
+                        </div>
 
-                            <!-- Hidden fields -->
-                            @{
-                                var username = Context.Session.GetString("Username");
-                                var returnUrl = Context.Request.Path + Context.Request.QueryString;
-                            }
-                            <input type="hidden" name="Username" value="@username" />
-                            <input type="hidden" name="ProductId" value="@Model.ProductId" />
-                            <input type="hidden" name="returnUrl" value="@returnUrl" />
-
-                            <!-- Add to Cart -->
-                            <button type="submit" class="btn btn-primary w-100 mb-3">
-                                <i class="fa fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
-                            </button>
-                        </form>
-
-                        <!-- Extra info -->
-                        <p><b>Tình trạng:</b> @(Model.UnitsInStock > 0 ? "Còn hàng" : "Hết hàng")</p>
-                        <p><b>Danh mục:</b> @(Model.Category != null ? Model.Category.CategoryName : "Không rõ")</p>
-
-                        <!-- Alerts -->
-                        @{
-                            var message = Context.Request.Query["msg"].ToString();
-                            var error = Context.Request.Query["error"].ToString();
-                        }
-                        @if (!string.IsNullOrEmpty(message))
-                        {
-                            <div class="alert alert-success mt-3">@message</div>
-                        }
-                        else if (!string.IsNullOrEmpty(error))
-                        {
-                            <div class="alert alert-danger mt-3">@error</div>
-                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
     <!-- Latest Products -->
     <div class="mt-5">
         @Html.Partial("_LatestProductPartial")

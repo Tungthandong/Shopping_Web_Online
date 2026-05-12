@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Google.Cloud.AIPlatform.V1;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Shopping_Web.Models; // Model "GenerateImageRequest" của bạn
@@ -25,8 +26,8 @@ namespace Shopping_Web.Controllers
     [ApiController]
     public class ChatBoxAIController : ControllerBase
     {
-        private const string IMAGE_API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
-        private const string TRANSLATE_API_URL = "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-vi-en";
+        private const string IMAGE_API_URL = "https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-xl-base-1.0";
+        private const string TRANSLATE_API_URL = "https://router.huggingface.co/hf-inference/models/Helsinki-NLP/opus-mt-vi-en";
         private static readonly HttpClient _httpClient = new HttpClient
         {
             Timeout = TimeSpan.FromSeconds(120)
@@ -61,8 +62,7 @@ namespace Shopping_Web.Controllers
                 }
                 Console.WriteLine($"Translated English prompt: {englishPrompt}");
 
-                string fullPrompt = $"A high-quality, centered vector design for a t-shirt print, minimalist style, " +
-                                    $"on a solid white background, 8k, sharp details: {englishPrompt}";
+                string fullPrompt = $"A realistic 4K studio photo of a plain white t-shirt laid flat on a clean wooden background, featuring a {englishPrompt} printed clearly and centered on the chest area. The design should appear naturally printed on the fabric (not floating). Soft shadows, balanced studio lighting, professional e-commerce photography style.";
 
                 var imagePayload = new { inputs = fullPrompt };
                 var imageJsonPayload = JsonSerializer.Serialize(imagePayload);
@@ -75,15 +75,15 @@ namespace Shopping_Web.Controllers
                 HttpResponseMessage imageResponse = await _httpClient.SendAsync(imageRequest);
 
                 if (!imageResponse.IsSuccessStatusCode)
-                {
-                    string errorContent = await imageResponse.Content.ReadAsStringAsync();
-                    Console.WriteLine($"Image API Error: {errorContent}");
-                    if (errorContent.Contains("model is loading"))
                     {
-                        return StatusCode(503, new { error = "AI tạo ảnh đang khởi động (cold start). Vui lòng thử lại sau 1-2 phút." });
+                        string errorContent = await imageResponse.Content.ReadAsStringAsync();
+                        Console.WriteLine($"Image API Error: {errorContent}");
+                        if (errorContent.Contains("model is loading"))
+                        {
+                            return StatusCode(503, new { error = "AI tạo ảnh đang khởi động (cold start). Vui lòng thử lại sau 1-2 phút." });
+                        }
+                        return StatusCode((int)imageResponse.StatusCode, new { error = $"Lỗi API tạo ảnh: {errorContent}" });
                     }
-                    return StatusCode((int)imageResponse.StatusCode, new { error = $"Lỗi API tạo ảnh: {errorContent}" });
-                }
                 byte[] imageBytes = await imageResponse.Content.ReadAsByteArrayAsync();
 
                 string uniqueFileName = $"{Guid.NewGuid()}.jpg";

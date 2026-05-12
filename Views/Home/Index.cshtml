@@ -39,6 +39,14 @@
 		border: 1px solid #eee;
 		padding: 10px;
 	}
+
+		.ai-generated-image button {
+			display: block;
+			margin: 8px auto 0 auto;
+			font-size: 0.9rem;
+			padding: 5px 10px;
+		}
+
 </style>
 <!-- Banner -->
 		@Html.Partial("_SliderPartial")
@@ -431,26 +439,42 @@
 			}
 
 			// Hàm helper để thêm tin nhắn (ảnh)
-			function addAiImage(imageUrl, promptText) {
-				const messageElement = document.createElement("div");
-				messageElement.classList.add("message", "bot");
+	     	function addAiImage(imageUrl, promptText) {
+			const messageElement = document.createElement("div");
+			messageElement.classList.add("message", "bot");
 
-				const contentElement = document.createElement("div");
-				contentElement.classList.add("message-content", "ai-generated-image");
+			const contentElement = document.createElement("div");
+			contentElement.classList.add("message-content", "ai-generated-image");
 
-				const textElement = document.createElement("p");
-				textElement.textContent = "Đây là thiết kế cho: '" + promptText + "'";
-				contentElement.appendChild(textElement);
+			const textElement = document.createElement("p");
+			textElement.textContent = "Đây là thiết kế cho: '" + promptText + "'";
+			contentElement.appendChild(textElement);
 
-				const imageElement = document.createElement("img");
-				imageElement.src = imageUrl;
-				imageElement.alt = promptText;
+			// Ảnh AI
+			const imageElement = document.createElement("img");
+			imageElement.src = imageUrl;
+			imageElement.alt = promptText;
+			imageElement.classList.add("img-fluid", "rounded", "mt-2");
+			contentElement.appendChild(imageElement);
 
-				contentElement.appendChild(imageElement);
-				messageElement.appendChild(contentElement);
-				chatBox.appendChild(messageElement);
-				scrollToBottom();
-			}
+			// 🔽 Nút “Lưu ảnh về máy”
+			const downloadButton = document.createElement("button");
+			downloadButton.textContent = " Lưu ảnh về máy";
+			downloadButton.classList.add("btn", "btn-primary", "mt-2");
+			downloadButton.addEventListener("click", function() {
+				const a = document.createElement("a");
+				a.href = imageUrl;
+				a.download = "ai-tshirt-design.png"; // tên file tải xuống
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			});
+			contentElement.appendChild(downloadButton);
+
+			messageElement.appendChild(contentElement);
+			chatBox.appendChild(messageElement);
+			scrollToBottom();
+		}
 
 			// Hàm helper: Tự động cuộn chatbox
 			function scrollToBottom() {

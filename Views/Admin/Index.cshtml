@@ -72,11 +72,11 @@
 <body class="bg-gray-100">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        @Html.Partial("_AdminSideBarPartial")
+        <partial name="_AdminSideBarPartial" />
         <!-- Main Content -->
         <div class="main-content flex-1 flex flex-col overflow-hidden ml-64">
             <!-- Header -->
-            @Html.Partial("_AdminHeaderPartial")
+            <partial name="_AdminHeaderPartial" />
             <!-- Overlay for mobile menu -->
             <div id="overlay" class="overlay"></div>
 

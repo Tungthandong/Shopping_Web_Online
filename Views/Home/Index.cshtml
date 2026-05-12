@@ -1,10 +1,10 @@
 ﻿@using System.Linq
 @model IEnumerable<Product>
 
-@Html.Partial("_SliderPartial")
+<partial name="_SliderPartial" />
 
 <div class="col-sm-3">
-    @Html.Partial("_SidebarPartial")
+    <partial name="_SidebarPartial" />
 </div>
 
 <div class="col-sm-9 padding-right">
@@ -64,7 +64,7 @@
             </div>
         }
     </div><!--features_items-->
-    @Html.Partial("_LatestProductPartial")
+    <partial name="_LatestProductPartial" />
 </div>
 @if (TempData["ShowWelcomeDialog"] != null && (bool)TempData["ShowWelcomeDialog"])
 {

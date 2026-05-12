@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Product>
 
-@Html.Partial("_SliderPartial")
+<partial name="_SliderPartial" />
 
 <!-- Car Grid View -->
 <section class="section car-listing pt-0 mt-5">
@@ -12,7 +12,7 @@
                     <div class="sidebar-heading">
                         <h3>Tìm kiếm sản phẩm</h3>
                     </div>
-                    @Html.Partial("_SidebarPartial")
+                    <partial name="_SidebarPartial" />
                 </div>
             </div>
             <!-- /Sidebar -->

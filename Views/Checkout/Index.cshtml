@@ -1,4 +1,4 @@
-﻿@model List<Cart>
+@model List<Cart>
 
 @{
     var username = "";
@@ -7,149 +7,481 @@
     if (ViewBag.Account != null)
     {
         username = ViewBag.Account.Username;
-        phone = ViewBag.Account.Phonenumber;
+        phone    = ViewBag.Account.Phonenumber;
     }
 }
 
-<form asp-controller="Checkout" asp-action="Checkout" method="post">
-    <section id="checkout" class="py-5" style="background-color: #f8f8f8;">
-        <div class="container bg-white p-4 rounded shadow-sm">
-            <h2 class="mb-4 fw-bold text-dark">Thanh toán</h2>
-            <div style="color: red">@ViewBag.Msg</div>
-            <div class="row">
-                <!-- Customer Info -->
-                <div class="col-md-6 mb-4">
-                    <h5 class="mb-3">Thông tin khách hàng</h5>
-                    <input type="text" class="form-control mb-3" placeholder="Tên *" name="Username" required value="@username" readonly>
-                    <input type="text" class="form-control mb-3" placeholder="Số điện thoại *" name="PhoneNumber" required value="@phone">
-                    <input type="text" class="form-control mb-3" placeholder="Địa chỉ *" name="ShippingAddress" required>
-                </div>
+<style>
+    /* ===== CHECKOUT PAGE ===== */
+    .checkout-section { padding: 2.5rem 0 4rem; background: #fafbfc; }
 
-                <!-- Payment Method -->
-                <div class="col-md-6 mb-4">
-                    <h5 class="mb-3">Phương thức thanh toán</h5>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="cod" name="PaymentMethod" value="COD">
-                        <label class="form-check-label" for="cod">Thanh toán khi nhận hàng</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="cod" name="PaymentMethod" value="VnPay">
-                        <label class="form-check-label" for="cod">VNPAY</label>
-                    </div>
-                </div>
+    .checkout-title {
+        font-size: clamp(1.4rem, 3vw, 1.9rem);
+        font-weight: 800;
+        color: var(--dark, #16213e);
+        margin-bottom: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .checkout-title i { color: var(--primary, #FE980F); }
+
+    /* Step indicator */
+    .checkout-steps {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 2rem;
+        overflow-x: auto;
+        padding-bottom: .3rem;
+    }
+
+    .step-item {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .82rem;
+        font-weight: 600;
+        color: #aaa;
+        flex-shrink: 0;
+    }
+
+    .step-item.active { color: var(--primary, #FE980F); }
+    .step-item.done   { color: #198754; }
+
+    .step-num {
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        background: #e5e5e5;
+        color: #aaa;
+        font-size: .8rem;
+        font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .step-item.active .step-num { background: var(--primary, #FE980F); color: #fff; }
+    .step-item.done   .step-num { background: #198754; color: #fff; }
+
+    .step-connector {
+        flex: 1;
+        min-width: 32px;
+        height: 2px;
+        background: #e5e5e5;
+        margin: 0 .5rem;
+    }
+
+    /* Card shared */
+    .checkout-card {
+        background: #fff;
+        border-radius: var(--radius, 14px);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm, 0 2px 12px rgba(0,0,0,.07));
+        margin-bottom: 1.5rem;
+    }
+
+    .checkout-card-header {
+        background: var(--dark, #16213e);
+        color: #fff;
+        padding: 1rem 1.5rem;
+        font-weight: 700;
+        font-size: .95rem;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .checkout-card-header i { color: var(--primary, #FE980F); }
+    .checkout-card-body { padding: 1.5rem; }
+
+    /* Form fields */
+    .co-field { margin-bottom: 1rem; }
+
+    .co-field label {
+        font-size: .8rem;
+        font-weight: 700;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: .3rem;
+        display: block;
+    }
+
+    .co-field input, .co-field select {
+        border: 1.5px solid #e5e5e5;
+        border-radius: 8px;
+        padding: .6rem .9rem;
+        font-size: .9rem;
+        font-weight: 500;
+        color: var(--dark, #16213e);
+        width: 100%;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .co-field input:focus, .co-field select:focus {
+        border-color: var(--primary, #FE980F);
+        box-shadow: 0 0 0 3px rgba(254,152,15,.12);
+        outline: none;
+    }
+
+    .co-field input[readonly] {
+        background: #f8f9fa;
+        color: #888;
+        cursor: not-allowed;
+    }
+
+    /* Payment / shipping option cards */
+    .option-card {
+        border: 1.5px solid #e5e5e5;
+        border-radius: 10px;
+        padding: .9rem 1.1rem;
+        margin-bottom: .6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        transition: border-color .2s, background .2s;
+    }
+
+    .option-card:has(input:checked),
+    .option-card.selected {
+        border-color: var(--primary, #FE980F);
+        background: rgba(254,152,15,.05);
+    }
+
+    .option-card input[type="radio"] {
+        width: 18px; height: 18px;
+        accent-color: var(--primary, #FE980F);
+        flex-shrink: 0;
+    }
+
+    .option-card-label {
+        font-weight: 700;
+        font-size: .9rem;
+        color: var(--dark, #16213e);
+        margin: 0;
+    }
+
+    .option-card-sub {
+        font-size: .75rem;
+        color: #888;
+        margin: 0;
+    }
+
+    .option-card-icon {
+        width: 40px; height: 40px;
+        border-radius: 8px;
+        background: #f5f5f5;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem;
+        color: var(--primary, #FE980F);
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    /* Summary table */
+    .summary-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    .summary-table th, .summary-table td { padding: .65rem .5rem; }
+    .summary-table thead th {
+        background: #f8f9fa;
+        font-size: .78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: #888;
+        border-bottom: 1.5px solid #f0f0f0;
+    }
+    .summary-table tbody tr { border-bottom: 1px solid #f5f5f5; }
+    .summary-table tbody tr:last-child { border-bottom: none; }
+    .summary-table .prod-name { font-weight: 700; color: var(--dark, #16213e); }
+    .summary-table .prod-size { font-size: .73rem; color: #999; }
+
+    /* Totals block */
+    .summary-totals { border-top: 2px solid #f0f0f0; padding-top: 1rem; margin-top: .5rem; }
+    .summary-totals-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: .5rem;
+        font-size: .88rem;
+        color: #666;
+    }
+
+    .summary-totals-row.grand {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--dark, #16213e);
+    }
+
+    .summary-totals-row.grand .amount { color: var(--primary, #FE980F); font-size: 1.25rem; }
+
+    /* Error */
+    .co-error {
+        background: #fde9e9;
+        color: #dc3545;
+        border-radius: 8px;
+        padding: .7rem 1rem;
+        font-size: .85rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    /* CTA */
+    .btn-place-order {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        width: 100%;
+        background: var(--primary, #FE980F);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: .9rem;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background .25s, transform .2s, box-shadow .25s;
+        margin-top: .5rem;
+    }
+
+    .btn-place-order:hover {
+        background: var(--primary-dark, #e07d0b);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(254,152,15,.35);
+    }
+
+    .btn-place-order:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+</style>
+
+<section class="checkout-section">
+    <div class="container">
+
+        <h1 class="checkout-title" data-aos="fade-down">
+            <i class="feather-credit-card"></i> Thanh toán đơn hàng
+        </h1>
+
+        <!-- Step indicator -->
+        <div class="checkout-steps" data-aos="fade-down">
+            <div class="step-item done">
+                <div class="step-num"><i class="feather-check" style="font-size:.75rem;"></i></div>
+                Giỏ hàng
             </div>
-
-            <!-- Shipping -->
-            <div class="row border-top pt-4 mt-4">
-                <div class="col-md-6 mb-3">
-                    <h5 class="mb-2">Phương thức giao hàng</h5>
-                    <div class="form-check mb-2">
-                        <input type="radio" class="form-check-input" name="ShippingMethod" id="standard" value="standard" checked>
-                        <label class="form-check-label" for="standard">Giao hàng tiêu chuẩn</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" name="ShippingMethod" id="express" value="express">
-                        <label class="form-check-label" for="express">Giao hàng nhanh</label>
-                    </div>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <h5>Tiền ship: <span id="shippingCost" class="text-nowrap">30,000 ₫</span></h5>
-                </div>
+            <div class="step-connector"></div>
+            <div class="step-item active">
+                <div class="step-num">2</div>
+                Thông tin giao hàng
             </div>
-
-            <!-- Order Summary -->
-            <div class="mt-4">
-                <h5 class="mb-3">Tóm tắt đơn hàng</h5>
-                <table class="table table-bordered w-100" style="table-layout: fixed;">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Sản phẩm</th>
-                            <th>Số lượng</th>
-                            <th>Giá</th>
-                            <th>Tổng</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model != null && Model.Count != 0)
-                        {
-                            foreach (var c in Model)
-                            {
-                                <tr>
-                                    <td>@c.Product.ProductName</td>
-                                    <td>@c.Quantity</td>
-                                    <td>@Convert.ToDecimal(c.Product.UnitPrice).ToString("N0") VND</td>
-                                    <td class="cart-item-total" data-total="@(c.Quantity* c.Product.UnitPrice)">
-                                        @Convert.ToDecimal(c.Quantity * c.Product.UnitPrice).ToString("N0") VND
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        <tr>
-                            <td colspan="3" class="text-end"><strong>Tiền ship</strong></td>
-                            <td id="shippingCostCell" class="text-end text-nowrap">30,000 ₫</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="text-end"><strong>Tổng</strong></td>
-                            <td><strong id="totalAmount">0 ₫</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <input type="hidden" name="TotalAmount" id="totalAmountInput" value="0" />
-                @if (Model == null || Model.Count == 0)
-                {
-                    <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-warning btn-lg px-4 text-white" disabled>Thanh toán</button>
-                    </div>
-                }
-                else
-                {
-                    <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-warning btn-lg px-4 text-white">Thanh toán</button>
-                    </div>
-                }
+            <div class="step-connector"></div>
+            <div class="step-item">
+                <div class="step-num">3</div>
+                Xác nhận
             </div>
         </div>
-    </section>
-</form>
+
+        @if (!string.IsNullOrEmpty(ViewBag.Msg as string))
+        {
+            <div class="co-error" data-aos="fade-down">
+                <i class="feather-alert-circle"></i> @ViewBag.Msg
+            </div>
+        }
+
+        <form asp-controller="Checkout" asp-action="Checkout" method="post">
+            <div class="row g-4">
+
+                <!-- ── Left column ── -->
+                <div class="col-lg-7" data-aos="fade-right">
+
+                    <!-- Customer info -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-header">
+                            <i class="feather-user"></i> Thông tin khách hàng
+                        </div>
+                        <div class="checkout-card-body">
+                            <div class="co-field">
+                                <label>Tên đăng nhập</label>
+                                <input type="text" name="Username" value="@username" readonly />
+                            </div>
+                            <div class="co-field">
+                                <label>Số điện thoại <span style="color:#dc3545;">*</span></label>
+                                <input type="text" name="PhoneNumber" value="@phone"
+                                       placeholder="0912 345 678" required />
+                            </div>
+                            <div class="co-field">
+                                <label>Địa chỉ giao hàng <span style="color:#dc3545;">*</span></label>
+                                <input type="text" name="ShippingAddress"
+                                       placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment method -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-header">
+                            <i class="feather-credit-card"></i> Phương thức thanh toán
+                        </div>
+                        <div class="checkout-card-body">
+                            <label class="option-card" onclick="this.querySelector('input').checked=true">
+                                <input type="radio" name="PaymentMethod" value="COD" checked />
+                                <div>
+                                    <p class="option-card-label">Thanh toán khi nhận hàng</p>
+                                    <p class="option-card-sub">Trả tiền mặt cho nhân viên giao hàng</p>
+                                </div>
+                                <div class="option-card-icon"><i class="feather-truck"></i></div>
+                            </label>
+                            <label class="option-card" onclick="this.querySelector('input').checked=true">
+                                <input type="radio" name="PaymentMethod" value="VnPay" />
+                                <div>
+                                    <p class="option-card-label">VNPAY</p>
+                                    <p class="option-card-sub">Thanh toán qua cổng VNPay</p>
+                                </div>
+                                <div class="option-card-icon" style="background:#e8f5ff;">
+                                    <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/9/06ncktiwd6dc1694418196384.png"
+                                         alt="VNPAY" style="height:22px; object-fit:contain;" />
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Shipping method -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-header">
+                            <i class="feather-package"></i> Phương thức vận chuyển
+                        </div>
+                        <div class="checkout-card-body">
+                            <label class="option-card" onclick="this.querySelector('input').checked=true;updateTotal()">
+                                <input type="radio" name="ShippingMethod" value="standard" id="standard" checked />
+                                <div>
+                                    <p class="option-card-label">Giao hàng tiêu chuẩn</p>
+                                    <p class="option-card-sub">3–5 ngày làm việc</p>
+                                </div>
+                                <div class="option-card-icon"><i class="feather-clock"></i></div>
+                                <strong style="color:var(--primary);font-size:.9rem;flex-shrink:0;margin-left:.5rem;">30,000 ₫</strong>
+                            </label>
+                            <label class="option-card" onclick="this.querySelector('input').checked=true;updateTotal()">
+                                <input type="radio" name="ShippingMethod" value="express" id="express" />
+                                <div>
+                                    <p class="option-card-label">Giao hàng nhanh</p>
+                                    <p class="option-card-sub">1–2 ngày làm việc</p>
+                                </div>
+                                <div class="option-card-icon"><i class="feather-zap"></i></div>
+                                <strong style="color:var(--primary);font-size:.9rem;flex-shrink:0;margin-left:.5rem;">50,000 ₫</strong>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Right column — Order summary ── -->
+                <div class="col-lg-5" data-aos="fade-left">
+                    <div class="checkout-card" style="position:sticky;top:90px;">
+                        <div class="checkout-card-header">
+                            <i class="feather-list"></i> Tóm tắt đơn hàng
+                        </div>
+                        <div class="checkout-card-body">
+                            @if (Model != null && Model.Count > 0)
+                            {
+                                <table class="summary-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sản phẩm</th>
+                                            <th class="text-center">SL</th>
+                                            <th class="text-end">Tổng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var c in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="prod-name">@c.Product.ProductName</div>
+                                                    <div class="prod-size">
+                                                        @(c.Variant != null ? c.Variant.Size : "") •
+                                                        @Convert.ToDecimal(c.Product.UnitPrice).ToString("N0") ₫
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">@c.Quantity</td>
+                                                <td class="text-end cart-item-total" data-total="@(c.Quantity * c.Product.UnitPrice)">
+                                                    @Convert.ToDecimal(c.Quantity * c.Product.UnitPrice).ToString("N0") ₫
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+
+                            <div class="summary-totals">
+                                <div class="summary-totals-row">
+                                    <span>Tạm tính</span>
+                                    <span id="subtotalDisplay">0 ₫</span>
+                                </div>
+                                <div class="summary-totals-row">
+                                    <span>Phí vận chuyển</span>
+                                    <span id="shippingDisplay">30,000 ₫</span>
+                                </div>
+                                <div class="summary-totals-row grand">
+                                    <span>Tổng cộng</span>
+                                    <span class="amount" id="totalDisplay">0 ₫</span>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="TotalAmount" id="totalAmountInput" value="0" />
+
+                            <button type="submit" class="btn-place-order"
+                                    @(Model == null || Model.Count == 0 ? "disabled" : "")>
+                                <i class="feather-check-circle"></i> Đặt hàng
+                            </button>
+
+                            <a asp-controller="Cart" asp-action="Index"
+                               style="display:block;text-align:center;margin-top:.8rem;font-size:.82rem;color:#888;text-decoration:none;">
+                                <i class="feather-arrow-left me-1"></i> Quay lại giỏ hàng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</section>
 
 <script>
+    function fmt(num) {
+        return new Intl.NumberFormat('vi-VN').format(Math.round(num)) + ' ₫';
+    }
+
+    function getCartSubtotal() {
+        let total = 0;
+        document.querySelectorAll('.cart-item-total').forEach(td => {
+            total += parseInt(td.dataset.total || 0);
+        });
+        return total;
+    }
+
+    function updateTotal() {
+        const selected = document.querySelector('input[name="ShippingMethod"]:checked');
+        const ship = selected && selected.value === 'express' ? 50000 : 30000;
+        const sub  = getCartSubtotal();
+        const grand = sub + ship;
+
+        document.getElementById('subtotalDisplay').textContent = fmt(sub);
+        document.getElementById('shippingDisplay').textContent = fmt(ship);
+        document.getElementById('totalDisplay').textContent    = fmt(grand);
+        document.getElementById('totalAmountInput').value      = grand;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        const shippingRadios = document.querySelectorAll('input[name="ShippingMethod"]');
-        const shippingCostEl = document.getElementById('shippingCost');
-        const shippingCostCell = document.getElementById('shippingCostCell');
-        const totalAmountEl = document.getElementById('totalAmount');
-
-        function getCartTotal() {
-            let total = 0;
-            document.querySelectorAll('.cart-item-total').forEach(td => {
-                total += parseInt(td.dataset.total);
-            });
-            return total;
-        }
-
-        function formatCurrency(num) {
-            return new Intl.NumberFormat('vi-VN').format(num) + ' ₫';
-        }
-
-        function updateTotal() {
-            let shippingCost = 30000;
-            const selected = document.querySelector('input[name="ShippingMethod"]:checked');
-            if (selected && selected.value === 'express') {
-                shippingCost = 50000;
-            }
-
-            const cartTotal = getCartTotal();
-            shippingCostEl.textContent = formatCurrency(shippingCost);
-            shippingCostCell.textContent = formatCurrency(shippingCost);
-            totalAmountEl.textContent = formatCurrency(cartTotal + shippingCost);
-            document.getElementById('totalAmountInput').value = cartTotal + shippingCost;
-        }
-
-
         updateTotal();
-
-        shippingRadios.forEach(radio => {
-            radio.addEventListener('change', updateTotal);
+        document.querySelectorAll('input[name="ShippingMethod"]').forEach(r => {
+            r.addEventListener('change', updateTotal);
         });
     });
 </script>

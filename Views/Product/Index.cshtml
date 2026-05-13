@@ -1,90 +1,307 @@
-﻿@model IEnumerable<Product>
+@model IEnumerable<Product>
+
+<style>
+    /* ===== PRODUCT INDEX ===== */
+    .shop-wrap {
+        padding: 2.5rem 0 4rem;
+    }
+
+    /* Sidebar wrapper */
+    .shop-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+
+    /* Toolbar */
+    .shop-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .75rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1.5px solid #f0f0f0;
+    }
+
+    .shop-toolbar-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--dark, #16213e);
+        margin: 0;
+    }
+
+    .shop-toolbar-title span {
+        color: var(--primary, #FE980F);
+    }
+
+    .shop-count {
+        font-size: .82rem;
+        color: #888;
+        font-weight: 500;
+    }
+
+    /* Grid card */
+    .product-grid-card {
+        background: #fff;
+        border-radius: var(--radius, 14px);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm, 0 2px 12px rgba(0,0,0,.07));
+        transition: transform .3s, box-shadow .3s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+    }
+
+    .product-grid-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md, 0 8px 30px rgba(0,0,0,.13));
+    }
+
+    .pgc-img-wrap {
+        position: relative;
+        overflow: hidden;
+        padding-top: 75%; /* 4:3 ratio */
+        flex-shrink: 0;
+    }
+
+    .pgc-img-wrap img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .5s ease;
+    }
+
+    .product-grid-card:hover .pgc-img-wrap img { transform: scale(1.07); }
+
+    /* Overlay on hover */
+    .pgc-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(22,33,62,.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity .3s;
+        z-index: 2;
+    }
+
+    .product-grid-card:hover .pgc-overlay { opacity: 1; }
+
+    .pgc-overlay-link {
+        background: #fff;
+        color: var(--dark, #16213e);
+        border-radius: 30px;
+        padding: .5rem 1.3rem;
+        font-weight: 700;
+        font-size: .85rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        transition: background .2s, color .2s, transform .2s;
+        transform: translateY(10px);
+        transition: transform .3s, background .2s, color .2s;
+    }
+
+    .product-grid-card:hover .pgc-overlay-link { transform: translateY(0); }
+    .pgc-overlay-link:hover { background: var(--primary, #FE980F); color: #fff; }
+
+    /* Card body */
+    .pgc-body {
+        padding: 1rem 1.1rem 1.1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pgc-name {
+        font-size: .95rem;
+        font-weight: 700;
+        color: var(--dark, #16213e);
+        text-decoration: none;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: .4rem;
+        transition: color .2s;
+    }
+
+    .pgc-name:hover { color: var(--primary, #FE980F); }
+
+    .pgc-price {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--primary, #FE980F);
+        margin-bottom: .75rem;
+    }
+
+    .pgc-action {
+        margin-top: auto;
+    }
+
+    .btn-pgc {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .4rem;
+        width: 100%;
+        background: var(--dark, #16213e);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: .6rem;
+        font-size: .85rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .25s;
+        cursor: pointer;
+    }
+
+    .btn-pgc:hover {
+        background: var(--primary, #FE980F);
+        color: #fff;
+    }
+
+    /* Success / error toast */
+    .product-toast {
+        font-size: .78rem;
+        padding: .25rem .6rem;
+        border-radius: 6px;
+        margin-top: .4rem;
+        display: inline-block;
+    }
+
+    .product-toast.success { background: #e6f9ed; color: #198754; }
+    .product-toast.error   { background: #fde9e9; color: #dc3545; }
+
+    /* Pagination */
+    .shop-pagination .page-link {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px !important;
+        border: 1.5px solid #e5e5e5;
+        color: var(--dark, #16213e);
+        font-weight: 600;
+        font-size: .88rem;
+        margin: 0 2px;
+        transition: background .2s, border-color .2s, color .2s;
+        text-decoration: none;
+    }
+
+    .shop-pagination .page-item.active .page-link,
+    .shop-pagination .page-link:hover {
+        background: var(--primary, #FE980F);
+        border-color: var(--primary, #FE980F);
+        color: #fff;
+    }
+
+    /* Empty state */
+    .shop-empty {
+        text-align: center;
+        padding: 4rem 1rem;
+    }
+
+    .shop-empty i { font-size: 3.5rem; color: #ddd; display: block; margin-bottom: 1rem; }
+    .shop-empty h4 { color: #555; font-weight: 600; }
+    .shop-empty p  { color: #999; font-size: .9rem; }
+</style>
 
 <partial name="_SliderPartial" />
 
-<!-- Car Grid View -->
-<section class="section car-listing pt-0 mt-5">
+<section class="shop-wrap">
     <div class="container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-xl-3 col-lg-4 col-sm-12 col-12 theiaStickySidebar">
-                <div class="sidebar-form">
-                    <div class="sidebar-heading">
-                        <h3>Tìm kiếm sản phẩm</h3>
-                    </div>
+        <div class="row g-4">
+
+            <!-- ── Sidebar ── -->
+            <div class="col-xl-3 col-lg-4">
+                <div class="shop-sidebar">
                     <partial name="_SidebarPartial" />
                 </div>
             </div>
-            <!-- /Sidebar -->
 
-            <!-- Products -->
-            <div class="col-lg-9">
+            <!-- ── Products ── -->
+            <div class="col-xl-9 col-lg-8">
+
+                @{
+                    var msgQ   = Context.Request.Query["msg"].ToString();
+                    var errQ   = Context.Request.Query["error"].ToString();
+                    int? pidQ  = int.TryParse(Context.Request.Query["pid"], out var pv) ? pv : (int?)null;
+                }
+
                 @if (Model == null || !Model.Any())
                 {
-                    <h2 class="title text-center" style="color:#e70303;">@ViewBag.Message</h2>
+                    <div class="shop-empty" data-aos="fade-up">
+                        <i class="feather-package"></i>
+                        <h4>@(string.IsNullOrEmpty(ViewBag.Message as string) ? "Không tìm thấy sản phẩm" : ViewBag.Message)</h4>
+                        <p>Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.</p>
+                        <a href="/Product/Index" class="btn-pgc d-inline-flex" style="width:auto;padding:.65rem 1.8rem;border-radius:30px;margin-top:.5rem;">
+                            <i class="feather-refresh-cw me-2"></i>Xem tất cả
+                        </a>
+                    </div>
                 }
                 else
                 {
-                    var message = Context.Request.Query["msg"].ToString();
-                    var error = Context.Request.Query["error"].ToString();
-                    int? productId = null;
-                    if (int.TryParse(Context.Request.Query["pid"], out var pidVal))
-                    {
-                        productId = pidVal;
-                    }
+                    <!-- Toolbar -->
+                    <div class="shop-toolbar" data-aos="fade-down">
+                        <h2 class="shop-toolbar-title">
+                            @if (!string.IsNullOrEmpty(ViewBag.Message as string))
+                            {
+                                @ViewBag.Message
+                            }
+                            else
+                            {
+                                <text>Tất cả <span>sản phẩm</span></text>
+                            }
+                        </h2>
+                        <span class="shop-count">@Model.Count() sản phẩm</span>
+                    </div>
 
-                    <h2 class="title text-center" style="color:#e70303;">@ViewBag.Message</h2>
-
-                    <div class="row">
+                    <div class="row g-0">
                         @foreach (Product product in Model)
                         {
-                            <div class="col-xxl-4 col-lg-6 col-md-6 col-12">
-                                <div class="listing-item">
-                                    <div class="listing-img">
-                                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
-                                            <img src="@product.Image" alt="@product.ProductName" width="255" height="280" style="object-fit: cover;" />
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-12 px-2" data-aos="fade-up">
+                                <div class="product-grid-card">
+                                    <div class="pgc-img-wrap">
+                                        <img src="@product.Image" alt="@product.ProductName" loading="lazy" />
+                                        <div class="pgc-overlay">
+                                            <a class="pgc-overlay-link"
+                                               asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
+                                                <i class="feather-eye"></i> Xem chi tiết
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="pgc-body">
+                                        <a class="pgc-name"
+                                           asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
+                                            @product.ProductName
                                         </a>
-                                    </div>
-                                    <div class="listing-content">
-                                        <div class="listing-features d-flex align-items-end justify-content-between">
-                                            <div class="list-rating">
-                                                <h3 class="listing-title">
-                                                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
-                                                        @product.ProductName
-                                                    </a>
-                                                </h3>
-                                            </div>
-                                        </div>
-                                        <div class="listing-location-details">
-                                            <div class="listing-price">
-                                                <h6>@product.UnitPrice₫</h6>
-                                            </div>
-                                        </div>
-                                        <div class="listing-button">
-                                            @{
-                                                var username = Context.Session.GetString("Username");
-                                                var returnUrl = Context.Request.Path + Context.Request.QueryString;
-                                            }
-                                            <form asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
-                                                <button type="submit" class="btn btn-order">
-                                                    <span><i class="feather-calendar me-2"></i></span> Xem chi tiết
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-
-                                    <div style="height: 20px; margin-top: 5px;">
-                                        @if (productId == product.ProductId)
-                                        {
-                                            if (!string.IsNullOrEmpty(message))
+                                        <div class="pgc-price">@Convert.ToDecimal(product.UnitPrice).ToString("N0") ₫</div>
+                                        <div class="pgc-action">
+                                            <a class="btn-pgc"
+                                               asp-controller="Product" asp-action="Detail" asp-route-id="@product.ProductId">
+                                                <i class="feather-shopping-cart"></i> Xem & Mua
+                                            </a>
+                                            @if (pidQ == product.ProductId)
                                             {
-                                                <span style="color:green; font-size: 14px;">@message</span>
+                                                if (!string.IsNullOrEmpty(msgQ))
+                                                {
+                                                    <span class="product-toast success">@msgQ</span>
+                                                }
+                                                else if (!string.IsNullOrEmpty(errQ))
+                                                {
+                                                    <span class="product-toast error">@errQ</span>
+                                                }
                                             }
-                                            else if (!string.IsNullOrEmpty(error))
-                                            {
-                                                <span style="color:red; font-size: 14px;">@error</span>
-                                            }
-                                        }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -92,29 +309,30 @@
                     </div>
                 }
 
-                <!-- Pagination -->
+                <!-- ── Pagination ── -->
                 @if (ViewBag.Totalpage > 1)
                 {
-                    <ul class="pagination" style="display:flex; justify-content:center">
-                        @for (int i = 1; i <= ViewBag.Totalpage; i++)
-                        {
-                            <li class="page-item @(i == ViewBag.Pageindex ? "active" : "")">
-                                <a class="page-link"
-                                   asp-controller="Product"
-                                   asp-route-page="@i"
-                                   asp-route-search="@ViewBag.Search"
-                                   asp-route-minPrice="@ViewBag.minPrice"
-                                   asp-route-maxPrice="@ViewBag.maxPrice"
-                                   asp-route-sort="@ViewBag.Sort"
-                                   asp-route-cid="@ViewBag.Cid">@i
-                                   </a>
-                            </li>
-                        }
-                    </ul>
+                    <nav aria-label="Pagination" class="mt-4">
+                        <ul class="shop-pagination pagination justify-content-center flex-wrap gap-1">
+                            @for (int i = 1; i <= ViewBag.Totalpage; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.Pageindex ? "active" : "")">
+                                    <a class="page-link"
+                                       asp-controller="Product"
+                                       asp-route-page="@i"
+                                       asp-route-search="@ViewBag.Search"
+                                       asp-route-minPrice="@ViewBag.minPrice"
+                                       asp-route-maxPrice="@ViewBag.maxPrice"
+                                       asp-route-sort="@ViewBag.Sort"
+                                       asp-route-cid="@ViewBag.Cid">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
                 }
+
             </div>
             <!-- /Products -->
         </div>
     </div>
 </section>
-<!-- /Car Grid View -->

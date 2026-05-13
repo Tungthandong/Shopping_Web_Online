@@ -1,95 +1,271 @@
-﻿
 <style>
-    /* Ẩn mũi tên mặc định */
-    #slider-carousel .owl-nav {
-        position: absolute;
-        top: 50%;
-        width: 100%;
-        transform: translateY(-50%);
-        display: flex;
-        justify-content: space-between;
-        pointer-events: none;
-        opacity: 0; /* Ẩn đi */
-        transition: opacity 0.3s ease;
-    }
-
-    /* Chỉ hiện khi hover vào slider */
-    #slider-carousel:hover .owl-nav {
-        opacity: 1;
-    }
-    #slider {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    #slider-carousel .item {
+    /* ===== HERO SLIDER ===== */
+    #hero-slider {
         position: relative;
-        height: 500px; /* chỉnh chiều cao ở đây */
+        width: 100%;
         overflow: hidden;
     }
 
-        #slider-carousel .item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* crop ảnh cho đều khung */
-        }
+    #hero-slider .owl-carousel { margin: 0; }
 
-    /* Style mũi tên */
-    #slider-carousel .owl-nav {
+    #hero-slider .slide-item {
+        position: relative;
+        height: 560px;
+        overflow: hidden;
+    }
+
+    @@media (max-width: 768px) {
+        #hero-slider .slide-item { height: 360px; }
+    }
+
+    #hero-slider .slide-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.04);
+        transition: transform 6s ease;
+    }
+
+    #hero-slider .owl-item.active .slide-item img {
+        transform: scale(1);
+    }
+
+    /* Gradient overlay */
+    #hero-slider .slide-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(22,33,62,.72) 35%, rgba(22,33,62,.1) 100%);
+    }
+
+    /* Slide caption */
+    #hero-slider .slide-caption {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 5% 0 6%;
+        color: #fff;
+        z-index: 2;
+    }
+
+    #hero-slider .slide-tag {
+        display: inline-block;
+        background: var(--primary, #FE980F);
+        color: #fff;
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        padding: .3rem .9rem;
+        border-radius: 30px;
+        margin-bottom: 1rem;
+        width: fit-content;
+        animation: fadeSlideUp .6s .2s both;
+    }
+
+    #hero-slider .slide-title {
+        font-size: clamp(1.6rem, 4vw, 2.9rem);
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+        animation: fadeSlideUp .6s .35s both;
+    }
+
+    #hero-slider .slide-sub {
+        font-size: 1rem;
+        opacity: .85;
+        max-width: 460px;
+        margin-bottom: 1.6rem;
+        animation: fadeSlideUp .6s .5s both;
+    }
+
+    #hero-slider .slide-actions {
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+        animation: fadeSlideUp .6s .65s both;
+    }
+
+    #hero-slider .btn-hero-primary {
+        background: var(--primary, #FE980F);
+        color: #fff;
+        border: none;
+        padding: .65rem 1.8rem;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: .92rem;
+        transition: background .25s, transform .2s, box-shadow .25s;
+        text-decoration: none;
+    }
+
+    #hero-slider .btn-hero-primary:hover {
+        background: var(--primary-dark, #e07d0b);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(254,152,15,.4);
+        color: #fff;
+    }
+
+    #hero-slider .btn-hero-ghost {
+        background: rgba(255,255,255,.15);
+        color: #fff;
+        border: 2px solid rgba(255,255,255,.6);
+        padding: .63rem 1.7rem;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: .92rem;
+        backdrop-filter: blur(6px);
+        transition: background .25s, transform .2s;
+        text-decoration: none;
+    }
+
+    #hero-slider .btn-hero-ghost:hover {
+        background: rgba(255,255,255,.25);
+        transform: translateY(-2px);
+        color: #fff;
+    }
+
+    /* Arrow nav */
+    #hero-slider .owl-nav {
         position: absolute;
         top: 50%;
         width: 100%;
         transform: translateY(-50%);
         display: flex;
         justify-content: space-between;
-        pointer-events: none; /* tránh che click */
+        padding: 0 1rem;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity .3s;
+        z-index: 10;
     }
 
-        #slider-carousel .owl-nav button {
-            background: #FFA633;
-            color: #fff;
-            font-size: 40px;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            pointer-events: auto; /* cho phép click */
-            transition: background 0.3s ease;
-        }
+    #hero-slider:hover .owl-nav { opacity: 1; }
 
-            #slider-carousel .owl-nav button:hover {
-                background: rgba(0,0,0,0.7);
-            }
+    #hero-slider .owl-nav button {
+        pointer-events: auto;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.18) !important;
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(255,255,255,.5) !important;
+        color: #fff !important;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background .25s, transform .2s;
+        line-height: 1;
+    }
 
+    #hero-slider .owl-nav button:hover {
+        background: var(--primary, #FE980F) !important;
+        border-color: var(--primary, #FE980F) !important;
+        transform: scale(1.1);
+    }
+
+    #hero-slider .owl-nav button span { display: none; }
+    #hero-slider .owl-nav .owl-prev::after { content: "\f104"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+    #hero-slider .owl-nav .owl-next::after { content: "\f105"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+
+    /* Dots */
+    #hero-slider .owl-dots {
+        position: absolute;
+        bottom: 1.2rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: .4rem;
+        z-index: 10;
+    }
+
+    #hero-slider .owl-dot span {
+        width: 8px;
+        height: 8px;
+        background: rgba(255,255,255,.5) !important;
+        border-radius: 50px;
+        transition: width .3s, background .3s !important;
+        display: block;
+    }
+
+    #hero-slider .owl-dot.active span {
+        width: 28px;
+        background: var(--primary, #FE980F) !important;
+    }
+
+    @@keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(22px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 </style>
-<section id="slider">
-    <div id="slider-carousel" class="owl-carousel owl-theme">
-        <div class="item">
-            <img src="~/images/banner1.png" alt="Banner 1" />
+
+<section id="hero-slider">
+    <div id="hero-carousel" class="owl-carousel owl-theme">
+
+        <div class="slide-item">
+            <img src="~/images/banner1.png" alt="Banner 1" loading="eager" />
+            <div class="slide-overlay"></div>
+            <div class="slide-caption">
+                <span class="slide-tag">Bộ sưu tập mới</span>
+                <h1 class="slide-title">Áo in theo<br>yêu cầu chất lượng cao</h1>
+                <p class="slide-sub">Thiết kế riêng cho bạn — từ mẫu mã đến size, tất cả đều có thể tùy chỉnh.</p>
+                <div class="slide-actions">
+                    <a asp-controller="Product" asp-action="Index" class="btn-hero-primary">
+                        <i class="feather-shopping-bag me-2"></i>Mua ngay
+                    </a>
+                    <a href="#featured" class="btn-hero-ghost">Xem thêm</a>
+                </div>
+            </div>
         </div>
-        <div class="item">
-            <img src="~/images/Twitter-Banner-V3-1280x330.jpg" alt="Banner 2" />
+
+        <div class="slide-item">
+            <img src="~/images/Twitter-Banner-V3-1280x330.jpg" alt="Banner 2" loading="lazy" />
+            <div class="slide-overlay"></div>
+            <div class="slide-caption">
+                <span class="slide-tag">Ưu đãi đặc biệt</span>
+                <h1 class="slide-title">Giảm giá lên đến<br>30% cho đơn đầu tiên</h1>
+                <p class="slide-sub">Đăng ký ngay hôm nay và nhận ưu đãi độc quyền cho đơn hàng đầu tiên của bạn.</p>
+                <div class="slide-actions">
+                    <a asp-controller="Login" asp-action="Index" class="btn-hero-primary">
+                        <i class="feather-user-plus me-2"></i>Đăng ký
+                    </a>
+                    <a asp-controller="Product" asp-action="Index" class="btn-hero-ghost">Xem sản phẩm</a>
+                </div>
+            </div>
         </div>
-        <div class="item">
-            <img src="~/images/Print-On-Demand-Viet-Nam-8.png" alt="Banner 3" />
+
+        <div class="slide-item">
+            <img src="~/images/Print-On-Demand-Viet-Nam-8.png" alt="Banner 3" loading="lazy" />
+            <div class="slide-overlay"></div>
+            <div class="slide-caption">
+                <span class="slide-tag">In theo yêu cầu</span>
+                <h1 class="slide-title">Hàng ngàn mẫu áo<br>đội nhóm, sự kiện</h1>
+                <p class="slide-sub">Phù hợp cho doanh nghiệp, trường học, câu lạc bộ — giao nhanh toàn quốc.</p>
+                <div class="slide-actions">
+                    <a asp-controller="Product" asp-action="Index" class="btn-hero-primary">
+                        <i class="feather-layers me-2"></i>Khám phá
+                    </a>
+                </div>
+            </div>
         </div>
+
     </div>
 </section>
 
 <script>
     $(document).ready(function () {
-        $("#slider-carousel").owlCarousel({
-            items: 1,              // hiển thị 1 ảnh
-            loop: true,            // lặp vô hạn
-            autoplay: true,        // tự động chạy
-            autoplayTimeout: 4000, // thời gian chuyển slide
-            nav: true,             // bật mũi tên
-            dots: false,           // tắt chấm tròn
-            navText: [
-                '<i class="fa fa-angle-left"></i>',
-                '<i class="fa fa-angle-right"></i>'
-            ]
+        $("#hero-carousel").owlCarousel({
+            items: 1,
+            loop: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            smartSpeed: 800,
+            nav: true,
+            dots: true,
+            animateOut: 'fadeOut',
+            navText: ['<span></span>', '<span></span>']
         });
     });
 </script>

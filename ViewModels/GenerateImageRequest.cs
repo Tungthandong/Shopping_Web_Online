@@ -1,4 +1,4 @@
-﻿namespace Shopping_Web.Models
+namespace Shopping_Web.ViewModels
 {
     public class GenerateImageRequest
     {

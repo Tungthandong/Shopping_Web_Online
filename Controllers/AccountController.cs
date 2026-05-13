@@ -1,98 +1,107 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shopping_Web.Models;
 using Shopping_Web.Services;
 using Shopping_Web.ViewModels;
-using System.Reflection;
 
 namespace Shopping_Web.Controllers
 {
     public class AccountController : Controller
     {
-        IAccountService _accountService;
+        private readonly IAccountService _accountService;
+
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }
+
         public IActionResult Index()
         {
             ViewBag.Message = TempData["Message"];
             var username = HttpContext.Session.GetString("Username");
-            if (username==null)
-            {
+            if (username == null)
                 return RedirectToAction("Index", "Login");
-            }
-            if (username!=null)
-            {
-                var account = _accountService.GetAccountByUsername(username);
-                return View(account);
-            }
-            return View();
+
+            var account = _accountService.GetAccountByUsername(username);
+            return View(account);
         }
+
         [HttpPost]
-        public IActionResult UpdateProfile(UpdateProfile updateProfile) {
-            var username = HttpContext.Session.GetString("Username");
-            var message = "Update Failed!!!";
-            if (username!=null)
-            {
-                var account = _accountService.GetAccountByUsername(username);
-                if (account != null)
-                {
-                    account.Fullname = updateProfile.Fullname;
-                    account.Phonenumber = updateProfile.Phonenumber;
-                    account.Email = updateProfile.Email;
-                    account.Birthdate = updateProfile.Birthdate;
-                    account.Gender = updateProfile.Gender;
-                    _accountService.UpdateProfile(account);
-                    message = "Update Successfully";
-                }
-            }
-            TempData["Message"] = message;
-            return RedirectToAction("Index", "Account");
-        }
-        [HttpPost]
-        public IActionResult ChangePassword(ChangePasword changePasword)
+        public IActionResult UpdateProfile(UpdateProfile updateProfile)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Message"] = "Thông tin không hợp lệ. Vui lòng kiểm tra lại.";
+                return RedirectToAction("Index", "Account");
+            }
+
             var username = HttpContext.Session.GetString("Username");
             if (username == null)
             {
-                TempData["Message"] = "You must login first!!!";
-                return RedirectToAction("Login");
+                TempData["Message"] = "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.";
+                return RedirectToAction("Index", "Login");
             }
 
             var account = _accountService.GetAccountByUsername(username);
             if (account == null)
             {
-                TempData["Message"] = "Account not found!!!";
-                return RedirectToAction("Login");
+                TempData["Message"] = "Không tìm thấy tài khoản.";
+                return RedirectToAction("Index", "Account");
+            }
+
+            account.Fullname    = updateProfile.Fullname;
+            account.Phonenumber = updateProfile.Phonenumber;
+            account.Email       = updateProfile.Email;
+            account.Birthdate   = updateProfile.Birthdate;
+            account.Gender      = updateProfile.Gender;
+            _accountService.UpdateProfile(account);
+
+            TempData["Message"] = "Cập nhật thông tin thành công!";
+            return RedirectToAction("Index", "Account");
+        }
+
+        [HttpPost]
+        public IActionResult ChangePassword(ChangePassword changePassword)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Message"] = "Thông tin không hợp lệ. Vui lòng kiểm tra lại.";
+                return RedirectToAction("Index", "Account");
+            }
+
+            var username = HttpContext.Session.GetString("Username");
+            if (username == null)
+            {
+                TempData["Message"] = "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.";
+                return RedirectToAction("Index", "Login");
+            }
+
+            var account = _accountService.GetAccountByUsername(username);
+            if (account == null)
+            {
+                TempData["Message"] = "Không tìm thấy tài khoản.";
+                return RedirectToAction("Index", "Account");
             }
 
             var hasher = new PasswordHasher<Account>();
-            
-            var verifyResult = hasher.VerifyHashedPassword(account, account.Password, changePasword.CurrentPassword);
+
+            var verifyResult = hasher.VerifyHashedPassword(account, account.Password, changePassword.CurrentPassword);
             if (verifyResult != PasswordVerificationResult.Success)
             {
-                TempData["Message"] = "Wrong current password!!!";
+                TempData["Message"] = "Mật khẩu hiện tại không đúng.";
                 return RedirectToAction("Index", "Account");
             }
 
-            if (changePasword.NewPassword != changePasword.ConfirmPassword)
+            if (changePassword.NewPassword == changePassword.CurrentPassword)
             {
-                TempData["Message"] = "New password and confirmation do not match!!!";
+                TempData["Message"] = "Mật khẩu mới phải khác mật khẩu hiện tại.";
                 return RedirectToAction("Index", "Account");
             }
 
-            if (changePasword.NewPassword == changePasword.CurrentPassword)
-            {
-                TempData["Message"] = "New password must be different from current password!!!";
-                return RedirectToAction("Index", "Account");
-            }
-
-            account.Password = hasher.HashPassword(account, changePasword.NewPassword);
+            account.Password = hasher.HashPassword(account, changePassword.NewPassword);
             _accountService.UpdateProfile(account);
 
-            TempData["Message"] = "Change Successfully";
+            TempData["Message"] = "Đổi mật khẩu thành công!";
             return RedirectToAction("Index", "Account");
         }
     }

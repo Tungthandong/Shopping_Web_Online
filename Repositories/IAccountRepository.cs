@@ -1,8 +1,8 @@
-﻿using Shopping_Web.Models;
+using Shopping_Web.Models;
 
-namespace Shopping_Web.DataAccess
+namespace Shopping_Web.Repositories
 {
-    public interface IAccountDA
+    public interface IAccountRepository
     {
         Account? Login(string username, string password);
         Account? GetAccountByUsername(string username);

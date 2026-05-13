@@ -84,6 +84,16 @@ namespace Shopping_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Signup(Signup signup)
         {
+            if (!ModelState.IsValid)
+            {
+                // Lấy lỗi đầu tiên để hiển thị
+                var firstError = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .FirstOrDefault()?.ErrorMessage;
+                TempData["Message"] = firstError ?? "Thông tin đăng ký không hợp lệ.";
+                return RedirectToAction("Index", "Login");
+            }
+
             string message = string.Empty;
 
             if (_accountService.GetAccountByUsername(signup.Username) != null)

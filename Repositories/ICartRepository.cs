@@ -1,8 +1,8 @@
-﻿using Shopping_Web.Models;
+using Shopping_Web.Models;
 
-namespace Shopping_Web.DataAccess
+namespace Shopping_Web.Repositories
 {
-    public interface ICartDA
+    public interface ICartRepository
     {
         string AddOrUpdateToCart(Cart c, int quantity);
         List<Cart> GetAllByUsername(string username);

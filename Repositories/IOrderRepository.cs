@@ -1,8 +1,8 @@
-﻿using Shopping_Web.Models;
+using Shopping_Web.Models;
 
-namespace Shopping_Web.DataAccess
+namespace Shopping_Web.Repositories
 {
-    public interface IOrderDA
+    public interface IOrderRepository
     {
         List<Order> GetOrders();
         string UpdateOrderStatus(int oid, string status);

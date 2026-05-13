@@ -1,162 +1,442 @@
-﻿@model List<Cart>
+@model List<Cart>
 
 @{
     var productId = ViewBag.ProductId as int?;
-    var variant = ViewBag.Var as int?;
-    var message = ViewBag.Message as string;
+    var variant   = ViewBag.Var as int?;
+    var message   = ViewBag.Message as string;
 }
 
 <style>
-    .cart_product img {
-        width: 100px;
-        height: auto;
-        object-fit: contain;
-        border-radius: 5px;
-        transition: transform 0.2s ease-in-out;
+    /* ===== CART PAGE ===== */
+    .cart-section { padding: 2.5rem 0 4rem; background: #fafbfc; min-height: 70vh; }
+
+    /* Page title */
+    .cart-page-title {
+        font-size: clamp(1.4rem, 3vw, 1.9rem);
+        font-weight: 800;
+        color: var(--dark, #16213e);
+        margin-bottom: 1.5rem;
+        padding-bottom: .75rem;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
     }
 
-        .cart_product img:hover {
-            transform: scale(1.05);
-        }
+    .cart-page-title i { color: var(--primary, #FE980F); }
 
-    .cart_description h4 a {
-        font-size: 14px;
-        font-weight: 700;
-        display: block;
-        max-width: 180px;
-        white-space: nowrap;
+    /* Alert */
+    .cart-alert {
+        background: #fde9e9;
+        color: #dc3545;
+        border-radius: 10px;
+        padding: .75rem 1rem;
+        margin-bottom: 1.2rem;
+        font-size: .88rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    /* Table card */
+    .cart-table-card {
+        background: #fff;
+        border-radius: var(--radius, 14px);
         overflow: hidden;
-        text-overflow: ellipsis;
-        color: #333;
-        text-decoration: none;
+        box-shadow: var(--shadow-sm, 0 2px 12px rgba(0,0,0,.07));
+        margin-bottom: 1.5rem;
     }
 
-        .cart_description h4 a:hover {
-            color: #e70303;
-        }
-
-    .cart_quantity_button a {
-        padding: 5px 10px;
-        background: #f8f9fa;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        color: #333;
-        margin: 0 2px;
-        text-decoration: none;
-        font-weight: bold;
+    /* Table overrides */
+    .cart-table { margin: 0; }
+    .cart-table thead tr { background: var(--dark, #16213e); }
+    .cart-table thead th {
+        color: #fff;
+        font-size: .8rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        padding: 1rem .9rem;
+        border: none;
+        white-space: nowrap;
     }
 
-        .cart_quantity_button a:hover {
-            background: #e70303;
-            color: #fff;
-        }
+    .cart-table tbody tr {
+        border-bottom: 1px solid #f5f5f5;
+        transition: background .2s;
+    }
 
-    .cart_quantity_input {
+    .cart-table tbody tr:last-child { border-bottom: none; }
+    .cart-table tbody tr:hover { background: #fffaf5; }
+
+    .cart-table td {
+        padding: .9rem;
+        vertical-align: middle;
+        border: none;
+        font-size: .88rem;
+    }
+
+    /* Product image cell */
+    .cart-img-wrap {
+        width: 72px;
+        height: 72px;
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .cart-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .3s;
+    }
+
+    .cart-img-wrap img:hover { transform: scale(1.08); }
+
+    /* Product name */
+    .cart-prod-name {
+        font-weight: 700;
+        color: var(--dark, #16213e);
+        font-size: .9rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-decoration: none;
+        transition: color .2s;
+        max-width: 200px;
+    }
+
+    .cart-prod-name:hover { color: var(--primary, #FE980F); }
+
+    .cart-size-badge {
+        background: #f3f3f3;
+        color: #666;
+        font-size: .72rem;
+        font-weight: 600;
+        padding: .2rem .6rem;
+        border-radius: 20px;
+        display: inline-block;
+        margin-top: .3rem;
+    }
+
+    /* Price */
+    .cart-price {
+        font-weight: 700;
+        color: #444;
+    }
+
+    /* Quantity stepper */
+    .cart-qty-wrap {
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+    }
+
+    .cart-qty-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        border: 1.5px solid #ddd;
+        background: #fff;
+        color: var(--dark, #16213e);
+        font-size: .9rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: background .2s, border-color .2s, color .2s;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .cart-qty-btn:hover {
+        background: var(--primary, #FE980F);
+        border-color: var(--primary, #FE980F);
+        color: #fff;
+    }
+
+    .cart-qty-display {
+        width: 42px;
+        height: 30px;
         text-align: center;
-        width: 50px;
-        border-radius: 4px;
-        border: 1px solid #ddd;
-        margin: 0 5px;
+        border: 1.5px solid #ddd;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: .85rem;
+        color: var(--dark, #16213e);
+        background: #fff;
     }
 
-    .cart_total_price {
-        font-weight: bold;
-        color: #e70303;
+    /* Total price */
+    .cart-total-price {
+        font-weight: 800;
+        color: var(--primary, #FE980F);
+        font-size: .95rem;
     }
 
-    .cart_quantity_delete i {
-        color: #e70303;
-        font-size: 18px;
-        transition: 0.2s;
+    /* Delete button */
+    .cart-delete-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid #fde9e9;
+        background: #fff9f9;
+        color: #dc3545;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .85rem;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+        cursor: pointer;
     }
 
-        .cart_quantity_delete i:hover {
-            color: #000;
-            transform: scale(1.2);
-        }
+    .cart-delete-btn:hover { background: #dc3545; color: #fff; }
+
+    /* Checkbox */
+    .cart-table .form-check-input {
+        width: 17px;
+        height: 17px;
+        cursor: pointer;
+        accent-color: var(--primary, #FE980F);
+    }
+
+    /* Inline row message */
+    .cart-row-msg td {
+        padding: .35rem .9rem;
+        font-size: .8rem;
+        font-weight: 600;
+        color: #dc3545;
+    }
+
+    /* Summary card */
+    .cart-summary {
+        background: #fff;
+        border-radius: var(--radius, 14px);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm, 0 2px 12px rgba(0,0,0,.07));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .cart-summary-total {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--dark, #16213e);
+    }
+
+    .cart-summary-total span {
+        color: var(--primary, #FE980F);
+        font-size: 1.4rem;
+        font-weight: 900;
+    }
+
+    .btn-checkout {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        background: var(--primary, #FE980F);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: .75rem 2.2rem;
+        font-size: .95rem;
+        font-weight: 700;
+        transition: background .25s, transform .2s, box-shadow .25s;
+        cursor: pointer;
+    }
+
+    .btn-checkout:hover {
+        background: var(--primary-dark, #e07d0b);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(254,152,15,.35);
+    }
+
+    .btn-checkout:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* Empty state */
+    .cart-empty {
+        text-align: center;
+        padding: 5rem 1rem;
+    }
+
+    .cart-empty-icon {
+        width: 80px;
+        height: 80px;
+        background: #fff4e6;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.2rem;
+        font-size: 2rem;
+        color: var(--primary, #FE980F);
+    }
+
+    .cart-empty h4 { color: #555; font-weight: 700; margin-bottom: .4rem; }
+    .cart-empty p  { color: #999; font-size: .9rem; }
+
+    .btn-go-shop {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--dark, #16213e);
+        color: #fff;
+        border-radius: 30px;
+        padding: .65rem 1.8rem;
+        font-size: .9rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .25s;
+        margin-top: .5rem;
+    }
+
+    .btn-go-shop:hover { background: var(--primary, #FE980F); color: #fff; }
 </style>
 
-<section id="cart_items" class="my-4">
+<section class="cart-section">
     <div class="container">
-        @if (!string.IsNullOrEmpty(ViewBag.Message))
+
+        <h1 class="cart-page-title" data-aos="fade-down">
+            <i class="feather-shopping-cart"></i> Giỏ hàng của bạn
+        </h1>
+
+        @if (!string.IsNullOrEmpty(message) && productId == null)
         {
-            <div class="alert alert-danger">@ViewBag.Message</div>
+            <div class="cart-alert" data-aos="fade-down">
+                <i class="feather-alert-circle"></i> @message
+            </div>
         }
 
-        <form method="post" asp-controller="Cart" asp-action="GoCheckout">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-dark">
-                        <tr>
-                            <th></th>
-                            <th class="text-center">Sản phẩm</th>
-                            <th class="text-center">Mô tả</th>
-                            <th class="text-center">Giá</th>
-                            <th class="text-center">Số lượng</th>
-                            <th class="text-center">Tổng</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int? cartTotal = 0;
-                        }
-                        @foreach (Cart cart in Model)
-                        {
-                            string quantityId = $"quantity_{cart.Product.ProductId}";
-                            <tr>
-                                <td class="text-center">
-                                    <input type="checkbox" name="selectedProducts" value="@cart.VariantId" />
-                                </td>
-                                <td class="cart_product text-center">
-                                    <a href="#"><img src="@cart.Product.Image" alt="@cart.Product.ProductName"></a>
-                                </td>
-                                <td class="cart_description">
-                                    <h4><a href="#">@cart.Product.ProductName</a></h4>
-                                    <p class="text-muted mb-0" style="font-size: 12px;">
-                                        Size: @(cart.Variant != null ? cart.Variant.Size : "N/A")
-                                    </p>
-                                </td>
-                                <td class="cart_price text-center">
-                                    <p>@Convert.ToDecimal(@cart.Product.UnitPrice).ToString("N0") VND</p>
-                                </td>
-                                <td class="cart_quantity text-center">
-                                    <div class="cart_quantity_button d-flex justify-content-center align-items-center">
-                                        <a href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=1&var=@cart.VariantId">+</a>
-                                        <input id="@quantityId" class="cart_quantity_input" type="text" name="quantity" value="@cart.Quantity" readonly />
-                                        <a onclick="return confirmDeleteNoItem('@quantityId', this.href)" href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=-1&var=@cart.VariantId">-</a>
-                                    </div>
-                                </td>
-                                <td class="cart_total text-center">
-                                    <p class="cart_total_price">@Convert.ToDecimal(cart.Product.UnitPrice * cart.Quantity).ToString("N0") VND</p>
-                                    <div style="display: none;">@(cartTotal += cart.Product.UnitPrice * cart.Quantity)</div>
-                                </td>
-                                <td class="cart_delete text-center">
-                                    <a onclick="return confirmDelete()" href="/Cart/DeleteItemInCart?productId=@cart.Product.ProductId&variantId=@cart.VariantId">
-                                        <i class="fa fa-times"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            @if (productId == cart.Product.ProductId && variant == cart.VariantId && !string.IsNullOrEmpty(message))
-                            {
+        @if (Model == null || !Model.Any())
+        {
+            <!-- Empty cart -->
+            <div class="cart-empty" data-aos="fade-up">
+                <div class="cart-empty-icon"><i class="feather-shopping-cart"></i></div>
+                <h4>Giỏ hàng trống</h4>
+                <p>Bạn chưa thêm sản phẩm nào vào giỏ hàng.</p>
+                <a href="/Product/Index" class="btn-go-shop">
+                    <i class="feather-shopping-bag"></i> Tiếp tục mua sắm
+                </a>
+            </div>
+        }
+        else
+        {
+            <form method="post" asp-controller="Cart" asp-action="GoCheckout">
+                <div class="cart-table-card" data-aos="fade-up">
+                    <div class="table-responsive">
+                        <table class="cart-table table">
+                            <thead>
                                 <tr>
-                                    <td colspan="7" class="text-center text-danger fw-bold">
-                                        @message
-                                    </td>
+                                    <th></th>
+                                    <th>Sản phẩm</th>
+                                    <th>Mô tả</th>
+                                    <th class="text-center">Đơn giá</th>
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-center">Thành tiền</th>
+                                    <th></th>
                                 </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                                @{
+                                    decimal cartTotal = 0;
+                                }
+                                @foreach (Cart cart in Model)
+                                {
+                                    string qtyId = $"qty_{cart.Product.ProductId}_{cart.VariantId}";
+                                    decimal lineTotal = Convert.ToDecimal(cart.Product.UnitPrice) * cart.Quantity;
+                                    cartTotal += lineTotal;
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <h5 class="fw-bold">Tổng: <span class="text-danger">@Convert.ToDecimal(cartTotal).ToString("N0") VND</span></h5>
-                <button type="submit" class="btn btn-dark px-4" @(Model == null || !Model.Any() ? "disabled" : "")>
-                    Tiến hành thanh toán
-                </button>
-            </div>
-        </form>
+                                    <tr>
+                                        <td style="width:42px;">
+                                            <div class="form-check mb-0">
+                                                <input type="checkbox" class="form-check-input"
+                                                       name="selectedProducts" value="@cart.VariantId" />
+                                            </div>
+                                        </td>
+                                        <td style="width:90px;">
+                                            <div class="cart-img-wrap">
+                                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@cart.Product.ProductId">
+                                                    <img src="@cart.Product.Image" alt="@cart.Product.ProductName" />
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a class="cart-prod-name"
+                                               asp-controller="Product" asp-action="Detail" asp-route-id="@cart.Product.ProductId">
+                                                @cart.Product.ProductName
+                                            </a>
+                                            <div>
+                                                <span class="cart-size-badge">
+                                                    Size: @(cart.Variant != null ? cart.Variant.Size : "N/A")
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="cart-price text-center">
+                                            @Convert.ToDecimal(cart.Product.UnitPrice).ToString("N0") ₫
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="cart-qty-wrap justify-content-center">
+                                                <a class="cart-qty-btn"
+                                                   href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=1&var=@cart.VariantId"
+                                                   title="Tăng">+</a>
+                                                <input id="@qtyId" class="cart-qty-display"
+                                                       type="text" value="@cart.Quantity" readonly />
+                                                <a class="cart-qty-btn"
+                                                   onclick="return confirmDecrement('@qtyId', this.href)"
+                                                   href="/Cart/UpdateQuantity?productId=@cart.Product.ProductId&delta=-1&var=@cart.VariantId"
+                                                   title="Giảm">−</a>
+                                            </div>
+                                        </td>
+                                        <td class="cart-total-price text-center">
+                                            @lineTotal.ToString("N0") ₫
+                                        </td>
+                                        <td style="width:46px;">
+                                            <a class="cart-delete-btn"
+                                               onclick="return confirmDelete()"
+                                               href="/Cart/DeleteItemInCart?productId=@cart.Product.ProductId&variantId=@cart.VariantId"
+                                               title="Xóa">
+                                                <i class="feather-trash-2"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    @if (productId == cart.Product.ProductId && variant == cart.VariantId && !string.IsNullOrEmpty(message))
+                                    {
+                                        <tr class="cart-row-msg">
+                                            <td colspan="7"><i class="feather-alert-circle me-1"></i>@message</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="cart-summary" data-aos="fade-up">
+                    <div class="cart-summary-total">
+                        Tổng tiền: <span>@cartTotal.ToString("N0") ₫</span>
+                    </div>
+                    <button type="submit" class="btn-checkout">
+                        <i class="feather-credit-card"></i> Tiến hành thanh toán
+                    </button>
+                </div>
+            </form>
+        }
+
     </div>
 </section>
 
@@ -165,10 +445,10 @@
         return confirm("Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng?");
     }
 
-    function confirmDeleteNoItem(inputId, href) {
-        const quantity = parseInt(document.getElementById(inputId).value);
-        if (quantity === 1) {
-            if (confirm("Số lượng về 0. Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng?")) {
+    function confirmDecrement(inputId, href) {
+        const qty = parseInt(document.getElementById(inputId).value);
+        if (qty === 1) {
+            if (confirm("Số lượng về 0. Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?")) {
                 window.location.href = href;
             }
             return false;

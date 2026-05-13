@@ -1,93 +1,341 @@
-﻿
-<section id="login" class="py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <!-- Login -->
-            <div class="col-lg-5 col-md-6 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <h3 class="mb-3 text-center">Đăng nhập</h3>
-                        <div class="text-danger mb-2">@ViewBag.Error</div>
+<style>
+    /* ===== AUTH PAGE ===== */
+    .auth-section {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        padding: 3rem 0;
+        background: linear-gradient(135deg, #f0f4ff 0%, #fef9f0 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background shapes */
+    .auth-section::before,
+    .auth-section::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        opacity: .06;
+        background: var(--primary, #FE980F);
+    }
+    .auth-section::before { width: 500px; height: 500px; top: -120px; right: -80px; }
+    .auth-section::after  { width: 320px; height: 320px; bottom: -60px; left: -60px; background: var(--dark, #16213e); }
+
+    /* Auth card */
+    .auth-card {
+        background: #fff;
+        border-radius: var(--radius, 14px);
+        overflow: hidden;
+        box-shadow: var(--shadow-lg, 0 16px 48px rgba(0,0,0,.13));
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .auth-card-header {
+        background: var(--dark, #16213e);
+        padding: 1.4rem 2rem 1.2rem;
+        position: relative;
+    }
+
+    .auth-card-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 2rem;
+        width: 40px; height: 3px;
+        background: var(--primary, #FE980F);
+        border-radius: 2px;
+    }
+
+    .auth-card-title {
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .auth-card-sub {
+        color: rgba(255,255,255,.55);
+        font-size: .8rem;
+        margin: .2rem 0 0;
+    }
+
+    .auth-card-body { padding: 1.8rem 2rem; flex: 1; }
+
+    /* Form control override */
+    .auth-field {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .auth-field .field-icon {
+        position: absolute;
+        left: .9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #aaa;
+        font-size: .9rem;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .auth-field input {
+        padding-left: 2.5rem;
+        border-radius: 8px;
+        border: 1.5px solid #e5e5e5;
+        height: 44px;
+        font-size: .88rem;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .auth-field input:focus {
+        border-color: var(--primary, #FE980F);
+        box-shadow: 0 0 0 3px rgba(254,152,15,.15);
+        outline: none;
+    }
+
+    /* Remember / forgot row */
+    .auth-extra {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.2rem;
+        font-size: .82rem;
+    }
+
+    .auth-extra .form-check-input:checked {
+        background-color: var(--primary, #FE980F);
+        border-color: var(--primary, #FE980F);
+    }
+
+    .auth-extra a {
+        color: var(--primary, #FE980F);
+        text-decoration: none;
+        font-weight: 600;
+        transition: opacity .2s;
+    }
+
+    .auth-extra a:hover { opacity: .75; }
+
+    /* Primary submit button */
+    .btn-auth {
+        width: 100%;
+        background: var(--primary, #FE980F);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        height: 44px;
+        font-size: .92rem;
+        font-weight: 700;
+        transition: background .25s, transform .2s, box-shadow .25s;
+        cursor: pointer;
+    }
+
+    .btn-auth:hover {
+        background: var(--primary-dark, #e07d0b);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(254,152,15,.35);
+    }
+
+    /* Google button */
+    .btn-google {
+        width: 100%;
+        background: #fff;
+        color: #444;
+        border: 1.5px solid #e5e5e5;
+        border-radius: 8px;
+        height: 44px;
+        font-size: .88rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .6rem;
+        transition: border-color .2s, box-shadow .2s;
+        cursor: pointer;
+        margin-top: .75rem;
+    }
+
+    .btn-google:hover {
+        border-color: #aaa;
+        box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    /* OR divider */
+    .or-divider {
+        position: relative;
+        text-align: center;
+        margin: 1rem 0;
+        color: #bbb;
+        font-size: .8rem;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: calc(50% - 22px);
+        height: 1px;
+        background: #e5e5e5;
+    }
+
+    .or-divider::before { left: 0; }
+    .or-divider::after  { right: 0; }
+
+    /* Error / success */
+    .auth-error {
+        background: #fde9e9;
+        color: #dc3545;
+        border-radius: 8px;
+        padding: .65rem 1rem;
+        font-size: .85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+    .auth-success {
+        background: #e6f9ed;
+        color: #198754;
+        border-radius: 8px;
+        padding: .65rem 1rem;
+        font-size: .85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+</style>
+
+<section class="auth-section">
+    <div class="container" style="position:relative;z-index:1;">
+        <div class="row g-4 justify-content-center">
+
+            <!-- ── Login Card ── -->
+            <div class="col-lg-5 col-md-6" data-aos="fade-right">
+                <div class="auth-card">
+                    <div class="auth-card-header">
+                        <h2 class="auth-card-title"><i class="feather-log-in me-2" style="color:var(--primary)"></i>Đăng nhập</h2>
+                        <p class="auth-card-sub">Chào mừng trở lại — vui lòng đăng nhập để tiếp tục</p>
+                    </div>
+                    <div class="auth-card-body">
                         @{
                             var username = Context.Request.Cookies["Username"];
                             var remember = Context.Request.Cookies["Remember"];
                         }
+
+                        @if (!string.IsNullOrEmpty(ViewBag.Error as string))
+                        {
+                            <div class="auth-error"><i class="feather-alert-circle"></i> @ViewBag.Error</div>
+                        }
+
                         <form asp-action="Login" method="post">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" placeholder="Tên đăng nhập" name="Username" value="@username" />
+                            <div class="auth-field">
+                                <i class="feather-user field-icon"></i>
+                                <input type="text" class="form-control" placeholder="Tên đăng nhập"
+                                       name="Username" value="@username" autocomplete="username" />
                             </div>
-                            <div class="mb-3">
-                                <input type="password" class="form-control" placeholder="Mật khẩu" name="Password" />
+                            <div class="auth-field">
+                                <i class="feather-lock field-icon"></i>
+                                <input type="password" class="form-control" placeholder="Mật khẩu"
+                                       name="Password" autocomplete="current-password" />
                             </div>
-                            <div class="form-check mb-2">
-                                <input type="checkbox" class="form-check-input" name="Remember" id="rememberCheck"
-                                       @(remember == "True" ? "checked" : "") />
-                                <label class="form-check-label" for="rememberCheck">Nhớ đăng nhập</label>
+                            <div class="auth-extra">
+                                <div class="form-check mb-0">
+                                    <input type="checkbox" class="form-check-input" name="Remember"
+                                           id="rememberCheck" @(remember == "True" ? "checked" : "") />
+                                    <label class="form-check-label" for="rememberCheck" style="font-size:.82rem;color:#555;">
+                                        Nhớ đăng nhập
+                                    </label>
+                                </div>
+                                <a asp-action="ForgotPass" asp-controller="Login">Quên mật khẩu?</a>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <a asp-action="ForgotPass" asp-controller="Login" class="small text-dark">Quên mật khẩu?</a>
-                            </div>
-                            <button type="submit" class="btn btn-outline-light w-100 mb-3">Đăng nhập</button>
+                            <button type="submit" class="btn-auth">
+                                <i class="feather-log-in me-2"></i>Đăng nhập
+                            </button>
                         </form>
 
+                        <div class="or-divider">hoặc</div>
+
                         <form asp-action="LoginGoogle" asp-controller="Login" method="post">
-                            <button type="submit" class="btn btn-light border w-100 d-flex align-items-center justify-content-center gap-2">
-                                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" width="20" height="20">
-                                <span>Đăng nhập với Google</span>
+                            <button type="submit" class="btn-google">
+                                <img src="https://developers.google.com/identity/images/g-logo.png"
+                                     alt="Google" width="18" height="18" />
+                                Đăng nhập với Google
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Signup -->
-            <div class="col-lg-5 col-md-6">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <h3 class="mb-3 text-center">Đăng ký tài khoản</h3>
-                        <form asp-action="Signup" method="post">
-                            <div class="mb-3">
+            <!-- ── Register Card ── -->
+            <div class="col-lg-5 col-md-6" data-aos="fade-left">
+                <div class="auth-card">
+                    <div class="auth-card-header">
+                        <h2 class="auth-card-title"><i class="feather-user-plus me-2" style="color:var(--primary)"></i>Đăng ký</h2>
+                        <p class="auth-card-sub">Tạo tài khoản miễn phí để bắt đầu mua sắm</p>
+                    </div>
+                    <div class="auth-card-body">
+
+                        @if (!string.IsNullOrEmpty(ViewBag.Message as string))
+                        {
+                            <div class="auth-error"><i class="feather-alert-circle"></i> @ViewBag.Message</div>
+                        }
+
+                        <form asp-action="Signup" method="post" novalidate>
+                            <div class="auth-field">
+                                <i class="feather-user field-icon"></i>
                                 <input type="text" class="form-control" name="Username"
-                                       placeholder="Tên đăng nhập" required
+                                       placeholder="Tên đăng nhập" required autocomplete="username"
                                        oninvalid="this.setCustomValidity('Vui lòng nhập tên đăng nhập')"
-                                       oninput="this.setCustomValidity('')">
+                                       oninput="this.setCustomValidity('')" />
                             </div>
-
-                            <div class="mb-3">
+                            <div class="auth-field">
+                                <i class="feather-mail field-icon"></i>
                                 <input type="email" class="form-control" name="Email"
-                                       placeholder="Email" required
+                                       placeholder="Email" required autocomplete="email"
                                        oninvalid="this.setCustomValidity('Vui lòng nhập email hợp lệ')"
-                                       oninput="this.setCustomValidity('')">
+                                       oninput="this.setCustomValidity('')" />
                             </div>
-
-                            <div class="mb-3">
+                            <div class="auth-field">
+                                <i class="feather-phone field-icon"></i>
                                 <input type="tel" class="form-control" name="Phonenumber"
                                        placeholder="Số điện thoại (10–11 số)" required
                                        pattern="^\d{10,11}$"
                                        oninvalid="this.setCustomValidity('Vui lòng nhập số điện thoại hợp lệ (10–11 số)')"
-                                       oninput="this.setCustomValidity('')">
+                                       oninput="this.setCustomValidity('')" />
                             </div>
-
-                            <div class="mb-3">
+                            <div class="auth-field">
+                                <i class="feather-lock field-icon"></i>
                                 <input type="password" class="form-control" name="Password"
-                                       placeholder="Mật khẩu" required minlength="6"
+                                       placeholder="Mật khẩu (tối thiểu 6 ký tự)" required minlength="6"
+                                       autocomplete="new-password"
                                        oninvalid="this.setCustomValidity('Mật khẩu phải có ít nhất 6 ký tự')"
-                                       oninput="this.setCustomValidity('')">
+                                       oninput="this.setCustomValidity('')" />
                             </div>
-
-                            <div class="mb-3">
+                            <div class="auth-field">
+                                <i class="feather-check-circle field-icon"></i>
                                 <input type="password" class="form-control" name="ConfirmPassword"
                                        placeholder="Xác nhận mật khẩu" required
+                                       autocomplete="new-password"
                                        oninvalid="this.setCustomValidity('Vui lòng xác nhận mật khẩu')"
-                                       oninput="this.setCustomValidity('')">
+                                       oninput="this.setCustomValidity('')" />
                             </div>
-
-                            <button type="submit" class="btn btn-outline-light w-100">Đăng ký</button>
-                            <div class="text-danger mt-2">@ViewBag.Message</div>
+                            <button type="submit" class="btn-auth" style="background:var(--dark,#16213e);"
+                                    onmouseover="this.style.background='var(--primary,#FE980F)'"
+                                    onmouseout="this.style.background='var(--dark,#16213e)'">
+                                <i class="feather-user-plus me-2"></i>Tạo tài khoản
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </section>

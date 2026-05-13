@@ -1,9 +1,126 @@
-﻿<div class="left-sidebar">
-	<div class="panel-group category-products" id="accordian">
-		<!--category-productsr-->
-		@await Component.InvokeAsync("Category")
-    </div><!--/category-products-->
-    <div style="margin-top: 10px;">
-        <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='/Product/Index'">Xóa bộ lọc</button>
+<style>
+    /* ===== SIDEBAR ===== */
+    .filter-card {
+        background: #fff;
+        border-radius: var(--radius, 14px);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm, 0 2px 12px rgba(0,0,0,.07));
+        margin-bottom: 1.2rem;
+    }
+
+    .filter-card-header {
+        background: var(--dark, #16213e);
+        color: #fff;
+        padding: .85rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        font-weight: 700;
+        font-size: .95rem;
+        letter-spacing: .03em;
+    }
+
+    .filter-card-header i {
+        color: var(--primary, #FE980F);
+        font-size: 1.05rem;
+    }
+
+    .filter-card-body { padding: 1rem 1.2rem; }
+
+    /* Category list */
+    .cat-list { list-style: none; padding: 0; margin: 0; }
+
+    .cat-list li { border-bottom: 1px solid #f0f0f0; }
+    .cat-list li:last-child { border-bottom: none; }
+
+    .cat-list a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .6rem .4rem;
+        color: #444;
+        text-decoration: none;
+        font-size: .9rem;
+        transition: color .2s, padding-left .2s;
+        border-radius: 6px;
+    }
+
+    .cat-list a:hover,
+    .cat-list a.active {
+        color: var(--primary, #FE980F);
+        padding-left: .6rem;
+    }
+
+    .cat-list .cat-count {
+        background: #f3f3f3;
+        color: #777;
+        font-size: .72rem;
+        font-weight: 600;
+        padding: .15rem .5rem;
+        border-radius: 20px;
+    }
+
+    .cat-list a:hover .cat-count,
+    .cat-list a.active .cat-count {
+        background: rgba(254,152,15,.12);
+        color: var(--primary, #FE980F);
+    }
+
+    /* Clear filter button */
+    .btn-clear-filter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .4rem;
+        background: #fff4e6;
+        color: var(--primary, #FE980F);
+        border: 1.5px solid rgba(254,152,15,.35);
+        border-radius: 8px;
+        padding: .55rem 1rem;
+        font-size: .85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background .2s, border-color .2s, color .2s;
+        width: 100%;
+        cursor: pointer;
+        margin-top: .5rem;
+    }
+
+    .btn-clear-filter:hover {
+        background: var(--primary, #FE980F);
+        color: #fff;
+        border-color: var(--primary, #FE980F);
+    }
+
+    /* Accordion collapse arrow */
+    .cat-collapse-btn {
+        background: none;
+        border: none;
+        color: rgba(255,255,255,.7);
+        margin-left: auto;
+        font-size: .85rem;
+        cursor: pointer;
+        transition: transform .3s;
+    }
+
+    .cat-collapse-btn.collapsed { transform: rotate(-90deg); }
+</style>
+
+<div class="filter-card">
+    <div class="filter-card-header">
+        <i class="feather-grid"></i>
+        <span>Danh mục sản phẩm</span>
+        <button class="cat-collapse-btn" data-bs-toggle="collapse" data-bs-target="#catList" aria-expanded="true">
+            <i class="feather-chevron-down"></i>
+        </button>
+    </div>
+    <div class="collapse show" id="catList">
+        <div class="filter-card-body">
+            @await Component.InvokeAsync("Category")
+        </div>
     </div>
 </div>
+
+<a href="/Product/Index" class="btn-clear-filter">
+    <i class="feather-x-circle"></i> Xóa bộ lọc
+</a>

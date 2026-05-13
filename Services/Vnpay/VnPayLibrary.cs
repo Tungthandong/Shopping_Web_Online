@@ -1,11 +1,11 @@
-﻿using System.Net.Sockets;
+using System.Net.Sockets;
 using System.Net;
 using Shopping_Web.Models.Vnpay;
 using System.Text;
 using System.Security.Cryptography;
 using System.Globalization;
 
-namespace Shopping_Web.Libraries
+namespace Shopping_Web.Services.Vnpay
 {
     public class VnPayLibrary
     {
@@ -26,10 +26,10 @@ namespace Shopping_Web.Libraries
             var vnPayTranId = Convert.ToInt64(vnPay.GetResponseData("vnp_TransactionNo"));
             var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
             var vnpSecureHash =
-                collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
+                collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value;
             var orderInfo = vnPay.GetResponseData("vnp_OrderInfo");
             var checkSignature =
-                vnPay.ValidateSignature(vnpSecureHash, hashSecret); //check Signature
+                vnPay.ValidateSignature(vnpSecureHash, hashSecret);
             if (!checkSignature)
                 return new PaymentResponseModel()
                 {
@@ -76,7 +76,6 @@ namespace Shopping_Web.Libraries
             return "127.0.0.1";
         }
 
-
         public void AddRequestData(string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
@@ -93,11 +92,11 @@ namespace Shopping_Web.Libraries
             }
         }
 
-
         public string GetResponseData(string key)
         {
             return _responseData.TryGetValue(key, out var retValue) ? retValue : string.Empty;
         }
+
         public string CreateRequestUrl(string baseUrl, string vnpHashSecret)
         {
             var data = new StringBuilder();
@@ -128,6 +127,7 @@ namespace Shopping_Web.Libraries
             var myChecksum = HmacSha512(secretKey, rspRaw);
             return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
         }
+
         private string HmacSha512(string key, string inputData)
         {
             var hash = new StringBuilder();
@@ -144,6 +144,7 @@ namespace Shopping_Web.Libraries
 
             return hash.ToString();
         }
+
         private string GetResponseData()
         {
             var data = new StringBuilder();
@@ -162,7 +163,6 @@ namespace Shopping_Web.Libraries
                 data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
             }
 
-            //remove last '&'
             if (data.Length > 0)
             {
                 data.Remove(data.Length - 1, 1);
@@ -184,4 +184,3 @@ namespace Shopping_Web.Libraries
         }
     }
 }
-

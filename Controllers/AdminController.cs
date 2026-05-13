@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Shopping_Web.DataAccess;
 using Shopping_Web.Models;
 using Shopping_Web.Services;
 using Shopping_Web.ViewModels;

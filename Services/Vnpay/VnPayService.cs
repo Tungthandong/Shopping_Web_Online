@@ -1,4 +1,3 @@
-﻿using Shopping_Web.Libraries;
 using Shopping_Web.Models.Vnpay;
 
 namespace Shopping_Web.Services.Vnpay
@@ -6,6 +5,7 @@ namespace Shopping_Web.Services.Vnpay
     public class VnPayService : IVnPayService
     {
         private readonly IConfiguration _configuration;
+
         public VnPayService(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -45,7 +45,5 @@ namespace Shopping_Web.Services.Vnpay
 
             return response;
         }
-
-
     }
 }

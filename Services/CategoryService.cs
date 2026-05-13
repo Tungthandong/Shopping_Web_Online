@@ -1,22 +1,25 @@
-﻿using Shopping_Web.DataAccess;
 using Shopping_Web.Models;
+using Shopping_Web.Repositories;
 
 namespace Shopping_Web.Services
 {
     public class CategoryService : ICategoryService
     {
-        ICategoryDA _categoryDA;
-        public CategoryService(ICategoryDA categoryDA) { 
-            _categoryDA = categoryDA;
+        private readonly ICategoryRepository _categoryRepository;
+
+        public CategoryService(ICategoryRepository categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
         }
+
         public List<Category> getCategories()
         {
-            return _categoryDA.getCategories();
+            return _categoryRepository.getCategories();
         }
 
         public Category GetCategory(int id)
         {
-            return _categoryDA.GetCategory(id);
+            return _categoryRepository.GetCategory(id);
         }
     }
 }

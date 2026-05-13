@@ -1,147 +1,456 @@
-﻿@model Product
-<section class="section car-listing pt-0 mt-5">
+@model Product
+
+<style>
+    /* ===== PRODUCT DETAIL ===== */
+    .detail-wrap { padding: 2.5rem 0 4rem; }
+
+    /* Breadcrumb */
+    .detail-breadcrumb {
+        font-size: .82rem;
+        color: #888;
+        margin-bottom: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        flex-wrap: wrap;
+    }
+
+    .detail-breadcrumb a { color: #888; text-decoration: none; transition: color .2s; }
+    .detail-breadcrumb a:hover { color: var(--primary, #FE980F); }
+    .detail-breadcrumb .sep { color: #ccc; }
+    .detail-breadcrumb .current { color: var(--dark, #16213e); font-weight: 600; }
+
+    /* Detail card */
+    .detail-card {
+        background: #fff;
+        border-radius: var(--radius, 14px);
+        overflow: hidden;
+        box-shadow: var(--shadow-md, 0 8px 30px rgba(0,0,0,.1));
+    }
+
+    /* Image panel */
+    .detail-img-panel {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius, 14px);
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 380px;
+    }
+
+    .detail-img-panel img {
+        width: 100%;
+        max-height: 420px;
+        object-fit: contain;
+        padding: 1rem;
+        transition: transform .5s ease;
+    }
+
+    .detail-img-panel:hover img { transform: scale(1.04); }
+
+    .detail-img-badge {
+        position: absolute;
+        top: 1rem; left: 1rem;
+        background: var(--primary, #FE980F);
+        color: #fff;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .3rem .8rem;
+        border-radius: 20px;
+    }
+
+    /* Info panel */
+    .detail-info { padding: 2rem 2rem 1.5rem; }
+
+    .detail-category {
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--primary, #FE980F);
+        margin-bottom: .5rem;
+    }
+
+    .detail-title {
+        font-size: clamp(1.3rem, 3vw, 1.9rem);
+        font-weight: 800;
+        color: var(--dark, #16213e);
+        margin-bottom: .6rem;
+        line-height: 1.25;
+    }
+
+    .detail-price {
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: var(--primary, #FE980F);
+        margin-bottom: 1.2rem;
+    }
+
+    .detail-stock {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .82rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-stock.in  { color: #198754; }
+    .detail-stock.out { color: #dc3545; }
+    .detail-stock i   { font-size: .95rem; }
+
+    .detail-divider {
+        border: none;
+        border-top: 1.5px solid #f0f0f0;
+        margin: 1.2rem 0;
+    }
+
+    /* Size pills */
+    .size-label {
+        font-size: .85rem;
+        font-weight: 700;
+        color: var(--dark, #16213e);
+        margin-bottom: .6rem;
+    }
+
+    .size-pills { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+
+    .size-pill {
+        padding: .4rem 1rem;
+        border-radius: 20px;
+        border: 1.5px solid #ddd;
+        background: #fff;
+        font-size: .82rem;
+        font-weight: 600;
+        color: #555;
+        cursor: pointer;
+        transition: border-color .2s, background .2s, color .2s;
+        user-select: none;
+    }
+
+    .size-pill:hover   { border-color: var(--primary, #FE980F); color: var(--primary, #FE980F); }
+    .size-pill.active  { background: var(--primary, #FE980F); border-color: var(--primary, #FE980F); color: #fff; }
+    .size-pill.disabled{ border-color: #eee; color: #bbb; cursor: not-allowed; background: #fafafa; text-decoration: line-through; }
+
+    /* Hidden select (linked to pills) */
+    #sizeSelect { display: none; }
+
+    /* Quantity stepper */
+    .qty-label {
+        font-size: .85rem;
+        font-weight: 700;
+        color: var(--dark, #16213e);
+        margin-bottom: .6rem;
+    }
+
+    .qty-stepper {
+        display: flex;
+        align-items: center;
+        gap: .3rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .qty-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        border: 1.5px solid #e5e5e5;
+        background: #fff;
+        color: var(--dark, #16213e);
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: border-color .2s, background .2s, color .2s;
+    }
+
+    .qty-btn:hover {
+        border-color: var(--primary, #FE980F);
+        color: var(--primary, #FE980F);
+    }
+
+    .qty-input {
+        width: 60px;
+        height: 38px;
+        text-align: center;
+        border: 1.5px solid #e5e5e5;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: .95rem;
+        color: var(--dark, #16213e);
+    }
+
+    /* CTA buttons */
+    .btn-add-cart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        width: 100%;
+        background: var(--primary, #FE980F);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: .8rem;
+        font-size: .95rem;
+        font-weight: 700;
+        transition: background .25s, transform .2s, box-shadow .25s;
+        cursor: pointer;
+        margin-bottom: .6rem;
+    }
+
+    .btn-add-cart:hover {
+        background: var(--primary-dark, #e07d0b);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(254,152,15,.35);
+    }
+
+    /* Alerts */
+    .detail-alert {
+        padding: .75rem 1rem;
+        border-radius: 8px;
+        font-size: .88rem;
+        font-weight: 600;
+        margin-top: .5rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    .detail-alert.success { background: #e6f9ed; color: #198754; }
+    .detail-alert.danger  { background: #fde9e9; color: #dc3545; }
+
+    /* Size chart section */
+    .size-chart-section {
+        background: #fff;
+        border-radius: var(--radius, 14px);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm, 0 2px 12px rgba(0,0,0,.07));
+        margin-top: 1.5rem;
+    }
+
+    .size-chart-title {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--dark, #16213e);
+        margin-bottom: 1rem;
+        padding-bottom: .5rem;
+        border-bottom: 2px solid var(--primary, #FE980F);
+        display: inline-block;
+    }
+
+    .size-chart-section img {
+        border-radius: 8px;
+        transition: transform .3s;
+    }
+
+    .size-chart-section img:hover { transform: scale(1.02); }
+</style>
+
+<section class="detail-wrap">
     <div class="container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-lg-3 mb-4">
-                <partial name="_SidebarPartial" />
+
+        <!-- Breadcrumb -->
+        <nav class="detail-breadcrumb" data-aos="fade-down">
+            <a asp-controller="Home" asp-action="Index"><i class="feather-home"></i> Trang chủ</a>
+            <span class="sep"><i class="feather-chevron-right"></i></span>
+            <a asp-controller="Product" asp-action="Index">Sản phẩm</a>
+            <span class="sep"><i class="feather-chevron-right"></i></span>
+            <span class="current">@Model.ProductName</span>
+        </nav>
+
+        <div class="row g-4">
+
+            <!-- ── Sidebar ── -->
+            <div class="col-lg-3 col-md-4">
+                <div style="position:sticky;top:90px;">
+                    <partial name="_SidebarPartial" />
+                </div>
             </div>
 
-
-            <!-- Product Detail -->
-            <div class="col-lg-9">
-                <div class="card border-0 rounded-3">
+            <!-- ── Detail ── -->
+            <div class="col-lg-9 col-md-8">
+                <div class="detail-card" data-aos="fade-up">
                     <div class="row g-0">
-                        <!-- Product Image -->
-                        <div class="col-md-5 text-center p-4">
-                            <img src="@Model.Image" alt="@Model.ProductName"
-                                 class="img-fluid rounded"
-                                 style="max-height: 320px; object-fit: contain;" />
+
+                        <!-- Image -->
+                        <div class="col-md-5">
+                            <div class="detail-img-panel h-100">
+                                <span class="detail-img-badge">Mới</span>
+                                <img src="@Model.Image" alt="@Model.ProductName" />
+                            </div>
                         </div>
 
-                        <!-- Product Info -->
+                        <!-- Info -->
                         <div class="col-md-7">
-                            <div class="card-body">
-                                <h3 class="card-title mb-3">@Model.ProductName</h3>
+                            <div class="detail-info">
+                                <div class="detail-category">
+                                    <i class="feather-tag me-1"></i>
+                                    @(Model.Category != null ? Model.Category.CategoryName : "Sản phẩm")
+                                </div>
 
-                                <h4 class="text-danger fw-bold mb-4">@Convert.ToDecimal(@Model.UnitPrice).ToString("N0") VND</h4>
+                                <h1 class="detail-title">@Model.ProductName</h1>
+
+                                <div class="detail-price">
+                                    @Convert.ToDecimal(Model.UnitPrice).ToString("N0") ₫
+                                </div>
+
+                                <span class="detail-stock @(Model.UnitsInStock > 0 ? "in" : "out")">
+                                    @if (Model.UnitsInStock > 0)
+                                    {
+                                        <i class="feather-check-circle"></i> <text>Còn hàng</text>
+                                    }
+                                    else
+                                    {
+                                        <i class="feather-x-circle"></i> <text>Hết hàng</text>
+                                    }
+                                </span>
+
+                                <hr class="detail-divider" />
 
                                 <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                                    <!-- Size -->
-                                    <div class="mb-3">
-                                        <label for="sizeSelect" class="form-label fw-bold">Size</label>
-                                        <select id="sizeSelect" name="VariantId" class="form-select w-auto">
-                                            @foreach (var variant in Model.ProductVariants)
-                                            {
-                                                if (variant.StockQuantity > 0)
-                                                {
-                                                    <option value="@variant.VariantId" data-stock="@variant.StockQuantity">
-                                                        @variant.Size (@variant.StockQuantity còn)
-                                                    </option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@variant.VariantId" disabled>
-                                                        @variant.Size (Hết hàng)
-                                                    </option>
-                                                }
-                                            }
-                                        </select>
+
+                                    <!-- Size pills -->
+                                    <div class="size-label">Chọn size:</div>
+                                    <div class="size-pills" id="sizePillsWrap">
+                                        @foreach (var variant in Model.ProductVariants)
+                                        {
+                                            bool inStock = variant.StockQuantity > 0;
+                                            <span class="size-pill @(!inStock ? "disabled" : "") @(Model.ProductVariants.First() == variant && inStock ? "active" : "")"
+                                                  data-variant-id="@variant.VariantId"
+                                                  data-stock="@variant.StockQuantity"
+                                                  @(!inStock ? "title=Hết hàng" : "")>
+                                                @variant.Size
+                                            </span>
+                                        }
                                     </div>
+
+                                    <!-- Hidden select synced to pills -->
+                                    <select id="sizeSelect" name="VariantId">
+                                        @foreach (var variant in Model.ProductVariants)
+                                        {
+                                            <option value="@variant.VariantId" data-stock="@variant.StockQuantity">
+                                                @variant.Size
+                                            </option>
+                                        }
+                                    </select>
 
                                     <!-- Quantity -->
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Số lượng</label>
-                                        <div class="input-group" style="max-width: 150px;">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(-1)">-</button>
-                                            <input type="text" id="quantityInput" name="Quantity" value="1"
-                                                   class="form-control text-center" />
-                                            <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(1)">+</button>
-                                        </div>
+                                    <div class="qty-label">Số lượng:</div>
+                                    <div class="qty-stepper">
+                                        <button type="button" class="qty-btn" id="qtyMinus">−</button>
+                                        <input type="text" id="quantityInput" name="Quantity" value="1" class="qty-input" readonly />
+                                        <button type="button" class="qty-btn" id="qtyPlus">+</button>
+                                        <small class="text-muted ms-2" id="stockNote"></small>
                                     </div>
 
-                                    <!-- Hidden fields -->
                                     @{
-                                        var username = Context.Session.GetString("Username");
+                                        var username  = Context.Session.GetString("Username");
                                         var returnUrl = Context.Request.Path + Context.Request.QueryString;
                                     }
-                                    <input type="hidden" name="Username" value="@username" />
+                                    <input type="hidden" name="Username"  value="@username" />
                                     <input type="hidden" name="ProductId" value="@Model.ProductId" />
                                     <input type="hidden" name="returnUrl" value="@returnUrl" />
 
-                                    <!-- Add to Cart -->
-                                    <button type="submit" class="btn btn-primary w-100 mb-3">
-                                        <i class="fa fa-shopping-cart me-2"></i>Thêm vào giỏ hàng
+                                    <button type="submit" class="btn-add-cart">
+                                        <i class="feather-shopping-cart"></i> Thêm vào giỏ hàng
                                     </button>
                                 </form>
 
-                                <!-- Extra info -->
-                                <p><b>Tình trạng:</b> @(Model.UnitsInStock > 0 ? "Còn hàng" : "Hết hàng")</p>
-                                <p><b>Danh mục:</b> @(Model.Category != null ? Model.Category.CategoryName : "Không rõ")</p>
-
-                                <!-- Alerts -->
                                 @{
-                                    var message = Context.Request.Query["msg"].ToString();
-                                    var error = Context.Request.Query["error"].ToString();
+                                    var alertMsg = Context.Request.Query["msg"].ToString();
+                                    var alertErr = Context.Request.Query["error"].ToString();
                                 }
-                                @if (!string.IsNullOrEmpty(message))
+                                @if (!string.IsNullOrEmpty(alertMsg))
                                 {
-                                    <div class="alert alert-success mt-3">@message</div>
+                                    <div class="detail-alert success"><i class="feather-check-circle"></i> @alertMsg</div>
                                 }
-                                else if (!string.IsNullOrEmpty(error))
+                                else if (!string.IsNullOrEmpty(alertErr))
                                 {
-                                    <div class="alert alert-danger mt-3">@error</div>
+                                    <div class="detail-alert danger"><i class="feather-alert-circle"></i> @alertErr</div>
                                 }
                             </div>
                         </div>
-                        <div class="row mt-4 justify-content-center text-center">
-                            <div class="col-md-5 col-12 mb-3 mb-md-0">
-                                <img src="~/images/products/z7184458665409_37a98fb26640f4ee43cc1b084daee2f2.jpg"
-                                     alt="Banner 1"
-                                     class="img-fluid rounded shadow-sm"
-                                     style="width:100%; object-fit:cover;">
-                                <h6 class="mt-2 fw-semibold" style="color:#333;">Size áo bóng đá</h6>
-                            </div>
-                            <div class="col-md-5 col-12">
-                                <img src="~/images/products/z7184440654902_54824f6e111fe3a33d2b2d16d36e6bd0.jpg"
-                                     alt="Banner 2"
-                                     class="img-fluid rounded shadow-sm"
-                                     style="width:100%; object-fit:cover;">
-                                <h6 class="mt-2 fw-semibold" style="color:#333;">Size áo thun</h6>
-                            </div>
-                        </div>
+                    </div>
+                </div>
 
+                <!-- Size Chart -->
+                <div class="size-chart-section" data-aos="fade-up">
+                    <h3 class="size-chart-title">Bảng size tham khảo</h3>
+                    <div class="row g-3 justify-content-center text-center">
+                        <div class="col-md-5 col-12">
+                            <img src="~/images/products/z7184458665409_37a98fb26640f4ee43cc1b084daee2f2.jpg"
+                                 alt="Size áo bóng đá"
+                                 class="img-fluid rounded shadow-sm w-100" style="object-fit:cover;" />
+                            <p class="mt-2 fw-semibold" style="color:#555; font-size:.85rem;">Size áo bóng đá</p>
+                        </div>
+                        <div class="col-md-5 col-12">
+                            <img src="~/images/products/z7184440654902_54824f6e111fe3a33d2b2d16d36e6bd0.jpg"
+                                 alt="Size áo thun"
+                                 class="img-fluid rounded shadow-sm w-100" style="object-fit:cover;" />
+                            <p class="mt-2 fw-semibold" style="color:#555; font-size:.85rem;">Size áo thun</p>
+                        </div>
                     </div>
                 </div>
             </div>
+
+        </div>
+
+        <!-- Latest Products -->
+        <div class="mt-5">
+            <partial name="_LatestProductPartial" />
         </div>
     </div>
-    <!-- Latest Products -->
-    <div class="mt-5">
-        <partial name="_LatestProductPartial" />
-    </div>
 </section>
+
 <script>
+    // ── Size pills ──
+    const pills      = document.querySelectorAll(".size-pill:not(.disabled)");
     const sizeSelect = document.getElementById("sizeSelect");
-    const input = document.getElementById("quantityInput");
+    const qtyInput   = document.getElementById("quantityInput");
+    const stockNote  = document.getElementById("stockNote");
 
     function getMaxStock() {
-        const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
-        return parseInt(selectedOption.getAttribute("data-stock")) || 0;
+        const opt = sizeSelect.options[sizeSelect.selectedIndex];
+        return parseInt(opt?.getAttribute("data-stock")) || 0;
     }
 
-    function changeQuantity(amount) {
-        let value = parseInt(input.value) || 1;
-        const maxStock = getMaxStock();
-
-        value += amount;
-        if (value < 1) value = 1;
-        if (value > maxStock) value = maxStock;
-
-        input.value = value;
+    function updateStockNote() {
+        const max = getMaxStock();
+        stockNote.textContent = max > 0 ? `(còn ${max} sản phẩm)` : "";
     }
 
-    sizeSelect.addEventListener("change", () => {
-        input.value = 1;
+    pills.forEach(pill => {
+        pill.addEventListener("click", () => {
+            document.querySelectorAll(".size-pill").forEach(p => p.classList.remove("active"));
+            pill.classList.add("active");
+            sizeSelect.value = pill.dataset.variantId;
+            qtyInput.value = 1;
+            updateStockNote();
+        });
+    });
+
+    // Sync initial selection
+    if (pills.length > 0) {
+        pills[0].classList.add("active");
+        sizeSelect.value = pills[0].dataset.variantId;
+    }
+    updateStockNote();
+
+    // ── Quantity stepper ──
+    document.getElementById("qtyPlus").addEventListener("click", () => {
+        let v = parseInt(qtyInput.value) || 1;
+        if (v < getMaxStock()) qtyInput.value = v + 1;
+    });
+
+    document.getElementById("qtyMinus").addEventListener("click", () => {
+        let v = parseInt(qtyInput.value) || 1;
+        if (v > 1) qtyInput.value = v - 1;
     });
 </script>

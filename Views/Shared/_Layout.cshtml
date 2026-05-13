@@ -1,462 +1,515 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Home | E-Shopper</title>
-
-    <!-- Favicon -->
+    <title>The InkSide 20's | In Áo Chuyên Nghiệp</title>
     <link rel="shortcut icon" href="~/images/logo_shoppingweb.jpg">
-
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
-
-    <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="~/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="~/plugins/fontawesome/css/all.min.css">
-
-    <!-- Select2 CSS -->
     <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
-
-    <!-- Datepicker CSS -->
     <link rel="stylesheet" href="~/css/bootstrap-datetimepicker.min.css">
-
-    <!-- Aos CSS -->
     <link rel="stylesheet" href="~/plugins/aos/aos.css">
-
-    <!-- Fearther CSS -->
     <link rel="stylesheet" href="~/css/feather.css">
-
-    <!-- Owl carousel CSS -->
     <link rel="stylesheet" href="~/css/owl.carousel.min.css">
-
-    <!-- Boxicons CSS -->
     <link rel="stylesheet" href="~/plugins/boxicons/css/boxicons.min.css">
-
-    <!-- Main CSS -->
     <link rel="stylesheet" href="~/css/style.css">
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-</head><!--/head-->
-
-<body>
     <style>
-        /* Container cố định góc phải */
-        .actionFix {
-            position: fixed;
-            right: 15px;
-            bottom: 100px;
-            z-index: 99;
+        :root {
+            --primary: #FE980F;
+            --primary-dark: #e07d0b;
+            --primary-light: rgba(254,152,15,.1);
+            --dark: #16213e;
+            --dark-2: #0f3460;
+            --shadow-sm: 0 2px 12px rgba(0,0,0,.06);
+            --shadow-md: 0 8px 30px rgba(0,0,0,.10);
+            --shadow-lg: 0 16px 50px rgba(0,0,0,.14);
+            --radius: 14px;
+            --ease: cubic-bezier(.4,0,.2,1);
+            --transition: all .3s var(--ease);
         }
 
-            .actionFix ul {
-                padding: 0;
-                margin: 0;
-            }
+        /* ─── GLOBAL ─── */
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; scroll-behavior: smooth; }
+        a { text-decoration: none; }
 
-                .actionFix ul li {
-                    list-style: none;
-                    width: 52px;
-                    height: 52px;
-                    margin-bottom: 12px;
-                }
-
-                    /* Tất cả nút */
-                    .actionFix ul li a {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        width: 52px;
-                        height: 52px;
-                        border-radius: 50%;
-                        background: #fff;
-                        overflow: hidden;
-                        position: relative;
-                        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                        text-decoration: none;
-                    }
-
-                        /* Icon hình ảnh */
-                        .actionFix ul li a img {
-                            width: 35px;
-                            height: 35px;
-                            object-fit: contain;
-                        }
-
-                        /* Icon font-awesome */
-                        .actionFix ul li a i {
-                            font-size: 22px;
-                            line-height: 1;
-                            color: #fff;
-                        }
-
-                    /* Riêng nút phone */
-                    .actionFix ul li.phone a {
-                        background: #d93536;
-                        color: #fff;
-                        animation: icon-luc-lac 1s infinite;
-                        z-index: 2;
-                        overflow: visible;
-                    }
-
-                        /* Sóng lan tỏa */
-                        .actionFix ul li.phone a::after {
-                            content: '';
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            width: 52px;
-                            height: 52px;
-                            border-radius: 50%;
-                            background: rgba(217, 53, 54, 0.4);
-                            transform: translate(-50%, -50%) scale(1);
-                            animation: roundScale 1.5s ease-out infinite;
-                            z-index: 1;
-                        }
-
-        /* Animation rung */
-        @@keyframes icon-luc-lac {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            25% {
-                transform: rotate(8deg);
-            }
-
-            50% {
-                transform: rotate(0deg);
-            }
-
-            75% {
-                transform: rotate(-8deg);
-            }
-
-            100% {
-                transform: rotate(0deg);
-            }
+        /* ─── TOP BAR ─── */
+        .site-topbar {
+            background: var(--dark);
+            padding: 7px 0;
+            font-size: 12.5px;
         }
-
-        /* Animation sóng tròn */
-        @@keyframes roundScale {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.6;
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(2);
-                opacity: 0;
-            }
+        .site-topbar a, .site-topbar span {
+            color: rgba(255,255,255,.75);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 5px;
         }
-        /* Hiển thị dropdown khi hover */
-        .nav-item.dropdown:hover .dropdown-menu {
-            display: block;
-            margin-top: 0;
+        .site-topbar a:hover { color: var(--primary); }
+        .site-topbar .divider { color: rgba(255,255,255,.2); margin: 0 6px; }
+        .topbar-social a {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: rgba(255,255,255,.1); justify-content: center;
+            font-size: 11px; transition: var(--transition);
         }
+        .topbar-social a:hover { background: var(--primary); color: #fff; }
 
-        /* Nền sáng, chữ đen */
-        .navbar, .nav {
-            background-color: #fff !important;
+        /* ─── STICKY HEADER ─── */
+        .site-header {
+            position: sticky; top: 0; z-index: 1050;
+            background: #fff;
+            box-shadow: 0 1px 0 #eee;
+            transition: box-shadow .3s var(--ease);
         }
+        .site-header.shadow-active { box-shadow: var(--shadow-md); }
 
-        .nav-link {
-            color: #000 !important;
-            transition: color 0.3s ease;
+        /* ─── NAVBAR ─── */
+        .navbar { padding: 8px 20px; }
+        .navbar-brand img { height: 52px; border-radius: 10px; transition: var(--transition); }
+        .navbar-brand img:hover { transform: scale(1.04); }
+
+        /* Nav links */
+        .main-nav .nav-link {
+            color: #2d2d2d !important;
+            font-weight: 500; font-size: 14.5px;
+            padding: 8px 13px !important;
+            border-radius: 10px; position: relative;
+            transition: var(--transition) !important;
         }
+        .main-nav .nav-link::after {
+            content: ''; position: absolute;
+            bottom: 5px; left: 50%;
+            width: 0; height: 2px;
+            background: var(--primary); border-radius: 2px;
+            transition: width .3s var(--ease), left .3s var(--ease);
+        }
+        .main-nav .nav-link:hover {
+            color: var(--primary) !important;
+            background: var(--primary-light);
+        }
+        .main-nav .nav-link:hover::after { width: 60%; left: 20%; }
 
-            .nav-link:hover {
-                color: #007bff !important;
-            }
+        /* Admin pill */
+        .nav-link.nav-admin {
+            background: linear-gradient(135deg, var(--primary), #ff6b00) !important;
+            color: #fff !important; font-weight: 600;
+            box-shadow: 0 3px 12px rgba(254,152,15,.35);
+        }
+        .nav-link.nav-admin:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(254,152,15,.45); }
+        .nav-link.nav-admin::after { display: none; }
 
-        /* Dropdown styling */
+        /* Dropdown */
         .dropdown-menu {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: none; padding: 8px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            min-width: 210px;
+            animation: dropIn .2s var(--ease);
+        }
+        @@keyframes dropIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        .dropdown-item {
+            border-radius: 8px; padding: 10px 14px;
+            font-size: 14px; color: #444; transition: var(--transition);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .dropdown-item i { color: var(--primary); width: 18px; text-align: center; }
+        .dropdown-item:hover { background: var(--primary-light); color: var(--primary); }
+        .nav-item.dropdown:hover .dropdown-menu { display: block; }
+
+        /* Welcome tag */
+        .welcome-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff; border-radius: 50px;
+            padding: 6px 14px; font-size: 13px; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px;
+            white-space: nowrap;
         }
 
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            color: #007bff;
+        /* Search */
+        .header-search { position: relative; }
+        .header-search input {
+            border-radius: 50px; border: 2px solid #eee;
+            padding: 7px 38px 7px 16px;
+            font-size: 13.5px; width: 210px;
+            transition: var(--transition); outline: none;
+        }
+        .header-search input:focus {
+            border-color: var(--primary); width: 250px;
+            box-shadow: 0 0 0 3px rgba(254,152,15,.12);
+        }
+        .header-search button {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            color: var(--primary); cursor: pointer; font-size: 14px;
         }
 
-        /* Thanh header */
-        .header {
-            border-bottom: 1px solid #eee;
+        /* ─── FOOTER ─── */
+        .site-footer { background: var(--dark); color: rgba(255,255,255,.8); }
+        .footer-main { padding: 60px 0 40px; }
+        .footer-logo img { height: 56px; border-radius: 10px; margin-bottom: 16px; }
+        .footer-desc { font-size: 13.5px; line-height: 1.75; color: rgba(255,255,255,.65); }
+        .footer-title {
+            color: #fff; font-size: 15px; font-weight: 700;
+            margin-bottom: 20px; padding-bottom: 10px;
+            border-bottom: 2px solid rgba(254,152,15,.4);
         }
-        /* Giãn đều các mục menu */
-        .navbar-nav .nav-item {
-            margin: 0 8px;
+        .footer-link {
+            display: flex; align-items: center; gap: 8px;
+            color: rgba(255,255,255,.65); font-size: 13.5px;
+            padding: 5px 0; transition: var(--transition);
+            text-decoration: none;
+        }
+        .footer-link:hover { color: var(--primary); padding-left: 6px; }
+        .footer-link i { color: var(--primary); font-size: 12px; flex-shrink: 0; }
+        .footer-social a {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+            margin-right: 8px; transition: var(--transition); text-decoration: none;
+            font-size: 14px;
+        }
+        .footer-social a:hover { background: var(--primary); color: #fff; transform: translateY(-3px); }
+        .footer-promo {
+            margin-top: 16px; padding: 12px 16px; border-radius: 10px;
+            background: rgba(254,152,15,.12); border-left: 3px solid var(--primary);
+            font-size: 13px; color: rgba(255,255,255,.8); line-height: 1.5;
+        }
+        .footer-bottom {
+            background: rgba(0,0,0,.25); padding: 14px 0;
+            text-align: center; font-size: 12.5px; color: rgba(255,255,255,.4);
+            border-top: 1px solid rgba(255,255,255,.06);
         }
 
-        /* Căn giữa nội dung header */
-        .navbar {
-            padding: 6px 20px;
+        /* ─── FLOATING ACTIONS ─── */
+        .float-actions {
+            position: fixed; right: 16px; bottom: 88px;
+            z-index: 999; display: flex; flex-direction: column; gap: 10px;
         }
+        .float-btn {
+            width: 50px; height: 50px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,.2);
+            transition: var(--transition); position: relative; text-decoration: none;
+        }
+        .float-btn:hover { transform: scale(1.12); }
+        .float-btn img { width: 30px; height: 30px; object-fit: contain; }
+        /* tooltip */
+        .float-btn::before {
+            content: attr(data-tip);
+            position: absolute; right: 60px; top: 50%; transform: translateY(-50%);
+            background: rgba(0,0,0,.7); color: #fff; white-space: nowrap;
+            padding: 4px 10px; border-radius: 6px; font-size: 12px;
+            opacity: 0; pointer-events: none; transition: opacity .2s;
+        }
+        .float-btn:hover::before { opacity: 1; }
+        /* Phone */
+        .float-phone {
+            background: #e03535; color: #fff;
+            animation: shake 1.2s ease infinite;
+        }
+        .float-phone::after {
+            content: ''; position: absolute; inset: -7px;
+            border-radius: 50%; border: 3px solid rgba(224,53,53,.35);
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+        .float-phone i { font-size: 20px; color: #fff; }
+        @@keyframes shake {
+            0%,100% { transform: rotate(0); }
+            15% { transform: rotate(-10deg); }
+            30% { transform: rotate(10deg); }
+            45% { transform: rotate(-6deg); }
+            60% { transform: rotate(6deg); }
+        }
+        @@keyframes pulse-ring {
+            0% { transform: scale(1); opacity: .5; }
+            100% { transform: scale(1.9); opacity: 0; }
+        }
+        .float-zalo, .float-fb { background: #fff; }
 
-            /* Ô search nhỏ gọn, sát phải */
-            .navbar form {
-                width: 220px;
-            }
+        /* ─── SCROLL TO TOP ─── */
+        #back-to-top {
+            position: fixed; right: 16px; bottom: 26px; z-index: 999;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--primary); color: #fff; border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; cursor: pointer;
+            box-shadow: 0 4px 16px rgba(254,152,15,.4);
+            transition: var(--transition); opacity: 0; pointer-events: none;
+        }
+        #back-to-top.visible { opacity: 1; pointer-events: all; }
+        #back-to-top:hover { background: var(--primary-dark); transform: translateY(-3px); }
 
-            .navbar .form-control {
-                height: 34px;
-                font-size: 14px;
-            }
+        /* ─── PROGRESS WRAP (keep existing backToTop.js working) ─── */
+        .progress-wrap { display: none; }
     </style>
+</head>
+<body>
+<div class="main-wrapper">
 
-    <div class="main-wrapper">
-        <!-- Header -->
-        <header class="header bg-white shadow-sm">
-            <div class="container-fluid">
-                <div class="contactinfo py-1 border-bottom">
-                    <ul class="nav nav-pills small text-dark">
-                        <li class="nav-item me-3">
-                            <a href="#" class="nav-link text-dark">
-                                <i class="fa fa-phone"></i> +84 86 50 69 618
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-dark">
-                                <i class="fa fa-envelope"></i> theinkside20s@gmail.com
-                            </a>
-                        </li>
-                    </ul>
+    <!-- Top Bar -->
+    <div class="site-topbar d-none d-md-block">
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-1">
+                    <a href="tel:0865069618"><i class="fas fa-phone-alt" style="color:var(--primary)"></i> 0865 069 618</a>
+                    <span class="divider">|</span>
+                    <a href="mailto:theinkside20s@gmail.com"><i class="fas fa-envelope" style="color:var(--primary)"></i> theinkside20s@gmail.com</a>
                 </div>
-
-                <nav class="navbar navbar-expand-lg header-nav">
-                    <div class="navbar-header d-flex align-items-center">
-                        <a id="mobile_btn" href="javascript:void(0);" class="me-2">
-                            <span class="bar-icon">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </span>
-                        </a>
-                        <a asp-controller="Home" asp-action="Index" class="navbar-brand logo">
-                            <img src="~/images/logo_shoppingweb.jpg" class="img-fluid" alt="Logo" width="80" height="60">
-                        </a>
-                    </div>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="nav justify-content-center bg-white py-2">
-                            @{
-                                var username = Context.Session.GetString("Username");
-                                var role = Context.Session.GetString("Role");
-                            }
-
-                            <!-- Admin Dashboard -->
-                            @if (username != null && role == "admin")
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-action="Index" asp-controller="Admin">
-                                        <i class="fa fa-user-shield"></i> Admin Dashboard
-                                    </a>
-                                </li>
-                            }
-
-                            <!-- Account Dropdown -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link text-dark dropdown-toggle" href="#" id="accountDropdown" role="button">
-                                    <i class="fa fa-user"></i> Tài khoản
-                                </a>
-                                <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="accountDropdown">
-                                    <li>
-                                        <a class="dropdown-item text-dark" asp-controller="Account" asp-action="Index">
-                                            <i class="fa fa-user-circle"></i> Tài khoản của tôi
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-dark" asp-controller="Checkout" asp-action="Index">
-                                            <i class="fa fa-crosshairs"></i> Thanh toán
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-dark" asp-controller="Checkout" asp-action="OrderHistory">
-                                            &#128221; Lịch sử mua hàng
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">
-                                    <i class="fa fa-box"></i> Sản phẩm
-                                </a>
-                            </li>
-
-                            <!-- Design -->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Design" asp-action="Index">
-                                    <i class="fa fa-upload"></i> Thiết kế
-                                </a>
-                            </li>
-
-                            <!-- Cart -->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
-                                    <i class="fa fa-shopping-cart"></i> Giỏ hàng
-                                </a>
-                            </li>
-
-                            <!-- Login / Logout -->
-                            @if (!string.IsNullOrEmpty(username))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Login" asp-action="Logout">
-                                        <i class="fa fa-lock"></i> Đăng xuất
-                                    </a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Login" asp-action="Index">
-                                        <i class="fa fa-lock"></i> Đăng nhập
-                                    </a>
-                                </li>
-                            }
-
-                            <!-- Welcome user -->
-                            @if (!string.IsNullOrEmpty(username))
-                            {
-                                <li class="nav-item">
-                                    <span class="nav-link text-dark">
-                                        <i class="fa fa-user"></i> Xin chào, @username!
-                                    </span>
-                                </li>
-                            }
-
-                            @*   <!-- Search -->
-                            <li class="nav-item ms-3">
-                                <form asp-controller="Product" asp-action="Index" method="get" class="d-flex">
-                                    <input type="hidden" name="cid" value="@ViewBag.Cid" />
-                                    <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
-                                    <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
-                                    <input class="form-control form-control-sm border" type="text" name="search" placeholder="Search" value="@ViewBag.Search" />
-                                </form>
-                            </li> *@
-                        </ul>
-                        <form asp-controller="Product" asp-action="Index" method="get" class="d-flex ms-auto">
-                            <input type="hidden" name="cid" value="@ViewBag.Cid" />
-                            <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
-                            <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
-                            <input class="form-control form-control-sm border" type="text" name="search" placeholder="Tìm kiếm..." value="@ViewBag.Search" />
-                        </form>
-                    </div>
-                </nav>
+                <div class="d-flex align-items-center gap-2 topbar-social">
+                    <span>Theo dõi:</span>
+                    <a href="https://www.facebook.com/messages/t/840078915850272" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://zalo.me/0865069618" target="_blank" title="Zalo"><i class="fas fa-comment-dots"></i></a>
+                </div>
             </div>
-        </header>
-        <!-- /Header -->
-
-
-
-
-        <div>
-            @RenderBody()
-            @RenderSection("Scripts", required: false)
-
         </div>
-        <!-- Footer -->
-        <footer class="footer">
-            <!-- Footer Top -->
-            <div class="footer-top aos" data-aos="fade-down">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <div class="footer-contact footer-widget">
-                                <h5 class="footer-title">Contact Info</h5>
-                                <div class="footer-contact-info">
-                                    <div class="footer-address">
-                                        <span><i class="feather-phone-call"></i></span>
-                                        <div class="addr-info">
-                                            <h6>+84 865 069 618</h6>
-                                        </div>
-                                    </div>
-                                    <div class="footer-address">
-                                        <span><i class="feather-mail"></i></span>
-                                        <div class="addr-info">
-                                            <h6>theinkside20s@gmail.com</h6>
-                                        </div>
-                                    </div>
-                                </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header" id="site-header">
+        <div class="container-fluid px-4">
+            <nav class="navbar navbar-expand-lg p-0 py-2">
+                <!-- Logo -->
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand me-3">
+                    <img src="~/images/logo_shoppingweb.jpg" alt="The InkSide 20's">
+                </a>
+
+                <!-- Toggler -->
+                <button class="navbar-toggler border-0 shadow-none" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#mainNav"
+                        aria-controls="mainNav" aria-expanded="false">
+                    <i class="fas fa-bars" style="color:var(--primary);font-size:20px"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav main-nav mx-auto align-items-center gap-1 py-2 py-lg-0">
+                        @{
+                            var username = Context.Session.GetString("Username");
+                            var role = Context.Session.GetString("Role");
+                        }
+
+                        @if (username != null && role == "admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-admin" asp-action="Index" asp-controller="Admin">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                                </a>
+                            </li>
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Product" asp-action="Index">
+                                <i class="fas fa-tshirt me-1"></i>Sản phẩm
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Design" asp-action="Index">
+                                <i class="fas fa-paint-brush me-1"></i>Thiết kế
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button">
+                                <i class="fas fa-user-circle me-1"></i>Tài khoản
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Account" asp-action="Index">
+                                        <i class="fas fa-id-card"></i> Hồ sơ của tôi
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Checkout" asp-action="Index">
+                                        <i class="fas fa-credit-card"></i> Thanh toán
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Checkout" asp-action="OrderHistory">
+                                        <i class="fas fa-history"></i> Lịch sử đơn hàng
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                <i class="fas fa-shopping-bag me-1"></i>Giỏ hàng
+                            </a>
+                        </li>
+
+                        @if (!string.IsNullOrEmpty(username))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Login" asp-action="Logout">
+                                    <i class="fas fa-sign-out-alt me-1"></i>Đăng xuất
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Login" asp-action="Index">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Right: welcome + search -->
+                    <div class="d-flex align-items-center gap-3 ms-lg-3">
+                        @if (!string.IsNullOrEmpty(username))
+                        {
+                            <span class="welcome-tag d-none d-xl-inline-flex">
+                                <i class="fas fa-wave-square"></i> @username
+                            </span>
+                        }
+                        <div class="header-search">
+                            <form asp-controller="Product" asp-action="Index" method="get">
+                                <input type="hidden" name="cid" value="@ViewBag.Cid" />
+                                <input type="hidden" name="minPrice" value="@ViewBag.MinPrice" />
+                                <input type="hidden" name="maxPrice" value="@ViewBag.MaxPrice" />
+                                <input type="text" name="search" placeholder="Tìm sản phẩm…" value="@ViewBag.Search" />
+                                <button type="submit"><i class="fas fa-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- /Header -->
+
+    <!-- Page content -->
+    <div>
+        @RenderBody()
+        @RenderSection("Scripts", required: false)
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-main">
+            <div class="container">
+                <div class="row g-5">
+                    <!-- Brand -->
+                    <div class="col-lg-4">
+                        <div class="footer-logo">
+                            <img src="~/images/logo_shoppingweb.jpg" alt="Logo">
+                        </div>
+                        <p class="footer-desc">
+                            The InkSide 20's — chuyên in áo theo yêu cầu, chất lượng cao, giao hàng nhanh.
+                            Thiết kế của bạn, chúng tôi hiện thực hóa!
+                        </p>
+                        <div class="footer-social mt-3">
+                            <a href="https://www.facebook.com/messages/t/840078915850272" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://zalo.me/0865069618" target="_blank" title="Zalo"><i class="fas fa-comment-dots"></i></a>
+                            <a href="tel:0865069618" title="Gọi điện"><i class="fas fa-phone-alt"></i></a>
+                        </div>
+                        <div class="footer-promo">
+                            🎯 Đặt hàng sỉ từ <strong style="color:var(--primary)">50 chiếc</strong> được giảm <strong style="color:var(--primary)">15%</strong>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="col-lg-2 col-6">
+                        <h6 class="footer-title">Điều hướng</h6>
+                        <a asp-controller="Home" asp-action="Index" class="footer-link"><i class="fas fa-chevron-right"></i> Trang chủ</a>
+                        <a asp-controller="Product" asp-action="Index" class="footer-link"><i class="fas fa-chevron-right"></i> Sản phẩm</a>
+                        <a asp-controller="Design" asp-action="Index" class="footer-link"><i class="fas fa-chevron-right"></i> Thiết kế</a>
+                        <a asp-controller="Checkout" asp-action="OrderHistory" class="footer-link"><i class="fas fa-chevron-right"></i> Đơn hàng</a>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="col-lg-3 col-6">
+                        <h6 class="footer-title">Liên hệ</h6>
+                        <a href="tel:0865069618" class="footer-link"><i class="fas fa-phone-alt"></i> 0865 069 618</a>
+                        <a href="mailto:theinkside20s@gmail.com" class="footer-link"><i class="fas fa-envelope"></i> theinkside20s@gmail.com</a>
+                        <a href="https://zalo.me/0865069618" target="_blank" class="footer-link"><i class="fas fa-comment-dots"></i> Zalo: 0865 069 618</a>
+                    </div>
+
+                    <!-- Hours -->
+                    <div class="col-lg-3">
+                        <h6 class="footer-title">Giờ làm việc</h6>
+                        <p class="footer-link mb-0"><i class="fas fa-clock"></i> Thứ 2 – Thứ 6: 8:00 – 20:00</p>
+                        <p class="footer-link"><i class="fas fa-clock"></i> Thứ 7 – CN: 9:00 – 17:00</p>
+                        <div class="mt-3 p-3 rounded-3" style="background:rgba(254,152,15,.08);border:1px dashed rgba(254,152,15,.3)">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <i class="fas fa-shield-alt" style="color:var(--primary)"></i>
+                                <strong style="color:#fff;font-size:13px">Cam kết chất lượng</strong>
                             </div>
+                            <p style="font-size:12.5px;color:rgba(255,255,255,.6);margin:0">In không đẹp, hoàn tiền 100%</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- /Footer Top -->
-        </footer>
-        <!-- /Footer -->
-    </div>
-    <div class="actionFix">
-        <ul>
-            <li class="phone">
-                <a href="tel:0989248835" title="Hotline">
-                    <i class="fa fa-phone" aria-hidden="true"></i>
-                </a>
-            </li>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                © 2025 The InkSide 20's · Tất cả quyền được bảo lưu · Made with ❤️ in Việt Nam
+            </div>
+        </div>
+    </footer>
+    <!-- /Footer -->
+</div>
 
+<!-- Floating Action Buttons -->
+<div class="float-actions">
+    <a href="tel:0865069618" class="float-btn float-phone" data-tip="Gọi ngay">
+        <i class="fas fa-phone"></i>
+    </a>
+    <a href="https://zalo.me/0865069618" target="_blank" class="float-btn float-zalo" data-tip="Zalo" title="Zalo">
+        <img src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png" alt="Zalo">
+    </a>
+    <a href="https://www.facebook.com/messages/t/840078915850272" target="_blank" class="float-btn float-fb" data-tip="Facebook" title="Facebook">
+        <img src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png" alt="Facebook">
+    </a>
+</div>
 
-            <li class="icon">
-                <a href="https://zalo.me/0865069618" target="_blank" title="">
-                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/zaloicon_8309_HasThumb_Thumb.png">
-                </a>
-            </li>
+<!-- Scroll To Top -->
+<button id="back-to-top" title="Về đầu trang">
+    <i class="fas fa-chevron-up"></i>
+</button>
+<!-- keep old element for backToTop.js compatibility -->
+<div class="progress-wrap"></div>
 
-            <li class="icon">
-                <a href="https://www.facebook.com/messages/t/840078915850272;source_id=1441792&amp;recurring_notification=0" target="_blank" title="">
-                    <img alt="" class=" lazyloaded" src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png" data-src="https://aobongda.net/pic/banner/thiet-ke-chua-co-ten-53_8182_HasThumb_Thumb.png">
-                </a>
-            </li>
-        </ul>
-    </div>
-    <!-- scrollToTop start -->
-    <div class="progress-wrap active-progress">
-        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919px, 307.919px; stroke-dashoffset: 228.265px;"></path>
-        </svg>
-    </div>
-    <!-- scrollToTop end -->
-    <!-- jQuery -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="~/js/jquery-3.7.1.min.js"></script>
+<!-- Scripts -->
+<script src="~/js/jquery-3.7.1.min.js"></script>
+<script src="~/js/bootstrap.bundle.min.js"></script>
+<script src="~/plugins/aos/aos.js"></script>
+<script src="~/plugins/moment/moment.min.js"></script>
+<script src="~/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/plugins/slick/slick.js"></script>
+<script src="~/js/owl.carousel.min.js"></script>
+<script src="~/plugins/select2/js/select2.min.js"></script>
+<script src="~/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+<script src="~/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+<script src="~/plugins/fancybox/fancybox.umd.js"></script>
+<script src="~/js/script.js"></script>
 
-    <!-- Bootstrap Core JS -->
-    <script src="~/js/bootstrap.bundle.min.js"></script>
+<script>
+    AOS.init({ duration: 650, once: true, offset: 50 });
 
-    <!-- Aos -->
-    <script src="~/plugins/aos/aos.js"></script>
+    // Sticky header shadow
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 80) {
+            $('#site-header').addClass('shadow-active');
+            $('#back-to-top').addClass('visible');
+        } else {
+            $('#site-header').removeClass('shadow-active');
+            $('#back-to-top').removeClass('visible');
+        }
+    });
 
-    <!-- Datepicker Core JS -->
-    <script src="~/plugins/moment/moment.min.js"></script>
-    <script src="~/js/bootstrap-datetimepicker.min.js"></script>
-
-    <!-- Slick JS -->
-    <script src="~/plugins/slick/slick.js"></script>
-
-    <!-- Owl Carousel JS -->
-    <script src="~/js/owl.carousel.min.js"></script>
-
-    <!-- Select2 JS -->
-    <script src="~/plugins/select2/js/select2.min.js"></script>
-
-    <!-- Top JS -->
-    <script src="~/js/backToTop.js"></script>
-
-    <!-- Sticky Sidebar JS -->
-    <script src="~/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
-    <script src="~/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
-
-    <!-- Fancybox JS -->
-    <script src="~/plugins/fancybox/fancybox.umd.js"></script>
-
-    <!-- Custom JS -->
-    <script src="~/js/script.js"></script>
+    // Scroll to top
+    $('#back-to-top').click(function () {
+        $('html, body').animate({ scrollTop: 0 }, 400);
+    });
+</script>
 </body>
 </html>

@@ -1,48 +1,50 @@
-﻿using Shopping_Web.DataAccess;
 using Shopping_Web.Models;
+using Shopping_Web.Repositories;
 
 namespace Shopping_Web.Services
 {
     public class OrderService : IOrderService
     {
-        IOrderDA _orderDA;
-        public OrderService(IOrderDA orderDA)
+        private readonly IOrderRepository _orderRepository;
+
+        public OrderService(IOrderRepository orderRepository)
         {
-            _orderDA = orderDA;
+            _orderRepository = orderRepository;
         }
+
         public List<Order> GetOrders()
         {
-            return _orderDA.GetOrders();
+            return _orderRepository.GetOrders();
         }
 
         public string UpdateOrderStatus(int oid, string status)
         {
-            return _orderDA.UpdateOrderStatus(oid, status);
+            return _orderRepository.UpdateOrderStatus(oid, status);
         }
 
         public void AddOrder(Order order)
         {
-            _orderDA.AddOrder(order);
+            _orderRepository.AddOrder(order);
         }
 
         public void AddOrderDetail(int oid, List<Cart> cart)
         {
-            _orderDA.AddOrderDetail(oid, cart);
+            _orderRepository.AddOrderDetail(oid, cart);
         }
 
         public List<Order> GetOrdersByUser(string username)
         {
-            return _orderDA.GetOrdersByUser(username);
+            return _orderRepository.GetOrdersByUser(username);
         }
 
         public void CancelOrder(int oid)
         {
-            _orderDA.CancelOrder(oid);
+            _orderRepository.CancelOrder(oid);
         }
 
         public List<OrderDetail> getDetailsByOrderId(int oid)
         {
-            return _orderDA.getDetailsByOrderId(oid);
+            return _orderRepository.getDetailsByOrderId(oid);
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using Google.Cloud.AIPlatform.V1;
+using Google.Cloud.AIPlatform.V1;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Shopping_Web.Models; // Model "GenerateImageRequest" của bạn
+using Shopping_Web.ViewModels;
 using System;
-using System.Collections.Generic; // Thêm
+using System.Collections.Generic;
 using System.IO;
-using System.Linq; // Thêm
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -42,7 +42,6 @@ namespace Shopping_Web.Controllers
             _apiToken = configuration["HuggingFaceApiToken"];
         }
 
-
         [HttpPost("generate")]
         public async Task<IActionResult> GenerateImage([FromBody] GenerateImageRequest request)
         {
@@ -75,15 +74,15 @@ namespace Shopping_Web.Controllers
                 HttpResponseMessage imageResponse = await _httpClient.SendAsync(imageRequest);
 
                 if (!imageResponse.IsSuccessStatusCode)
+                {
+                    string errorContent = await imageResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Image API Error: {errorContent}");
+                    if (errorContent.Contains("model is loading"))
                     {
-                        string errorContent = await imageResponse.Content.ReadAsStringAsync();
-                        Console.WriteLine($"Image API Error: {errorContent}");
-                        if (errorContent.Contains("model is loading"))
-                        {
-                            return StatusCode(503, new { error = "AI tạo ảnh đang khởi động (cold start). Vui lòng thử lại sau 1-2 phút." });
-                        }
-                        return StatusCode((int)imageResponse.StatusCode, new { error = $"Lỗi API tạo ảnh: {errorContent}" });
+                        return StatusCode(503, new { error = "AI tạo ảnh đang khởi động (cold start). Vui lòng thử lại sau 1-2 phút." });
                     }
+                    return StatusCode((int)imageResponse.StatusCode, new { error = $"Lỗi API tạo ảnh: {errorContent}" });
+                }
                 byte[] imageBytes = await imageResponse.Content.ReadAsByteArrayAsync();
 
                 string uniqueFileName = $"{Guid.NewGuid()}.jpg";

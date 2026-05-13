@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
-using Shopping_Web.DataAccess;
-using Shopping_Web.Models;
+using Shopping_Web.Data;
+using Shopping_Web.Repositories;
 using Shopping_Web.Services;
 using Shopping_Web.Services.Vnpay;
 
@@ -36,24 +36,28 @@ namespace Shopping_Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<YugiohCardShopContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
-            builder.Services.AddScoped<IProductDA, ProductDA>();
+
+            // Repositories
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+            // Services
             builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<ICategoryDA, CategoryDA>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IAccountDA, AccountDA>();
             builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<ICartDA, CartDA>();
             builder.Services.AddScoped<ICartService, CartService>();
-            builder.Services.AddScoped<IOrderDA, OrderDA>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddControllersWithViews();
+
             builder.Services.AddSession();
             // Thêm IHttpClientFactory
             builder.Services.AddHttpClient();
             builder.Configuration.AddUserSecrets<Program>();
-            builder.Services.AddControllersWithViews();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -65,6 +69,7 @@ namespace Shopping_Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSession();
@@ -74,8 +79,6 @@ namespace Shopping_Web
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
 
             app.Run();
         }
